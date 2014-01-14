@@ -106,73 +106,6 @@ button:hover {
 			height:100%;
 		}
 
-/* Login form */
-#qb_login_form,
-#qb_signup_form {
-	display:none;
-}
-	#qb_login_form input,
-	#qb_signup_form input[type="text"] {
-		width:194px;
-		height:22px;
-		padding:7px;
-		border:1px solid #dcdee3;
-	}
-	#qb_login_form button,
-	#qb_signup_form button,
-	#chat button {
-		color:#fff;
-		background:#429abd;
-		border:1px solid #3985a4;
-	}
-	#qb_login_form button {
-		margin-bottom:15px;
-	}
-	#qb_login_form p:last-child {
-		line-height:16px;
-	}
-		#qb_login_form span {
-			font-size:14px;
-		}
-	
-/* Signup form */
-#qb_signup_form {
-	margin-top:10px;
-}
-	#qb_signup_form .ajax-loader {
-		position:absolute;
-		right:-40px;
-		bottom:2px;
-	}
-	#qb_signup_form .fileUpload {
-		position:relative;
-		overflow:hidden;
-		margin-bottom:30px;
-	}
-		#qb_signup_form .fileUpload input[type="file"] {
-			position:relative;
-			opacity:0;
-			height:31px;
-			z-index:1;
-			cursor:pointer;
-		}
-		#qb_signup_form .fileUpload .fileName {
-			position:absolute;
-			top:0;
-			left:0;
-			width:155px;
-			height:15px;
-			font-size:14px;
-		}
-		#qb_signup_form .fileUpload img {
-			position:absolute;
-			top:0;
-			right:0;
-			width:33px;
-		}
-		#qb_signup_form .fileUpload img.hover {
-			opacity:0.6;
-		}
 
 /* Connecting */
 #connecting {
@@ -191,239 +124,224 @@ button:hover {
 	display:none;
 }
 
-/* Chat
+
+/* WebRTC container
 ==============================*/
-#chat {
-	position:relative;
-	display:none;
-	height:100%;
+
+#callToUser {
+	 position: fixed;
+     left: 50%;
+     top: 50%;
 }
-	#chat .chat-header,
-	#chat .chat-footer {
-		background:#f3f3f3;
-	}
-	#chat .chat-header {
-		height:40px;
-		border-bottom:1px solid #cacaca;
-		border-radius:5px 5px 0 0;
-	}
-		#chat .chat-header .occupants {
-			float:left;
-			padding:7px;
-			line-height:26px;
-			border-right:1px solid #cacaca;
+
+#recipientVideoContainer {
+			width:100%;
+			height:100%;
+			position: absolute;
 		}
-			#chat .occupants img {
-				width:16px;
-				height:16px;
-				position:relative;
-				top:2px;
-			}
-		#chat .chat-header .logout-wrap {
-			float:right;
-			padding:7px;
+	
+		#recipientVideoContainer video {
+			width:100%;
+			background:black;
+			position: absolute;
 		}
-			#chat .chat-header .logout {
-				display:block;
-				padding:0 5px;
-				font-size:13px;
-				line-height:25px;
-				color:#fff;
-				text-decoration:none;
-				background:#76112b;
-				border:1px solid #580d20;
-			}
-			#chat .chat-header .logout:hover {
-				opacity:0.6;
-			}
-		#chat .chat-header .room_name {
-			overflow:hidden;
-			padding:7px;
-			line-height:26px;
+		
+		#recipientVideoContainer.videoEnded {
+			-webkit-transition: all 1s ease;
+			-moz-transition: all 1s ease;
+			transition: all 1s ease;
+			
+			-webkit-filter:blur(10px);
+			-moz-filter:blur(10px);
+			filter:blur(10px);
+			background:white;
 		}
-	#chat .chat-content {
-		position:relative;
-		overflow:auto;
-		height:411px;
-		padding:7px 7px 0;
-		background:#fff;
-	}
-		#chat .message-wrap {
+		
+		#recipientVideoContainer.videoEnded video {
+			-webkit-transition: all 1s ease;
+			-moz-transition: all 1s ease;
+			transition: all 1s ease;
+			
+			opacity:0.5
+		}
+		
+		#userVideo {
+			position: absolute;
+			left: 20px;
+			top: 20px;
+			width: 160px;
+			height: 120px;
+			background: black;
+			border: 5px solid white;
+			border-radius: 4px;
+			box-shadow: 0 1px 3px black;
+			-webkit-transition: opacity .2s ease;
+			-moz-transition: opacity .2s ease;
+			transition: opacity .2s ease;
+		}
+		
+		.user-video {
+			width: 100%;
+			height: 100%;
+			display: none;
+		}
+		
+		#controls {
+			position: absolute;
+			width: 100%;
+			background: rgba(0, 0, 0, 0.25);
+			bottom: 0;
+			box-sizing: border-box;
+			padding: 8px;
+			text-align: center;
+		}
+		
+		#callTimer {
+		    float: left;
+		    font-family: Helvetica Neue, sans-serif;
+		    color: #fff;
+		    font-weight: 500;
+		    -webkit-font-smoothing: antialiased;
+		    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+		    font-size: 20px;
+		    padding-top: 6px;
+		}
+		
+		#controls #container {
+			display:block;
+			width:100%;
+			max-width: 500px;
+			margin:0 auto;
+		}
+		
+		button {
+			padding: 8px 20px;
+		    border-radius: 5px;
+		    border: 1px solid #333;
+		    display:inline;
+		    font-family: Helvetica Neue, sans-serif;
+		    //color: #fff;
+		    -webkit-font-smoothing: antialiased;
+		    font-size: 14px;
+		    text-shadow: 0 1px 0px rgba(0,0,0,0.4);
+		    font-weight: bold;
+		    box-shadow: 0 1px 0px rgba(255,255,255,0.1), inset 0 1px 0 rgba(255,255,255,0.7);
+		}
+		
+		button:active {
+		    box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(0, 0, 0, 0.35), 0 1px 0 rgba(255, 255, 255, 0.6);
+		}
+		
+		button, button:active, button:focus {
+			outline:none;
+		}
+		
+		#callIncoming {
+		    position: absolute;
+		    background: #0861bb;
+			background: -moz-linear-gradient(top,  #0861bb 0%, #74afeb 100%);
+			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#0861bb), color-stop(100%,#74afeb));
+			background: -webkit-linear-gradient(top,  #0861bb 0%,#74afeb 100%);
+			background: -o-linear-gradient(top,  #0861bb 0%,#74afeb 100%);
+			background: -ms-linear-gradient(top,  #0861bb 0%,#74afeb 100%);
+			background: linear-gradient(to bottom,  #0861bb 0%,#74afeb 100%);
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0861bb', endColorstr='#74afeb',GradientType=0 );
+			width: 100%;
+		    height: 100%;
+		}
+		
+		#callIncoming.hidden {
+			-webkit-transition:all .5s ease;
+			-moz-transition:all .5s ease;
+			transition:all .5s ease;
 			opacity:0;
-			overflow:hidden;
-			margin-bottom:7px;
-			padding:5px;
-			background:#fbfbfb;
-			border:1px solid #cacaca;
-			border-radius:3px;
+			-webkit-transform: scale(2);
+			-moz-transform: scale(2);
+			transform: scale(2);
 		}
-			#chat .message-wrap .avatar {
-				float:left;
-				width:50px;
-				height:50px;
-				margin-right:7px;
-			}
-			#chat .message-wrap .message {
-				overflow:hidden;
-				font-size:14px;
-				word-break:break-all;
-			}
-				#chat .message-wrap .message a {
-					color:#429abd;
-				}
-				#chat .message-wrap .message a:hover {
-					opacity:0.8;
-				}
-				#chat .message-wrap .time {
-					font-size:12px;
-					color:#999;
-				}
-	#chat .chat-footer {
-		overflow:hidden;
-		padding:7px;
-		border-top:1px solid #cacaca;
-		border-radius:0 0 5px 5px;
-	}
-		#chat .chat-footer #message {
-			display:none;
+		
+		.avatar {
+		    background: url(http://static1.wikia.nocookie.net/__cb20060710194906/uncyclopedia/images/c/c7/MorganFreeman.jpg);
+		    width: 150px;
+		    height: 150px;
+		    margin: 5% auto 0;
+		    border-radius: 130px;
+		    border: 5px solid white;
+		    box-shadow: 0 1px 5px rgba(0,0,0,0.5), inset 0 1px 3px rgba(0,0,0,0.5);
 		}
-		#chat .chat-footer textarea {
-			width:300px;
-			padding:3px 7px;
-			font-family:Helvetica, Arial, sans-serif;
-			font-size:15px;
-			line-height:18px;
-			background:#fff;
-			resize:none;
+		
+		.callerID {
+		    display: block;
+		    width: 320px;
+		    margin: 20px auto 0;
+		    text-align: center;
+		    color: #fff;
+		    font-family: Helvetica Neue, sans-serif;
+		    font-size: 30px;
+		    -webkit-font-smoothing: antialiased;
+		    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+		    font-weight: bold;
 		}
-		#chat .chat-footer .message_field {
-			overflow:hidden;
-			float:left;
-			height:18px;
-			margin-right:7px;
-			border:1px solid #cacaca;
-			border-radius:3px;
+		.callerID:after {
+		    content: "is calling you...";
+		    display: block;
+		    font-size: 15px;
+		    font-weight: 400;
+		    margin-top: 3px;
 		}
-		#chat .chat-footer button {
-			float:left;
-			padding:0 10px;
-			height:26px;
+		.draggable {
+			opacity:0.5;
 		}
-
-.joined,
-.leave {
-	display:block;
-	margin-bottom:7px;
-	font-size:14px;
-	word-break:break-all;
-}			
-.joined {
-	color:#108134;
-}
-.leave {
-	color:#76112b;
-}
-
-#area {
-	position:absolute;
-	display:none;
-	bottom:7px;
-	left:7px;
-	width:314px;
-	height:127px;
-	background:#fff;
-	border:1px solid #cacaca;
-	border-radius:3px;
-}
-	.controls {
-		display:block;
-		height:25px;
-		padding-left:5px;
-		background:#f3f3f3;
-		border-bottom:1px solid #cacaca;
-	}
-		.controls .smiles {
-			float:right;
-			width:30px;
-			height:26px;
-			text-align:center;
-			line-height:32px;
+		.delay {
+		    display: block;
+		    width: 180px;
+		    margin: 0 auto;
+		    text-align: center;
+		    font-family: Helvetica Neue, sans-serif;
+		    margin-top: 100px;
+		    font-size: 30px;
+		    color: white;
+		    -webkit-font-smoothing: antialiased;
+		    text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+		    animation-timing-function: linear;
 		}
-		.controls .smiles:hover,
-		#chat .chat-header .occupants:hover {
-			background:#dadada !important;
-			cursor:pointer;
+		
+		#acceptCall {
+			background: rgb(9, 202, 24);
 		}
-	#message_area {
-		height:94px;
-		outline:0;
-		border:0;
-	}
-
-.smileicons {
-	vertical-align:text-bottom;
-	height:16px;
-	width:16px;
-}
-.smiles-icons {
-	position:absolute;
-	display:none;
-	top:-102px;
-	right:0;
-	width:150px;
-	height:100px;
-	overflow:auto;
-	background:rgba(0,0,0,0.7);
-	border-radius:3px;
-}
-#area.big-layout .smiles-icons {
-	top:-156px;
-	width:210px;
-	height:154px;
-}
-	.smiles-icons .smileicons {
-		padding:7px;
-	}
-	.smiles-icons .smileicons:hover {
-		background:rgba(0,0,0,0.9);
-		cursor:pointer;
-	}
-	
-.list {
-	position:absolute;
-	overflow:auto;
-	display:none;
-	top:40px;
-	left:0;
-	width:250px;
-	max-width:450px;
-	max-height:418px;
-	background:#fff;
-	border:1px solid #cacaca;
-	border-radius:3px;
-	z-index:1;
-}
-	.list li {
-		display:block;
-		padding:3px 5px;
-		color:#5a5a5a;
-		font-size:15px;
-		line-height:20px;
-		background:#fff;
-		border-bottom:1px solid #cacaca;
-		word-break:break-all;
-	}
-	.list li:last-child {
-		border-bottom:0;
-	}
-	
-.title {
-	background:#f3f3f3 !important;
-	font-weight:bold;
-	font-size:15px;
-	line-height:25px;
-}
-.title:hover,
-.list li:hover {
-	cursor:auto;
-}
+		
+		#declineCall {
+			background: rgb(185, 62, 32);
+		}
+		
+		#hangUp {
+			background: rgb(185, 62, 32);
+			float: right;
+		}
+		
+		#debug {
+		    position: absolute;
+		    top 0;
+		    z-index: 100;
+		    color: #fff;
+		    font-size: 12pt;
+		}
+		#callEndedContent {
+		    display: block;
+		    text-align: center;
+		    z-index: 1000;
+		    position: absolute;
+		    width: 100%;
+		    margin-top: 100px;
+		    color: #fff;
+		    font-family: Helvetica Neue, sans-serif;
+		    text-shadow: 0 1px 3px black;
+		    -webkit-font-smoothing: antialiased;
+		}
+		#callEndedContent h3 {
+		    font-size: 25px;
+		    font-weight: 300;
+		}
+		#callEndedContent span {
+		    font-weight: bold;
+		}
