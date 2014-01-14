@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>XMPP WebRTC DEMO sample</title>
+	<link rel="stylesheet" href="xmppchat.css" />
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+</head>
+<body>
+	<div id="fb-root"></div>
+	<div id="wrap">
+	
+		<div id="auth">			
+			<div class="main-wrap">
+				<div class="logo"><img src="images/logo.png" alt="QuickBlox logo" /></div>
+				<div class="welcome">Welcome to<br />QuickBlox WebRTC DEMO sample</div>
+				
+				<div id="buttons">
+					<p><button onclick="authQB(1)">Sign in with User1</button></p>
+					<p><button onclick="authQB(2)">Sign in with User2</button></p>
+				</div>
+			</div>
+			
+			<div class="powered">Powered by <a href="http://quickblox.com">QuickBlox</a></div>
+		</div>
+		
+		
+		<div id="connecting">
+			<p>Connecting. Please wait...</p>
+			<p><img src="images/connecting.gif" alt="connecting" /></p>
+		</div>
+		
+		
+		<div id="webrtc">
+			
+		</div>
+	</div>
+	
+	<script src="js/quickblox.js"></script>
+	<script src="js/strophe.js"></script>
+	<script src="js/jquery.base64.min.js"></script>
+	<script src="js/jquery.formatDateTime.js"></script>
+	<script src="js/jquery.scrollTo-min.js"></script>
+	<script src="js/parseUri.js"></script>
+
+	<script src="xmppchat.js"></script>
+</body>
+</html>
