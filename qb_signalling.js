@@ -100,11 +100,11 @@ function onMessage(msg) {
     if (type == "chat" && elems.length > 0) {
         var body = elems[0];
 
-        log('onMessage: from ' + from + ': ' + Strophe.getText(body));
+        console.log('onMessage: from ' + from + ': ' + Strophe.getText(body));
         
         fromUserID = from.split('-')[0];
         
-        switch (body) {
+        switch (Strophe.getText(body)) {
 		case QB_CALL:
 		    onCall(fromUserID);
 		    break;

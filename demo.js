@@ -93,10 +93,14 @@ function onConnectionDisconnected(){
 
 function onCall(fromUserID){
     console.log('onCall: ' + fromUserID);
+    
+    accept(fromUserID);
 }
 
 function onAccept(fromUserID){
     console.log('onAccept: ' + fromUserID);
 }
 
-
+function callToUser(){
+   call(opponentID);
+}
