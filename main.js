@@ -87,7 +87,7 @@ function onConnectionSuccess(user_id) {
     
     $('#localVideoContainer').show();
     $('#callToUser').show();
-    $('#currentUser').text(fullname);
+    $('#currentUserName').text(fullname);
     
     // start local video
     var localVideo = document.getElementById("localVideo");
