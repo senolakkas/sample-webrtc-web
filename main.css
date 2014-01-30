@@ -137,10 +137,12 @@ button:hover {
 
 #localVideoContainer{
     width:50%;
+    float: left;
+    margin-left: 20px;
+   	margin-top: 20px;
 }
 	#localVideo {
-    	margin-left: 20px;
-   	 	margin-top: 20px;
+  
 	}
 	#currentUserName{
    	 	text-align:center;
@@ -149,6 +151,8 @@ button:hover {
 #remoteVideoContainer{
     width:50%;
     float:right;
+    margin-right: 20px;
+   	margin-top: 20px;
 }	
 
 #incomingCallControls{
