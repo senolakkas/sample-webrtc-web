@@ -150,6 +150,14 @@ button:hover {
 #incomingCallControls{
     text-align:center;
 }
+
+	#acceptCallButton {
+		background: rgb(9, 202, 24);
+	}
+		
+	#rejectCallButton {
+		background: rgb(185, 62, 32);
+	}
 	
 
 
@@ -301,27 +309,9 @@ button:hover {
 		.draggable {
 			opacity:0.5;
 		}
-		.delay {
-		    display: block;
-		    width: 180px;
-		    margin: 0 auto;
-		    text-align: center;
-		    font-family: Helvetica Neue, sans-serif;
-		    margin-top: 100px;
-		    font-size: 30px;
-		    color: white;
-		    -webkit-font-smoothing: antialiased;
-		    text-shadow: 0 1px 2px rgba(0,0,0,0.4);
-		    animation-timing-function: linear;
-		}
+
 		
-		#acceptCall {
-			background: rgb(9, 202, 24);
-		}
-		
-		#declineCall {
-			background: rgb(185, 62, 32);
-		}
+
 		
 		#hangUp {
 			background: rgb(185, 62, 32);

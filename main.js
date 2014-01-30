@@ -144,5 +144,5 @@ function rejectCall(){
     
     $('#incomingCallControls').hide();
         
-    $('#incomingCallAudio')[0].stop()
+    $('#incomingCallAudio')[0].pause()
 }
