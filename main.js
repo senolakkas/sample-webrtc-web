@@ -97,7 +97,7 @@ function onConnectionSuccess(user_id) {
     $('#localVideoContainer').show();
     $('#callToUserButton').show();
     $('#currentUserName').text(myName);
-    $('#callToUser').text('Call to ' + opponentName);
+    $('#callToUserButton').text('Call to ' + opponentName);
     
     $('#localVideoContainer').show();
     $('#remoteVideoContainer').show();
