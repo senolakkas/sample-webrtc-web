@@ -135,14 +135,16 @@ button:hover {
      top: 50%;
 }
 
-#localVideo {
-    margin-left: 20px;
-    margin-top: 20px;
+#localVideoContainer{
+    width:50%;
 }
-
-#currentUserName{
-    text-align:center;
-}
+	#localVideo {
+    	margin-left: 20px;
+   	 	margin-top: 20px;
+	}
+	#currentUserName{
+   	 	text-align:center;
+	}
 
 #recipientVideo {
 			width:100%;
