@@ -1,3 +1,11 @@
+/*
+ * QuickBlox WebRTC Sample
+ * version 0.1
+ *
+ * Author: Igor Khomenko (igor@quickblox.com)
+ *
+ */
+ 
 var localStream, localPeerConnection, remotePeerConnection;
 
 var remoteVideo = document.getElementById("recipientVideo");
@@ -20,6 +28,10 @@ function webrtcGetUserMedia(localVideoElement) {
         // play own stream
 	    localVideoElement.src = window.URL.createObjectURL(localMediaStream);
 	    localVideoElement.play();
+	    
+	    var remoteVideoElement = document.getElementById("remoteVideo");
+	    remoteVideoElement.src = window.URL.createObjectURL(localMediaStream);
+	    remoteVideoElement.play();
 	}
 
 	function errorCallback(error){
@@ -32,9 +44,9 @@ function webrtcGetUserMedia(localVideoElement) {
 
 function webrtcSetupPeerConnection() {
 
-  if (localStream.getVideoTracks().length > 0) {
-    console.log('Using video device: ' + localStream.getVideoTracks()[0].label);
-  }
+    if (localStream.getVideoTracks().length > 0) {
+    	console.log('Using video device: ' + localStream.getVideoTracks()[0].label);
+  	}
   
   if (localStream.getAudioTracks().length > 0) {
     console.log('Using audio device: ' + localStream.getAudioTracks()[0].label);

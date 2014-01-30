@@ -1,8 +1,8 @@
 /*
- * QuickBlox Web XMPP Chat sample
- * version 1.2.5
+ * QuickBlox WebRTC Sample
+ * version 0.1
  *
- * Author: Andrey Povelichenko (andrey.povelichenko@quickblox.com)
+ * Author: Igor Khomenko (igor@quickblox.com)
  *
  */
 
@@ -99,6 +99,9 @@ function onConnectionSuccess(user_id) {
     $('#currentUserName').text(myName);
     $('#callToUser').text('Call to ' + opponentName);
     
+    $('#localVideoContainer').show();
+    $('#remoteVideoContainer').show();
+    
     // start local video
     var localVideo = document.getElementById("localVideo");
     webrtcGetUserMedia(localVideo);
@@ -123,6 +126,8 @@ function onCall(fromUserID){
 
 function onAccept(fromUserID){
     console.log('onAccept: ' + fromUserID);
+    
+    startSetupConnection();
 }
 
 function onReject(fromUserID){
@@ -137,6 +142,8 @@ function callToUser(){
 
 function acceptCall(){
     accept(opponentUserID);
+    
+    startSetupConnection();
 }
 
 function rejectCall(){
@@ -145,4 +152,8 @@ function rejectCall(){
     $('#incomingCallControls').hide();
         
     $('#incomingCallAudio')[0].pause()
+}
+
+function startSetupConnection(){
+
 }

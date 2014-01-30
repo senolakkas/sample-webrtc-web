@@ -1,3 +1,11 @@
+/*
+ * QuickBlox WebRTC Sample
+ * version 0.1
+ *
+ * Author: Igor Khomenko (igor@quickblox.com)
+ *
+ */
+ 
 // QB Account params
 var QBPARAMS = {
                         app_id      : '92',

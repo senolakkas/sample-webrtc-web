@@ -146,15 +146,17 @@ button:hover {
    	 	text-align:center;
 	}
 	
-	
+#remoteVideoContainer{
+    width:50%;
+    float:right;
+}	
+
 #incomingCallControls{
     text-align:center;
 }
-
 	#acceptCallButton {
 		background: rgb(9, 202, 24);
 	}
-		
 	#rejectCallButton {
 		background: rgb(185, 62, 32);
 	}
@@ -162,75 +164,7 @@ button:hover {
 
 
 
-#recipientVideo {
-			width:100%;
-			height:100%;
-			position: absolute;
-		}
-	
-		#recipientVideo video {
-			width:100%;
-			background:black;
-			position: absolute;
-		}
-		
-		#recipientVideo.videoEnded {
-			-webkit-transition: all 1s ease;
-			-moz-transition: all 1s ease;
-			transition: all 1s ease;
-			
-			-webkit-filter:blur(10px);
-			-moz-filter:blur(10px);
-			filter:blur(10px);
-			background:white;
-		}
-		
-		#recipientVideo.videoEnded video {
-			-webkit-transition: all 1s ease;
-			-moz-transition: all 1s ease;
-			transition: all 1s ease;
-			
-			opacity:0.5
-		}
-		
-		#userVideo {
-			position: absolute;
-			left: 20px;
-			top: 20px;
-			width: 160px;
-			height: 120px;
-			background: black;
-			border: 5px solid white;
-			border-radius: 4px;
-			box-shadow: 0 1px 3px black;
-			-webkit-transition: opacity .2s ease;
-			-moz-transition: opacity .2s ease;
-			transition: opacity .2s ease;
-		}
-		
-		.user-video {
-			width: 100%;
-			height: 100%;
-			display: none;
-		}
-		
-		#controls {
-			position: absolute;
-			width: 100%;
-			background: rgba(0, 0, 0, 0.25);
-			bottom: 0;
-			box-sizing: border-box;
-			padding: 8px;
-			text-align: center;
-		}
-		
-		#controls #container {
-			display:block;
-			width:100%;
-			max-width: 500px;
-			margin:0 auto;
-		}
-		
+
 		button {
 			padding: 8px 20px;
 		    border-radius: 5px;
@@ -251,30 +185,6 @@ button:hover {
 		
 		button, button:active, button:focus {
 			outline:none;
-		}
-		
-		#callIncoming {
-		    position: absolute;
-		    background: #0861bb;
-			background: -moz-linear-gradient(top,  #0861bb 0%, #74afeb 100%);
-			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#0861bb), color-stop(100%,#74afeb));
-			background: -webkit-linear-gradient(top,  #0861bb 0%,#74afeb 100%);
-			background: -o-linear-gradient(top,  #0861bb 0%,#74afeb 100%);
-			background: -ms-linear-gradient(top,  #0861bb 0%,#74afeb 100%);
-			background: linear-gradient(to bottom,  #0861bb 0%,#74afeb 100%);
-			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0861bb', endColorstr='#74afeb',GradientType=0 );
-			width: 100%;
-		    height: 100%;
-		}
-		
-		#callIncoming.hidden {
-			-webkit-transition:all .5s ease;
-			-moz-transition:all .5s ease;
-			transition:all .5s ease;
-			opacity:0;
-			-webkit-transform: scale(2);
-			-moz-transform: scale(2);
-			transform: scale(2);
 		}
 
 		#hangUp {
