@@ -276,71 +276,8 @@ button:hover {
 			-moz-transform: scale(2);
 			transform: scale(2);
 		}
-		
-		.avatar {
-		    background: url(http://static1.wikia.nocookie.net/__cb20060710194906/uncyclopedia/images/c/c7/MorganFreeman.jpg);
-		    width: 150px;
-		    height: 150px;
-		    margin: 5% auto 0;
-		    border-radius: 130px;
-		    border: 5px solid white;
-		    box-shadow: 0 1px 5px rgba(0,0,0,0.5), inset 0 1px 3px rgba(0,0,0,0.5);
-		}
-		
-		.callerID {
-		    display: block;
-		    width: 320px;
-		    margin: 20px auto 0;
-		    text-align: center;
-		    color: #fff;
-		    font-family: Helvetica Neue, sans-serif;
-		    font-size: 30px;
-		    -webkit-font-smoothing: antialiased;
-		    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
-		    font-weight: bold;
-		}
-		.callerID:after {
-		    content: "is calling you...";
-		    display: block;
-		    font-size: 15px;
-		    font-weight: 400;
-		    margin-top: 3px;
-		}
-		.draggable {
-			opacity:0.5;
-		}
 
-		
-
-		
 		#hangUp {
 			background: rgb(185, 62, 32);
 			float: right;
-		}
-		
-		#debug {
-		    position: absolute;
-		    top 0;
-		    z-index: 100;
-		    color: #fff;
-		    font-size: 12pt;
-		}
-		#callEndedContent {
-		    display: block;
-		    text-align: center;
-		    z-index: 1000;
-		    position: absolute;
-		    width: 100%;
-		    margin-top: 100px;
-		    color: #fff;
-		    font-family: Helvetica Neue, sans-serif;
-		    text-shadow: 0 1px 3px black;
-		    -webkit-font-smoothing: antialiased;
-		}
-		#callEndedContent h3 {
-		    font-size: 25px;
-		    font-weight: 300;
-		}
-		#callEndedContent span {
-		    font-weight: bold;
 		}
