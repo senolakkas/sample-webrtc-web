@@ -135,9 +135,9 @@ button:hover {
      top: 50%;
 }
 
-#localVideo{
-    left: 40px;
-	top: 40px;
+#localVideo {
+    margin-left: 20px;
+    margin-top: 20px;
 }
 
 #recipientVideo {
