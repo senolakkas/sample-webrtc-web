@@ -6,16 +6,18 @@
  *
  */
 
-var login, password, fullname;
+var myName, opponentName;
 
 // Test users
 var TESTUSERS = {
                         id1         : '298',
                         login1      : 'bobbobbob',
                         password1   : 'bobbobbob',
+                        name1       : 'Bob',
                         id2         : '299',
                         login2      : 'samsamsam',
                         password2   : 'samsamsam',
+                        name2       : 'Sam',
 }
 
 // Widget settings
@@ -53,16 +55,21 @@ function authQB(user) {
     $('#auth').hide().next('#connecting').show();
 	$('#wrap').addClass('connect_message');
 	
+	var login, password;
 	if (user == 1) {
 		login = TESTUSERS.login1;
 		password = TESTUSERS.password1;
-		fullname = 'Bob';
+		
+		myName = TESTUSERS.name1;
+		opponentName = TESTUSERS.name2;
 		
 		opponentID = TESTUSERS.id2;
 	} else {
 		login = TESTUSERS.login2;
 		password = TESTUSERS.password2;
-		fullname = 'Sam';
+		
+		myName = TESTUSERS.name2;
+		opponentName = TESTUSERS.name1;
 		
 		opponentID = TESTUSERS.id1;
 	}
@@ -87,7 +94,8 @@ function onConnectionSuccess(user_id) {
     
     $('#localVideoContainer').show();
     $('#callToUser').show();
-    $('#currentUserName').text(fullname);
+    $('#currentUserName').text(myName);
+    $('#callToUser').text('Call to ' + opponentName);
     
     // start local video
     var localVideo = document.getElementById("localVideo");
