@@ -89,6 +89,7 @@ function onConnectionFailed(error) {
 function onConnectionSuccess(user_id) {
     console.log('onConnectionSuccess');
     
+    
     $('#connecting').hide();
     $('#webrtc').show();
     
@@ -114,7 +115,7 @@ function onCall(fromUserID){
     
     $('#incomingCallControls').show();
     
-    $('#incomingCallAlert').play();
+    $('#incomingCallAudio')[0].play();
     
     //accept(fromUserID);
 }
