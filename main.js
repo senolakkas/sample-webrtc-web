@@ -7,6 +7,7 @@
  */
 
 var myName, opponentName;
+var opponentUserID;
 
 // Test users
 var TESTUSERS = {
@@ -117,13 +118,27 @@ function onCall(fromUserID){
     
     $('#incomingCallAudio')[0].play();
     
-    //accept(fromUserID);
+    opponentUserID = fromUserID;
 }
 
 function onAccept(fromUserID){
     console.log('onAccept: ' + fromUserID);
 }
 
+function onReject(fromUserID){
+    console.log('onReject: ' + fromUserID);
+    
+    alert("Call rejected");
+}
+
 function callToUser(){
    call(opponentID);
+}
+
+function acceptCall(){
+    accept(opponentUserID);
+}
+
+function declineCall(){
+    reject(opponentUserID);
 }

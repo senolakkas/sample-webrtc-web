@@ -11,8 +11,9 @@ var CHAT = {
                         bosh_url    : 'http://chat.quickblox.com:5280'
 }
 
-var QB_CALL = 'qb_call';
-var QB_ACCEPT = 'qb_accept';
+var QB_CALL = 'qbvideochat_call';
+var QB_ACCEPT = 'qbvideochat_acceptCall';
+var QB_REJECT = 'qbvideochat_rejectCall';
 
 var connection, userJID;
 
@@ -109,6 +110,9 @@ function onMessage(msg) {
 	case QB_ACCEPT:
 		onAccept(fromUserID);
 		break;
+	case QB_REJECT:
+		onReject(fromUserID);
+		break;
 	}
 
     // we must return true to keep the handler alive.  
@@ -133,6 +137,17 @@ function accept(userID) {
     var reply = $msg({to: opponentJID, 
                      from: userJID, 
                      type: QB_ACCEPT})
+            .cnode(Strophe.xmlElement('body', ''));
+        
+    connection.send(reply);
+}
+
+function reject(userID) {
+    var opponentJID = userID + "-" + QBPARAMS.app_id + "@" + CHAT.server
+    
+    var reply = $msg({to: opponentJID, 
+                     from: userJID, 
+                     type: QB_REJECT})
             .cnode(Strophe.xmlElement('body', ''));
         
     connection.send(reply);
