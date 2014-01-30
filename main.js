@@ -95,7 +95,7 @@ function onConnectionSuccess(user_id) {
     $('#webrtc').show();
     
     $('#localVideoContainer').show();
-    $('#callToUser').show();
+    $('#callToUserButton').show();
     $('#currentUserName').text(myName);
     $('#callToUser').text('Call to ' + opponentName);
     
