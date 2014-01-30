@@ -67,7 +67,7 @@ function xmppConnect(user_id, password) {
 		    break;
 		case Strophe.Status.CONNECTED:
 		    console.log('[Connection] Connected');
-		    onConnectionSuccess();
+		    onConnectionSuccess(user_id);
 		    break;
 		case Strophe.Status.DISCONNECTED:
 		    console.log('[Connection] Disconnected');

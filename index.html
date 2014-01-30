@@ -20,8 +20,8 @@
 				<div class="welcome">Welcome to<br />QuickBlox WebRTC DEMO sample</div>
 				
 				<div id="buttons">
-					<p><button onclick="authQB(1)">Sign in with User1</button></p>
-					<p><button onclick="authQB(2)">Sign in with User2</button></p>
+					<p><button onclick="authQB(1)">Sign in with Bob</button></p>
+					<p><button onclick="authQB(2)">Sign in with Sam</button></p>
 				</div>
 			</div>
 			
@@ -39,8 +39,11 @@
 		<!-- VideoChat block-->
 		<div id="webrtc">
 		
-		    <!-- local video stream -->
-            <video id="localVideo" autoplay style="display:none;"></video>
+		    <!-- local video container -->
+		    <div id="localVideoContainer" style="display:none;">
+            	<video id="localVideo" autoplay"></video>
+            	<p id="currentUser"></p>
+            </div>
             
             <!-- remote video stream -->
             <video id="remoteVideo" autoplay style="display:none;"></video>

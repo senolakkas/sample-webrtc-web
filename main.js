@@ -6,7 +6,7 @@
  *
  */
 
-var login, password;
+var login, password, fullname;
 
 // Test users
 var TESTUSERS = {
@@ -56,11 +56,13 @@ function authQB(user) {
 	if (user == 1) {
 		login = TESTUSERS.login1;
 		password = TESTUSERS.password1;
+		fullname = 'Bob';
 		
 		opponentID = TESTUSERS.id2;
 	} else {
 		login = TESTUSERS.login2;
 		password = TESTUSERS.password2;
+		fullname = 'Sam';
 		
 		opponentID = TESTUSERS.id1;
 	}
@@ -77,14 +79,15 @@ function onConnectionFailed(error) {
 	$('#qb_login_form input').addClass('error');
 }
 
-function onConnectionSuccess() {
+function onConnectionSuccess(user_id) {
     console.log('onConnectionSuccess');
     
     $('#connecting').hide();
     $('#webrtc').show();
     
-    $('#localVideo').show();
+    $('#localVideoContainer').show();
     $('#callToUser').show();
+    $('#currentUser').text(fullname);
     
     // start local video
     var localVideo = document.getElementById("localVideo");
