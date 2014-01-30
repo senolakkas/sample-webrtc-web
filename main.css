@@ -129,10 +129,8 @@ button:hover {
 /* WebRTC container
 ==============================*/
 
-#callToUser {
-	 position: fixed;
-     left: 50%;
-     top: 50%;
+#callToUserButton {
+    float: left;
 }
 
 #localVideoContainer{
@@ -151,6 +149,9 @@ button:hover {
     margin-right: 20px;
    	margin-top: 20px;
 }	
+	#opponentUserName{
+   	 	text-align:center;
+	}
 
 #incomingCallControls{
     text-align:center;

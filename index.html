@@ -49,12 +49,13 @@
 				<!-- remote video container -->
 				<div id="remoteVideoContainer" style="display:none;">
 					<video id="remoteVideo" autoplay"></video>
+					<p id="opponentUserName"></p>
 				</div>
+				
+				<!-- call user -->
+                <button id="callToUserButton" onclick="callToUser()" style="display:none;"></button>
             </div>
-            
-            <!-- call user -->
-            <button id="callToUser" onclick="callToUser()" style="display:none;"></button>
-            
+
             <!-- incoming call alert -->
             <audio id="incomingCallAudio" src="./ring.mp3"></audio>
 
