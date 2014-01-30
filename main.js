@@ -101,7 +101,9 @@ function onConnectionDisconnected(){
 function onCall(fromUserID){
     console.log('onCall: ' + fromUserID);
     
-    accept(fromUserID);
+    $('#incomingCallControls').show();
+    
+    //accept(fromUserID);
 }
 
 function onAccept(fromUserID){
