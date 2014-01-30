@@ -134,19 +134,19 @@ button:hover {
      top: 50%;
 }
 
-#recipientVideoContainer {
+#recipientVideo {
 			width:100%;
 			height:100%;
 			position: absolute;
 		}
 	
-		#recipientVideoContainer video {
+		#recipientVideo video {
 			width:100%;
 			background:black;
 			position: absolute;
 		}
 		
-		#recipientVideoContainer.videoEnded {
+		#recipientVideo.videoEnded {
 			-webkit-transition: all 1s ease;
 			-moz-transition: all 1s ease;
 			transition: all 1s ease;
@@ -157,7 +157,7 @@ button:hover {
 			background:white;
 		}
 		
-		#recipientVideoContainer.videoEnded video {
+		#recipientVideo.videoEnded video {
 			-webkit-transition: all 1s ease;
 			-moz-transition: all 1s ease;
 			transition: all 1s ease;

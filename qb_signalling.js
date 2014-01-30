@@ -96,23 +96,20 @@ function onMessage(msg) {
     var from = msg.getAttribute('from');
     var type = msg.getAttribute('type');
     var elems = msg.getElementsByTagName('body');
-
-    if (type == "chat" && elems.length > 0) {
-        var body = elems[0];
-
-        console.log('onMessage: from ' + from + ': ' + Strophe.getText(body));
-        
-        fromUserID = from.split('-')[0];
-        
-        switch (Strophe.getText(body)) {
-		case QB_CALL:
-		    onCall(fromUserID);
-		    break;
-		case QB_ACCEPT:
-		    onAccept(fromUserID);
-		    break;
-		}
-    }
+    var body = elems[0];
+         
+	console.log('onMessage: from ' + from + ',type: ' + type + ',body:' + Strophe.getText(body));
+         
+	fromUserID = from.split('-')[0];
+	
+	switch (type) {
+	case QB_CALL:
+		onCall(fromUserID);
+		break;
+	case QB_ACCEPT:
+		onAccept(fromUserID);
+		break;
+	}
 
     // we must return true to keep the handler alive.  
     // returning false would remove it after it finishes.
@@ -124,8 +121,8 @@ function call(userID) {
 
     var reply = $msg({to: opponentJID, 
                      from: userJID, 
-                     type: 'chat'})
-            .cnode(Strophe.xmlElement('body', QB_CALL));
+                     type: QB_CALL})
+            .cnode(Strophe.xmlElement('body', ''));
         
     connection.send(reply);
 }
@@ -135,8 +132,8 @@ function accept(userID) {
     
     var reply = $msg({to: opponentJID, 
                      from: userJID, 
-                     type: 'chat'})
-            .cnode(Strophe.xmlElement('body', QB_ACCEPT));
+                     type: QB_ACCEPT})
+            .cnode(Strophe.xmlElement('body', ''));
         
     connection.send(reply);
 }

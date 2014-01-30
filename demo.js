@@ -82,6 +82,13 @@ function onConnectionSuccess() {
     
     $('#connecting').hide();
     $('#webrtc').show();
+    
+    $('#localVideo').show();
+    $('#callToUser').show();
+    
+    // start local video
+    var localVideo = document.getElementById("localVideo");
+    webrtcGetUserMedia(localVideo);
 }
 
 function onConnectionDisconnected(){

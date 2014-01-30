@@ -13,6 +13,7 @@
 <body>
 	<div id="wrap">
 	
+	    <!-- Login with User1, User2 block-->
 		<div id="auth">			
 			<div class="main-wrap">
 				<div class="logo"><img src="images/logo.png" alt="QuickBlox logo" /></div>
@@ -28,44 +29,42 @@
 		</div>
 		
 		
+		<!-- Connecting... block-->
 		<div id="connecting">
 			<p>Connecting. Please wait...</p>
 			<p><img src="images/connecting.gif" alt="connecting" /></p>
 		</div>
 		
 		
+		<!-- VideoChat block-->
 		<div id="webrtc">
-            <div id="recipientVideoContainer" style="display:none;"></div>
-
-            <div id="userVideo" style="display:none;"></div>
-
-			<div id="callIncoming" style="display:none;">
-				<div class="avatar"></div>
-				<span class="callerID">Morgan Freeman</span>
-				<span class="delay" style="display:none">Please wait...</span>
-	
-				<div id="controls" class="incomingCallControls">
-					<div id="container">
-						<button id="acceptCall">Accept call</button>
-						<button id="declineCall">Decline call</button>
-					</div>
-				</div>
-			</div>
-
-			<!-- <audio src="ring.mp3" autoplay loop id="ring"></audio> -->
-
-			<div id="controls" class="activeCallControls" style="display:none;">
-				<div id="container">
-					<span id="callTimer"><label id="minutes">00</label>:<label id="seconds">00</label></span>
-					<button id="hangUp">End call</button>
-				</div>
-			</div>
-
-			<div id="callToUser">
-				<button id="callToUser" onclick="callToUser()">Сall to opponent</button>
-			</div>
-		</div>
 		
+		    <!-- local video stream -->
+            <video id="localVideo" autoplay style="display:none;"></video>
+            
+            <!-- remote video stream -->
+            <video id="remoteVideo" autoplay style="display:none;"></video>
+            
+            <!-- call user -->
+            <button id="callToUser" onclick="callToUser() style="display:none;">Сall to opponent</button>
+
+            <!-- accept/reject buttons -->
+			<div id="incomingCallControls" style="display:none;">
+				<button id="acceptCall">Accept call</button>
+				<button id="declineCall">Decline call</button>
+			</div>
+
+            <!-- hung up button -->
+			<div id="hangUpCallControls" style="display:none;">
+				<button id="hangUp">End call</button>
+			</div>
+			
+			<!-- video chat connecting control -->
+			<div id="videoChatConnectingControls" style="display:none;">
+				<img src="http://www.avazun.ru/img/upload_progress.gif" alt="video chat connecting">
+			</div>
+			
+		</div>
 	</div>
 	
 	<script src="js/quickblox.js"></script>
