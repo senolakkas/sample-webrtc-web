@@ -114,6 +114,8 @@ function onCall(fromUserID){
     
     $('#incomingCallControls').show();
     
+    $('#incomingCallAlert').play();
+    
     //accept(fromUserID);
 }
 
