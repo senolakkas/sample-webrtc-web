@@ -139,6 +139,10 @@ function acceptCall(){
     accept(opponentUserID);
 }
 
-function declineCall(){
+function rejectCall(){
     reject(opponentUserID);
+    
+    $('#incomingCallControls').hide();
+        
+    $('#incomingCallAudio')[0].stop()
 }
