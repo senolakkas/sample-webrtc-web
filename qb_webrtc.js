@@ -112,7 +112,7 @@ function handleRemoteStreamRemoved(event) {
  */ 
 function createOffer() {
   	console.log('Creating offer to peer...');
-  	pc.createOffer(createOfferSuccessCallback, createOfferFailureCallback);
+  	pc.createOffer(sessionDescriptionSuccessCallback, createOfferFailureCallback);
 }
 
 function createAnswer() {
