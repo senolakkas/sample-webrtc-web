@@ -29,9 +29,9 @@ function webrtcGetUserMedia(localVideoElement) {
 	    localVideoElement.src = window.URL.createObjectURL(localMediaStream);
 	    localVideoElement.play();
 	    
-	    var remoteVideoElement = document.getElementById("remoteVideo");
-	    remoteVideoElement.src = window.URL.createObjectURL(localMediaStream);
-	    remoteVideoElement.play();
+	    //var remoteVideoElement = document.getElementById("remoteVideo");
+	    //remoteVideoElement.src = window.URL.createObjectURL(localMediaStream);
+	    //remoteVideoElement.play();
 	}
 
 	function errorCallback(error){
