@@ -90,12 +90,13 @@ function createPeerConnection(remoteVideoEl) {
 	}
 }
 
-function onIceCandidateCallback(event) {
-  	traceW('onIceCandidate, event: ' + event);
-  	
-  	if (event.candidate) {
-  		traceW('candidate: ' + event.candidate.candidate);
-  		onIceCandidate(event.candidate);
+function onIceCandidateCallback(event) {  
+    var candidate = event.candidate;	
+  	if (candidate) {
+  		traceW('onIceCandidateCallback, candidate: ' + candidate.candidate + 
+  			', sdpMLineIndex: ' + candidate.sdpMLineIndex + ', sdpMid: ' + candidate.sdpMid);
+  			
+  		onIceCandidate(candidate);
   	} else {
    	 	traceW('No candidates');
   	}
