@@ -91,7 +91,7 @@ function createPeerConnection(remoteVideoEl) {
 }
 
 function onIceCandidate(event) {
-  	trace('onIceCandidate event: ', event);
+  	trace('onIceCandidate event: ' + event);
   	
   	if (event.candidate) {
   		trace('candidate: ' + event.candidate.candidate);
