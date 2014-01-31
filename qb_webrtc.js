@@ -6,7 +6,9 @@
  *
  */
 
-var pc_config = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}]};
+var pc_config = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}, 
+								{'url': 'turn:turnserver.quickblox.com:3478?transport=udp'},
+								{'url': 'turn:turnserver.quickblox.com:3478?transport=tcp'}]};
 var pc_constraints = {'optional': [{'DtlsSrtpKeyAgreement': true}]};
  
 // Set up audio and video regardless of what devices are present.

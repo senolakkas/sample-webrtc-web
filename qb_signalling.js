@@ -102,7 +102,7 @@ function sendAnswer(userID, sessionDescription) {
 }
 
 function sendCandidate(userID, candidate) {
-	traceS('sendCandidate ' + userID);
+	traceS('sendCandidate ' + userID + ', candidate: ' + candidate);
     sendMessage(userID, QB_CANDIDATE, candidate);
 }
 
@@ -128,33 +128,33 @@ function xmppConnect(user_id, password) {
 	connection.connect(userJID, password, function (status) {
 		switch (status) {
 		case Strophe.Status.ERROR:
-		    console.log('[Connection] Error');
+		    traceS('[Connection] Error');
 		    break;
 		case Strophe.Status.CONNECTING:
-			console.log('[Connection] Connecting');
+			traceS('[Connection] Connecting');
 			break;
 		case Strophe.Status.CONNFAIL:
 		    onConnectionFailed('[Connection] Failed to connect');
 		    break;
 		case Strophe.Status.AUTHENTICATING:
-		    console.log('[Connection] Authenticating');
+		    traceS('[Connection] Authenticating');
 		    break;
 		case Strophe.Status.AUTHFAIL:
 		    onConnectionFailed('[Connection] Unauthorized');
 		    break;
 		case Strophe.Status.CONNECTED:
-		    console.log('[Connection] Connected');
+		    traceS('[Connection] Connected');
 		    onConnectionSuccess(user_id);
 		    break;
 		case Strophe.Status.DISCONNECTED:
-		    console.log('[Connection] Disconnected');
+		    traceS('[Connection] Disconnected');
 		    break;
 		case Strophe.Status.DISCONNECTING:
-		    console.log('[Connection] Disconnecting');
+		    traceS('[Connection] Disconnecting');
 		    onConnectionDisconnected();
 		    break;
 		case Strophe.Status.ATTACHED:
-		    console.log('[Connection] Attached');
+		    traceS('[Connection] Attached');
 		    break;
 		}
 	});
