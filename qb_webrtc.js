@@ -5,10 +5,18 @@
  * Author: Igor Khomenko (igor@quickblox.com)
  *
  */
+
+var pc_config = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}]};
+var pc_constraints = {'optional': [{'DtlsSrtpKeyAgreement': true}]};
+ 
+// Set up audio and video regardless of what devices are present.
+var sdpConstraints = {'mandatory': {
+  'OfferToReceiveAudio':true,
+  'OfferToReceiveVideo':true }
+};
  
 var localStream, localPeerConnection, remotePeerConnection;
 
-var remoteVideo = document.getElementById("recipientVideo");
 
 function webrtcGetUserMedia(localVideoElement) {
     console.log("webrtcGetUserMedia....");
@@ -29,6 +37,7 @@ function webrtcGetUserMedia(localVideoElement) {
 	    localVideoElement.src = window.URL.createObjectURL(localMediaStream);
 	    localVideoElement.play();
 	    
+	    // test
 	    //var remoteVideoElement = document.getElementById("remoteVideo");
 	    //remoteVideoElement.src = window.URL.createObjectURL(localMediaStream);
 	    //remoteVideoElement.play();
@@ -42,66 +51,46 @@ function webrtcGetUserMedia(localVideoElement) {
 	navigator.getUserMedia(constraints, successCallback, errorCallback);
 }
 
-function webrtcSetupPeerConnection() {
+function createPeerConnection() {
+  	try {
+   		pc = new RTCPeerConnection(null);
+   		pc.onicecandidate = handleIceCandidate;
+   	 	pc.onaddstream = handleRemoteStreamAdded;
+   	 	pc.onremovestream = handleRemoteStreamRemoved;
+   
+   	 	console.log('Created RTCPeerConnnection');
+  	} catch (e) {
+   	 	console.log('Failed to create PeerConnection, exception: ' + e.message);
+   	 	alert('Cannot create RTCPeerConnection object.');
+      	return;
+	}
+}
 
-    if (localStream.getVideoTracks().length > 0) {
-    	console.log('Using video device: ' + localStream.getVideoTracks()[0].label);
+function handleIceCandidate(event) {
+  	console.log('handleIceCandidate event: ', event);
+  	if (event.candidate) {
+   	 	sendMessage({
+     		 type: 'candidate',
+      		label: event.candidate.sdpMLineIndex,
+      		id: event.candidate.sdpMid,
+      		candidate: event.candidate.candidate});
+  	} else {
+   	 	console.log('End of candidates.');
   	}
-  
-  if (localStream.getAudioTracks().length > 0) {
-    console.log('Using audio device: ' + localStream.getAudioTracks()[0].label);
-  }
-  
-  var servers = null;
-
-  localPeerConnection = new webkitRTCPeerConnection(servers);
-  console.log("Created local peer connection object localPeerConnection");
-  localPeerConnection.onicecandidate = gotLocalIceCandidate;
-
-  remotePeerConnection = new webkitRTCPeerConnection(servers);
-  console.log("Created remote peer connection object remotePeerConnection");
-  remotePeerConnection.onicecandidate = gotRemoteIceCandidate;
-  remotePeerConnection.onaddstream = gotRemoteStream;
-
-  localPeerConnection.addStream(localStream);
-  console.log("Added localStream to localPeerConnection");
-  localPeerConnection.createOffer(gotLocalDescription);
 }
 
-function gotLocalDescription(description){
-  localPeerConnection.setLocalDescription(description);
-  console.log("Offer from localPeerConnection: \n" + description.sdp);
-  remotePeerConnection.setRemoteDescription(description);
-  remotePeerConnection.createAnswer(gotRemoteDescription);
+function handleRemoteStreamAdded(event) {
+ 	 console.log('Remote stream added.');
+ 	 remoteVideo.src = window.URL.createObjectURL(event.stream);
+  	remoteStream = event.stream;
 }
 
-function gotRemoteDescription(description){
-  remotePeerConnection.setLocalDescription(description);
-  console.log("Answer from remotePeerConnection: \n" + description.sdp);
-  localPeerConnection.setRemoteDescription(description);
-}
-
-function gotRemoteStream(event){
-  remoteVideo.src = URL.createObjectURL(event.stream);
-  console.log("Received remote stream");
-}
-
-function gotLocalIceCandidate(event){
-  if (event.candidate) {
-    remotePeerConnection.addIceCandidate(new RTCIceCandidate(event.candidate));
-    console.log("Local ICE candidate: \n" + event.candidate.candidate);
-  }
-}
-
-function gotRemoteIceCandidate(event){
-  if (event.candidate) {
-    localPeerConnection.addIceCandidate(new RTCIceCandidate(event.candidate));
-    console.log("Remote ICE candidate: \n " + event.candidate.candidate);
-  }
+function handleRemoteStreamRemoved(event) {
+  	console.log('Remote stream removed. Event: ', event);
 }
 
 function hangup() {
-  console.log("Ending call");
-  localPeerConnection.close();
-  remotePeerConnection.close();
+  	console.log("Ending call");
+  	localPeerConnection.close();
+  	remotePeerConnection.close();
 }

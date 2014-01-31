@@ -22,6 +22,9 @@ var CHAT = {
 var QB_CALL = 'qbvideochat_call';
 var QB_ACCEPT = 'qbvideochat_acceptCall';
 var QB_REJECT = 'qbvideochat_rejectCall';
+var QB_OFFER = 'qbvideochat_offer';
+var QB_ANSWER = 'qbvideochat_answer';
+var QB_STOPCALL = 'qbvideochat_stopCall';
 
 var connection, userJID;
 

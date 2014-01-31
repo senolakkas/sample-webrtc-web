@@ -131,6 +131,7 @@ button:hover {
 
 #callToUserButton {
     float: left;
+    margin-left: 40px;
 }
 
 #localVideoContainer{
