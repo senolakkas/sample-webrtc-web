@@ -73,7 +73,7 @@ function getUserMedia(localVideoEl) {
 function createPeerConnection(remoteVideoEl) {
   	try {
    		pc = new RTCPeerConnection(null);
-   		pc.onicecandidate = onIceCandidate;
+   		pc.onicecandidate = onIceCandidateCallback;
    	 	pc.onaddstream = onRemoteStreamAdded;
    	 	pc.onremovestream = onRemoteStreamRemoved;
    	 	
@@ -90,8 +90,8 @@ function createPeerConnection(remoteVideoEl) {
 	}
 }
 
-function onIceCandidate(event) {
-  	traceW('onIceCandidate event: ' + event);
+function onIceCandidateCallback(event) {
+  	traceW('onIceCandidate, event: ' + event);
   	
   	if (event.candidate) {
   		traceW('candidate: ' + event.candidate.candidate);
