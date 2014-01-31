@@ -181,7 +181,7 @@ function onAnswer(fromUserID, sdpStringRepresentation){
 }
 
 function onCandidate(fromUserID, candidateRawData){
-    traceM('onCandidate: ' + fromUserID + ', candidate: ' + candidate);
+    traceM('onCandidate: ' + fromUserID + ', candidate: ' + candidateRawData);
     
     addCandidate(candidateRawData);
 }

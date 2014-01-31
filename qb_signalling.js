@@ -196,6 +196,7 @@ function onMessage(msg) {
 		onAnswer(fromUserID, body);
 		break;
 	case QB_CANDIDATE:
+		traceS('QB_CANDIDATE');
 		onCandidate(fromUserID, body);
 		break;
 	case QB_STOPCALL:
