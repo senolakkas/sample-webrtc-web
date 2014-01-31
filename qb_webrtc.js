@@ -113,7 +113,7 @@ function onRemoteStreamRemoved(event) {
 
 function setRemoteDescription(descriptionSDP, descriptionType){
 	var sessionDescription = new RTCSessionDescription({sdp: descriptionSDP, type: descriptionType});
-	trace('setRemoteDescription: ' + sessionDescription + ', pc:' + pc);
+	trace('setRemoteDescription: ' + descriptionSDP + ', pc:' + pc);
 	
    	pc.setRemoteDescription(sessionDescription,
    		function onSuccess(){
