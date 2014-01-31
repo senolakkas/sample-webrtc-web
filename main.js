@@ -199,9 +199,9 @@ function onStop(fromUserID, reason){
 function onLocalSessionDescription(sessionDescription){
 	console.log('onLocalSessionDescription');
 
-	if (description.type === 'offer') {
+	if (sessionDescription.type === 'offer') {
 		offer(opponentID, sessionDescription);
-	}else if (description.type === 'answer') {
+	}else if (sessionDescription.type === 'answer') {
 		answer(opponentID, sessionDescription);
 	}
 }
