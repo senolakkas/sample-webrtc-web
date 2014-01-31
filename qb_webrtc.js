@@ -25,6 +25,7 @@ var pc;
   	- createOffer()
   	- createAnswer()
   	- addCandidate(candidateRawData)
+  	- setRemoteDescription(descriptionSDP, descriptionType)
 
   Public callbacks:
 	- onLocalSessionDescription(description)
@@ -105,6 +106,12 @@ function handleRemoteStreamAdded(event) {
 
 function handleRemoteStreamRemoved(event) {
   	console.log('Remote stream removed. Event: ', event);
+}
+
+function setRemoteDescription(descriptionSDP, descriptionType){
+	var sessionDescription = new RTCSessionDescription({sdp: descriptionSDP, type: descriptionType});
+	
+   	pc.setRemoteDescription(sessionDescription);
 }
 
 /*

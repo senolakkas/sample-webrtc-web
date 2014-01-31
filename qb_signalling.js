@@ -190,7 +190,6 @@ function onMessage(msg) {
 		onReject(fromUserID);
 		break;
 	case QB_OFFER:
-	    console.log('onoffer1');
 		onOffer(fromUserID, body);
 		break;
 	case QB_ANSWER:

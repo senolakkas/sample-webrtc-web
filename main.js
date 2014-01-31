@@ -169,8 +169,7 @@ function onOffer(fromUserID, sdpStringRepresentation){
     
     createPeerConnection();
     //
-    pc.setRemoteDescription(new RTCSessionDescription({sdp: sdpStringRepresentation, 
-                                                      type: 'offer'}));
+    setRemoteDescription(sdpStringRepresentation, 'offer');
     //
     createAnswer();
 }
@@ -178,8 +177,7 @@ function onOffer(fromUserID, sdpStringRepresentation){
 function onAnswer(fromUserID, sdpStringRepresentation){
     console.log('onAnswer: ' + fromUserID);
     
-    pc.setRemoteDescription(new RTCSessionDescription({sdp: sdpStringRepresentation, 
-                                                      type: 'answer'}));
+    setRemoteDescription(sdpStringRepresentation, 'answer');
 }
 
 function onCandidate(fromUserID, candidateRawData){
