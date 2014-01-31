@@ -7,7 +7,7 @@
  */
 
 var myName, opponentName;
-var opponentUserID;
+var opponentID;
 
 // Test users
 var TESTUSERS = {
@@ -85,7 +85,7 @@ function callToUser(){
 }
 
 function acceptCall(){
-    accept(opponentUserID);
+    accept(opponentID);
     
     $('#incomingCallControls').hide();
     
@@ -95,7 +95,7 @@ function acceptCall(){
 }
 
 function rejectCall(){
-    reject(opponentUserID);
+    reject(opponentID);
     
     $('#incomingCallControls').hide();
         
@@ -147,7 +147,7 @@ function onCall(fromUserID){
     
     $('#incomingCallAudio')[0].play();
     
-    opponentUserID = fromUserID;
+    opponentID = fromUserID;
 }
 
 function onAccept(fromUserID){
@@ -198,16 +198,16 @@ function onStop(fromUserID, reason){
  
 function onLocalSessionDescription(description){
 	if (description.type === 'offer') {
-		offer(opponentUserID, sessionDescription);
+		offer(opponentID, sessionDescription);
 	}else if (description.type === 'answer') {
-		answer(opponentUserID, sessionDescription);
+		answer(opponentID, sessionDescription);
 	}
 }
 
 function onCandidate(candidate){
   	
   	// Send ICE candidates to opponent
-	candidate(opponentUserID, {
+	candidate(opponentID, {
       					label: candidate.sdpMLineIndex,
       					   id: candidate.sdpMid,
       				candidate: candidate.candidate});
