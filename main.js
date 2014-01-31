@@ -182,9 +182,10 @@ function onAnswer(fromUserID, sdpStringRepresentation){
 
 function onCandidate(fromUserID, candidateData){
     traceM('onCandidate');
-    traceM('onCandidate: ' + fromUserID + ', candidate: ' + JSON.stringify(candidateData));
+    var jsonCandidate = JSON.parse(candidateData);
+    traceM('onCandidate: ' + fromUserID + ', candidate: ' + JSON.stringify(jsonCandidate));
     
-    addCandidate(candidateData);
+    addCandidate(jsonCandidate);
 }
 
 function onStop(fromUserID, reason){

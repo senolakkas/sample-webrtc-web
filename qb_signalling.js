@@ -196,7 +196,7 @@ function onMessage(msg) {
 		onAnswer(fromUserID, body);
 		break;
 	case QB_CANDIDATE:
-		onCandidate(fromUserID, JSON.parse(body));
+		onCandidate(fromUserID, body);
 		break;
 	case QB_STOPCALL:
 		onStop(fromUserID, body);
