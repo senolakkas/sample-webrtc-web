@@ -103,7 +103,7 @@ function sendAnswer(userID, sessionDescription) {
 
 function sendCandidate(userID, candidate) {
 	traceS('sendCandidate ' + userID + ', candidate: ' + JSON.stringify(candidate));
-    sendMessage(userID, QB_CANDIDATE, candidate);
+    sendMessage(userID, QB_CANDIDATE, JSON.stringify(candidate));
 }
 
 function stop(userID, reason) {
@@ -196,7 +196,6 @@ function onMessage(msg) {
 		onAnswer(fromUserID, body);
 		break;
 	case QB_CANDIDATE:
-		traceS('QB_CANDIDATE');
 		onCandidate(fromUserID, body);
 		break;
 	case QB_STOPCALL:
