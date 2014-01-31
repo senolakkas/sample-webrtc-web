@@ -110,6 +110,7 @@ function handleRemoteStreamRemoved(event) {
 
 function setRemoteDescription(descriptionSDP, descriptionType){
 	var sessionDescription = new RTCSessionDescription({sdp: descriptionSDP, type: descriptionType});
+	console.log('setRemoteDescription: ', sessionDescription);
 	
    	pc.setRemoteDescription(sessionDescription);
 }
