@@ -175,7 +175,7 @@ function onMessage(msg) {
     var elems = msg.getElementsByTagName('body');
     var body = elems[0];
          
-	console.log('onMessage: from ' + from + ',type: ' + type + ',body:' + Strophe.getText(body));
+	console.log('onMessage: from ' + from + ',type: ' + type);
          
 	fromUserID = from.split('-')[0];
 	
