@@ -86,6 +86,12 @@ function callToUser(){
 
 function acceptCall(){
     accept(opponentUserID);
+    
+    $('#incomingCallControls').hide();
+    
+    $('#incomingCallAudio')[0].pause();
+    
+    $('#remoteVideoContainer').show();
 }
 
 function rejectCall(){
