@@ -196,7 +196,9 @@ function onStop(fromUserID, reason){
  * WebRTC callbacks 
  */
  
-function onLocalSessionDescription(description){
+function onLocalSessionDescription(sessionDescription){
+	console.log('onLocalSessionDescription');
+
 	if (description.type === 'offer') {
 		offer(opponentID, sessionDescription);
 	}else if (description.type === 'answer') {
