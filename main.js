@@ -153,7 +153,8 @@ function onCall(fromUserID){
 function onAccept(fromUserID){
     console.log('onAccept: ' + fromUserID);
     
-    createPeerConnection();
+    var remoteVideo = document.getElementById("remoteVideo");
+    createPeerConnection(remoteVideo);
     //
     createOffer();
 }
@@ -167,11 +168,10 @@ function onReject(fromUserID){
 function onOffer(fromUserID, sdpStringRepresentation){
     console.log('onOffer: ' + fromUserID);
     
-    createPeerConnection();
+    var remoteVideo = document.getElementById("remoteVideo");
+    createPeerConnection(remoteVideo);
     //
     setRemoteDescription(sdpStringRepresentation, 'offer');
-    //
-    createAnswer();
 }
 
 function onAnswer(fromUserID, sdpStringRepresentation){
@@ -208,6 +208,13 @@ function onLocalSessionDescription(sessionDescription){
 	}else if (sessionDescription.type === 'answer') {
 		sendAnswer(opponentID, sdpStringRepresentation);
 	}
+}
+
+function onAddedRemoteDescription(sessionDescription){
+    //
+    if(sessionDescription.type === 'offer'){
+    	createAnswer();
+    }
 }
 
 function onCandidate(candidate){

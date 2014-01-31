@@ -15,13 +15,14 @@ var sdpConstraints = {'mandatory': {
   'OfferToReceiveVideo':true }
 };
  
-var localStream;
+var localStream, remoteStream;
+var localVideoElement, remoteVideoElement;
 var pc;
 
 /*
   Public methods:
-  	- getUserMedia(localVideoElement)
-  	- createPeerConnection()
+  	- getUserMedia(localVideoEl)
+  	- createPeerConnection(remoteVideoEl)
   	- createOffer()
   	- createAnswer()
   	- addCandidate(candidateRawData)
@@ -30,14 +31,15 @@ var pc;
   Public callbacks:
 	- onLocalSessionDescription(description)
 	- onCandidate(candidate)
+	- onAddedRemoteDescription(sessionDescription)
  */
 
 
 /*
  * GetUserMedia 
  */
-function getUserMedia(localVideoElement) {
-    console.log("webrtcGetUserMedia....");
+function getUserMedia(localVideoEl) {
+    trace("webrtcGetUserMedia....");
 
 	navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
@@ -46,23 +48,19 @@ function getUserMedia(localVideoElement) {
 	var constraints = {video: true, audio: true};
 
 	function successCallback(localMediaStream) {
-	    console.log("navigator.getUserMedia success");
+	    trace("getUserMedia Success");
 	
-	    // save local stream
+	    // save local stream & video element
 	    localStream = localMediaStream;
+	    localVideoElement = localVideoEl;
 
         // play own stream
 	    localVideoElement.src = window.URL.createObjectURL(localMediaStream);
 	    localVideoElement.play();
-	    
-	    // test
-	    //var remoteVideoElement = document.getElementById("remoteVideo");
-	    //remoteVideoElement.src = window.URL.createObjectURL(localMediaStream);
-	    //remoteVideoElement.play();
 	}
 
 	function errorCallback(error){
-	   console.log("navigator.getUserMedia error: ", error);
+	   trace("getUserMedia error: ", error);
 	}
 
     // Get User media
@@ -72,59 +70,70 @@ function getUserMedia(localVideoElement) {
 /*
  * RTCPeerConnection creation
  */
-function createPeerConnection() {
+function createPeerConnection(remoteVideoEl) {
   	try {
    		pc = new RTCPeerConnection(null);
-   		pc.onicecandidate = handleIceCandidate;
-   	 	pc.onaddstream = handleRemoteStreamAdded;
-   	 	pc.onremovestream = handleRemoteStreamRemoved;
+   		pc.onicecandidate = onIceCandidate;
+   	 	pc.onaddstream = onRemoteStreamAdded;
+   	 	pc.onremovestream = onRemoteStreamRemoved;
    	 	
    	 	pc.addStream(localStream);
+   	 	
+   	 	// save remote video element
+   	 	remoteVideoElement = remoteVideoEl;
    
-   	 	console.log('Created RTCPeerConnnection');
+   	 	trace('Created RTCPeerConnnection');
   	} catch (e) {
-   	 	console.log('Failed to create PeerConnection, exception: ' + e.message);
+   	 	trace('Failed to create PeerConnection, exception: ' + e.message);
    	 	alert('Cannot create RTCPeerConnection object.');
       	return;
 	}
 }
 
-function handleIceCandidate(event) {
-  	console.log('handleIceCandidate event: ', event);
+function onIceCandidate(event) {
+  	trace('onIceCandidate event: ', event);
+  	
   	if (event.candidate) {
   		onCandidate(event.candidate);
   	} else {
-   	 	console.log('End of candidates.');
+   	 	trace('No candidates');
   	}
 }
 
-function handleRemoteStreamAdded(event) {
- 	 console.log('Remote stream added.');
- 	 remoteVideo.src = window.URL.createObjectURL(event.stream);
-  	 remoteStream = event.stream;
+function onRemoteStreamAdded(event) {
+ 	trace('Stream added');
+ 	
+ 	remoteVideoElement.src = window.URL.createObjectURL(event.stream);
+  	remoteStream = event.stream;
 }
 
-function handleRemoteStreamRemoved(event) {
-  	console.log('Remote stream removed. Event: ', event);
+function onRemoteStreamRemoved(event) {
+  	trace('Stream removed. Event: ', event);
 }
 
 function setRemoteDescription(descriptionSDP, descriptionType){
 	var sessionDescription = new RTCSessionDescription({sdp: descriptionSDP, type: descriptionType});
-	console.log('setRemoteDescription: ' + sessionDescription + ', pc:' + pc);
+	trace('setRemoteDescription: ' + sessionDescription + ', pc:' + pc);
 	
-   	pc.setRemoteDescription(sessionDescription);
+   	pc.setRemoteDescription(sessionDescription,
+   		function onSuccess(){
+            onAddedRemoteDescription(sessionDescription);
+  		},function onError(error){
+  			trace('setRemoteDescription error: ' + error);
+  		}
+  	);
 }
 
 /*
  * Offer/Answer 
  */ 
 function createOffer() {
-  	console.log('Creating offer to peer...');
+  	trace('Creating offer to peer...');
   	pc.createOffer(sessionDescriptionSuccessCallback, createOfferFailureCallback);
 }
 
 function createAnswer() {
-  	console.log('Creating answer to peer...');
+  	trace('Creating answer to peer...');
   	pc.createAnswer(sessionDescriptionSuccessCallback, createAnswerFailureCallback, sdpConstraints);
 }
 
@@ -132,19 +141,23 @@ function sessionDescriptionSuccessCallback(sessionDescription) {
   	// Set Opus as the preferred codec in SDP if Opus is present.
   	sessionDescription.sdp = preferOpus(sessionDescription.sdp);
   	
-  	pc.setLocalDescription(sessionDescription);
- 	
- 	console.log('sessionDescriptionSuccessCallback: ' + sessionDescription);
+  	trace('sessionDescriptionSuccessCallback: ' + sessionDescription);
   	
-  	onLocalSessionDescription(sessionDescription);
+  	pc.setLocalDescription(sessionDescription, 
+  		function onSuccess(){
+  			onLocalSessionDescription(sessionDescription);
+  		},function onError(error){
+  			trace('setLocalDescription error: ' + error);
+  		}
+  	);
 }
 
 function createOfferFailureCallback(event){
-  	console.log('createOffer() error: ', event);
+  	trace('createOffer() error: ', event);
 }
 
 function createAnswerFailureCallback(event){
-  	console.log('createAnswer() error: ', event);
+  	trace('createAnswer() error: ', event);
 }
 
 /*
@@ -162,7 +175,7 @@ function addCandidate(candidateRawData){
  * Cleanup 
  */ 
 function hangup() {
-  	console.log("Closed RTC");
+  	trace("Closed RTC");
   	pc.close();
   	pc = null;
 }
@@ -245,4 +258,8 @@ function setDefaultCodec(mLine, payload) {
     }
   }
   return newLine.join(' ');
+}
+
+function trace(text) {
+ 	 console.log("[qb_webrtc]: " + text);
 }
