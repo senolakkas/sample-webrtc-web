@@ -15,9 +15,13 @@ var sdpConstraints = {'mandatory': {
   'OfferToReceiveVideo':true }
 };
  
-var localStream, localPeerConnection, remotePeerConnection;
+var localStream;
+var pc;
 
 
+/*
+ * GetUserMedia 
+ */
 function webrtcGetUserMedia(localVideoElement) {
     console.log("webrtcGetUserMedia....");
 
@@ -51,12 +55,17 @@ function webrtcGetUserMedia(localVideoElement) {
 	navigator.getUserMedia(constraints, successCallback, errorCallback);
 }
 
+/*
+ * RTCPeerConnection creation
+ */
 function createPeerConnection() {
   	try {
    		pc = new RTCPeerConnection(null);
    		pc.onicecandidate = handleIceCandidate;
    	 	pc.onaddstream = handleRemoteStreamAdded;
    	 	pc.onremovestream = handleRemoteStreamRemoved;
+   	 	
+   	 	pc.addStream(localStream);
    
    	 	console.log('Created RTCPeerConnnection');
   	} catch (e) {
@@ -69,6 +78,7 @@ function createPeerConnection() {
 function handleIceCandidate(event) {
   	console.log('handleIceCandidate event: ', event);
   	if (event.candidate) {
+  	    // Send ICE candidates to opponent
    	 	sendMessage({
      		 type: 'candidate',
       		label: event.candidate.sdpMLineIndex,
@@ -82,11 +92,42 @@ function handleIceCandidate(event) {
 function handleRemoteStreamAdded(event) {
  	 console.log('Remote stream added.');
  	 remoteVideo.src = window.URL.createObjectURL(event.stream);
-  	remoteStream = event.stream;
+  	 remoteStream = event.stream;
 }
 
 function handleRemoteStreamRemoved(event) {
   	console.log('Remote stream removed. Event: ', event);
+}
+
+/*
+ * Offer/Answer 
+ */ 
+function doOffer() {
+  	console.log('Sending offer to peer');
+  	pc.createOffer(sessionDescriptionSuccessCallback, createOfferFailureCallback);
+}
+
+function doAnswer() {
+  	console.log('Sending answer to peer.');
+  	pc.createAnswer(sessionDescriptionSuccessCallback, createAnswerFailureCallback, sdpConstraints);
+}
+
+function sessionDescriptionSuccessCallback(sessionDescription) {
+  	// Set Opus as the preferred codec in SDP if Opus is present.
+  	sessionDescription.sdp = preferOpus(sessionDescription.sdp);
+  	pc.setLocalDescription(sessionDescription);
+ 	
+ 	console.log('setLocalAndSendMessage sending message' , sessionDescription);
+  	
+  	sendMessage(sessionDescription);
+}
+
+function createOfferFailureCallback(event){
+  	console.log('createOffer() error: ', event);
+}
+
+function createAnswerFailureCallback(event){
+  	console.log('createAnswer() error: ', event);
 }
 
 function hangup() {

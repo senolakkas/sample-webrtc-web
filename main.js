@@ -27,8 +27,6 @@ var WIDGET_HEIGHT = $('body').height();
 
 /*------------------- DOM is ready -------------------------*/
 $(document).ready(function(){
-	$.ajaxSetup({ cache: true });
-	
 	$('#auth').show();
 	//
 	$('#connecting').hide();
@@ -52,6 +50,9 @@ $(document).ready(function(){
 	});
 });
 
+/*
+ * Actions 
+ */
 function authQB(user) {
     $('#auth').hide().next('#connecting').show();
 	$('#wrap').addClass('connect_message');
@@ -79,6 +80,27 @@ function authQB(user) {
 	connect(params); // qb_signalling.js
 }
 
+function callToUser(){
+   call(opponentID);
+}
+
+function acceptCall(){
+    accept(opponentUserID);
+    
+    startSetupConnection();
+}
+
+function rejectCall(){
+    reject(opponentUserID);
+    
+    $('#incomingCallControls').hide();
+        
+    $('#incomingCallAudio')[0].pause()
+}
+
+/*
+ * Signalling 
+ */
 function onConnectionFailed(error) {
     console.log('onConnectionFailed: ' + error);
  
@@ -136,24 +158,25 @@ function onReject(fromUserID){
     alert("Call rejected");
 }
 
-function callToUser(){
-   call(opponentID);
+function onOffer(fromUserID, description){
+    console.log('onOffer: ' + fromUserID + ', description: ' + description);
 }
 
-function acceptCall(){
-    accept(opponentUserID);
-    
-    startSetupConnection();
+function onAnswer(fromUserID, description){
+    console.log('onAnswer: ' + fromUserID + ', description: ' + description);
 }
 
-function rejectCall(){
-    reject(opponentUserID);
-    
-    $('#incomingCallControls').hide();
-        
-    $('#incomingCallAudio')[0].pause()
+function onCandidate(fromUserID, candidate){
+    console.log('onCandidate: ' + fromUserID + ', candidate: ' + candidate);
 }
 
+function onStop(fromUserID, reason){
+    console.log('onStop: ' + fromUserID + ', reason: ' + reason);
+}
+
+/*
+ * WebRTC methods 
+ */
 function startSetupConnection(){
-
+    createPeerConnection();
 }

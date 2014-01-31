@@ -24,10 +24,25 @@ var QB_ACCEPT = 'qbvideochat_acceptCall';
 var QB_REJECT = 'qbvideochat_rejectCall';
 var QB_OFFER = 'qbvideochat_offer';
 var QB_ANSWER = 'qbvideochat_answer';
+var QB_CANDIDATE = 'qbvideochat_candidate';
 var QB_STOPCALL = 'qbvideochat_stopCall';
 
 var connection, userJID;
 
+
+/*
+ * Public interface. In additional to next public methods there are next callbacks:
+   	- onConnectionSuccess(user_id)
+	- onConnectionFailed(error)
+	- onCall(fromUserID)
+	- onAccept(fromUserID)
+	- onReject(fromUserID)
+	- onOffer(fromUserID, description)
+	- onAnswer(fromUserID, description)
+	- onCandidate(fromUserID, candidate)
+	- onStop(fromUserID, reason)
+ */
+ 
 function connect(params){
 	// Init QB application
 	//
@@ -49,6 +64,37 @@ function connect(params){
 	});
 }
 
+function call(userID) {
+    sendMessage(userID, QB_CALL, null);
+}
+
+function accept(userID) {
+    sendMessage(userID, QB_ACCEPT, null);
+}
+
+function reject(userID) {
+    sendMessage(userID, QB_REJECT, null);
+}
+
+function offer(userID) {
+    sendMessage(userID, QB_OFFER, null);
+}
+
+function answer(userID) {
+    sendMessage(userID, QB_ANSWER, null);
+}
+
+function candidate(userID) {
+    sendMessage(userID, QB_CANDIDATE, null);
+}
+
+function stop(userID) {
+    sendMessage(userID, QB_STOPCALL, null);
+}
+
+/*
+ * Transport layer 
+ */
 function xmppConnect(user_id, password) {
 	connection = new Strophe.Connection(CHAT.bosh_url);
 	connection.rawInput = rawInput;
@@ -124,6 +170,18 @@ function onMessage(msg) {
 	case QB_REJECT:
 		onReject(fromUserID);
 		break;
+	case QB_OFFER:
+		onOffer(fromUserID, description);
+		break;
+	case QB_ANSWER:
+		onAnswer(fromUserID, description);
+		break;
+	case QB_CANDIDATE:
+		onCandidate(fromUserID, candidate);
+		break;
+	case QB_STOPCALL:
+		onStop(fromUserID, reason);
+		break;
 	}
 
     // we must return true to keep the handler alive.  
@@ -131,35 +189,18 @@ function onMessage(msg) {
     return true;
 }
 
-function call(userID) {
-    var opponentJID = userID + "-" + QBPARAMS.app_id + "@" + CHAT.server
-
-    var reply = $msg({to: opponentJID, 
-                     from: userJID, 
-                     type: QB_CALL})
-            .cnode(Strophe.xmlElement('body', ''));
-        
-    connection.send(reply);
-}
-
-function accept(userID) {
-    var opponentJID = userID + "-" + QBPARAMS.app_id + "@" + CHAT.server
+/*
+ * Helpers 
+ */
+function sendMessage(userID, type, data) {
+    var opponentJID = userID + "-" + QBPARAMS.app_id + "@" + CHAT.server;
+	var body = data == null ? '' : data;
     
     var reply = $msg({to: opponentJID, 
                      from: userJID, 
-                     type: QB_ACCEPT})
-            .cnode(Strophe.xmlElement('body', ''));
+                     type: type})
+            .cnode(Strophe.xmlElement('body', body));
         
     connection.send(reply);
 }
 
-function reject(userID) {
-    var opponentJID = userID + "-" + QBPARAMS.app_id + "@" + CHAT.server
-    
-    var reply = $msg({to: opponentJID, 
-                     from: userJID, 
-                     type: QB_REJECT})
-            .cnode(Strophe.xmlElement('body', ''));
-        
-    connection.send(reply);
-}
