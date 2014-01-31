@@ -37,7 +37,7 @@ var connection, userJID;
   	- reject(userID)
   	- offer(userID, sessionDescription)
   	- answer(userID, sessionDescription)
-  	- candidate(userID, candidate)
+  	- sendCandidate(userID, candidate)
   	- stop(userID, reason)
 
   Public callbacks:
@@ -96,7 +96,7 @@ function answer(userID, sessionDescription) {
     sendMessage(userID, QB_ANSWER, sessionDescription);
 }
 
-function candidate(userID, candidate) {
+function sendCandidate(userID, candidate) {
     sendMessage(userID, QB_CANDIDATE, candidate);
 }
 

@@ -209,7 +209,7 @@ function onLocalSessionDescription(sessionDescription){
 function onCandidate(candidate){
   	
   	// Send ICE candidates to opponent
-	candidate(opponentID, {
+	sendCandidate(opponentID, {
       					label: candidate.sdpMLineIndex,
       					   id: candidate.sdpMid,
       				candidate: candidate.candidate});
