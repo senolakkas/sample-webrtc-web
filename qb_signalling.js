@@ -35,10 +35,10 @@ var connection, userJID;
   	- call(userID)
   	- accept(userID)
   	- reject(userID)
-  	- offer(userID)
-  	- answer(userID)
-  	- candidate(userID)
-  	- stop(userID)
+  	- offer(userID, sessionDescription)
+  	- answer(userID, sessionDescription)
+  	- candidate(userID, candidate)
+  	- stop(userID, reason)
 
   Public callbacks:
    	- onConnectionSuccess(user_id)
@@ -88,20 +88,20 @@ function reject(userID) {
     sendMessage(userID, QB_REJECT, null);
 }
 
-function offer(userID) {
-    sendMessage(userID, QB_OFFER, null);
+function offer(userID, sessionDescription) {
+    sendMessage(userID, QB_OFFER, sessionDescription);
 }
 
-function answer(userID) {
-    sendMessage(userID, QB_ANSWER, null);
+function answer(userID, sessionDescription) {
+    sendMessage(userID, QB_ANSWER, sessionDescription);
 }
 
-function candidate(userID) {
-    sendMessage(userID, QB_CANDIDATE, null);
+function candidate(userID, candidate) {
+    sendMessage(userID, QB_CANDIDATE, candidate);
 }
 
-function stop(userID) {
-    sendMessage(userID, QB_STOPCALL, null);
+function stop(userID, reason) {
+    sendMessage(userID, QB_STOPCALL, reason);
 }
 
 /*
@@ -183,16 +183,16 @@ function onMessage(msg) {
 		onReject(fromUserID);
 		break;
 	case QB_OFFER:
-		onOffer(fromUserID, description);
+		onOffer(fromUserID, body);
 		break;
 	case QB_ANSWER:
-		onAnswer(fromUserID, description);
+		onAnswer(fromUserID, body);
 		break;
 	case QB_CANDIDATE:
-		onCandidate(fromUserID, candidate);
+		onCandidate(fromUserID, body);
 		break;
 	case QB_STOPCALL:
-		onStop(fromUserID, reason);
+		onStop(fromUserID, body);
 		break;
 	}
 

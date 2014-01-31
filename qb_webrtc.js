@@ -19,23 +19,23 @@ var localStream;
 var pc;
 
 /*
- * In additional to next public methods there are next callbacks:
-   	- onConnectionSuccess(user_id)
-	- onConnectionFailed(error)
-	- onCall(fromUserID)
-	- onAccept(fromUserID)
-	- onReject(fromUserID)
-	- onOffer(fromUserID, description)
-	- onAnswer(fromUserID, description)
-	- onCandidate(fromUserID, candidate)
-	- onStop(fromUserID, reason)
+  Public methods:
+  	- getUserMedia(localVideoElement)
+  	- createPeerConnection()
+  	- createOffer()
+  	- createAnswer()
+  	- addCandidate(candidateRawData)
+
+  Public callbacks:
+	- onLocalSessionDescription(description)
+	- onCandidate(candidate)
  */
 
 
 /*
  * GetUserMedia 
  */
-function webrtcGetUserMedia(localVideoElement) {
+function getUserMedia(localVideoElement) {
     console.log("webrtcGetUserMedia....");
 
 	navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
@@ -91,13 +91,7 @@ function createPeerConnection() {
 function handleIceCandidate(event) {
   	console.log('handleIceCandidate event: ', event);
   	if (event.candidate) {
-  	
-  	    // Send ICE candidates to opponent
-   	 	sendMessage({
-     		 type: 'candidate',
-      		label: event.candidate.sdpMLineIndex,
-      		id: event.candidate.sdpMid,
-      		candidate: event.candidate.candidate});
+  		onCandidate(event.candidate);
   	} else {
    	 	console.log('End of candidates.');
   	}
@@ -116,24 +110,25 @@ function handleRemoteStreamRemoved(event) {
 /*
  * Offer/Answer 
  */ 
-function doOffer() {
-  	console.log('Sending offer to peer');
-  	pc.createOffer(sessionDescriptionSuccessCallback, createOfferFailureCallback);
+function createOffer() {
+  	console.log('Creating offer to peer...');
+  	pc.createOffer(createOfferSuccessCallback, createOfferFailureCallback);
 }
 
-function doAnswer() {
-  	console.log('Sending answer to peer.');
+function createAnswer() {
+  	console.log('Creating answer to peer...');
   	pc.createAnswer(sessionDescriptionSuccessCallback, createAnswerFailureCallback, sdpConstraints);
 }
 
 function sessionDescriptionSuccessCallback(sessionDescription) {
   	// Set Opus as the preferred codec in SDP if Opus is present.
   	sessionDescription.sdp = preferOpus(sessionDescription.sdp);
+  	
   	pc.setLocalDescription(sessionDescription);
  	
- 	console.log('setLocalAndSendMessage sending message' , sessionDescription);
+ 	console.log('sessionDescriptionSuccessCallback: ' + sessionDescription);
   	
-  	sendMessage(sessionDescription);
+  	onLocalSessionDescription(sessionDescription);
 }
 
 function createOfferFailureCallback(event){
@@ -144,8 +139,102 @@ function createAnswerFailureCallback(event){
   	console.log('createAnswer() error: ', event);
 }
 
+/*
+ * ICE 
+ */ 
+function addCandidate(candidateRawData){
+	var candidate = new RTCIceCandidate({
+     	sdpMLineIndex: candidateRawData.label,
+      		candidate: candidateRawData.candidate
+    });
+    pc.addIceCandidate(candidate);
+}
+
+/*
+ * Cleanup 
+ */ 
 function hangup() {
-  	console.log("Ending call");
-  	localPeerConnection.close();
-  	remotePeerConnection.close();
+  	console.log("Closed RTC");
+  	pc.close();
+  	pc = null;
+}
+
+
+/*
+ * Helpers 
+ */ 
+ 
+// Set Opus as the default audio codec if it's present.
+function preferOpus(sdp) {
+  var sdpLines = sdp.split('\r\n');
+  var mLineIndex;
+  // Search for m line.
+  for (var i = 0; i < sdpLines.length; i++) {
+      if (sdpLines[i].search('m=audio') !== -1) {
+        mLineIndex = i;
+        break;
+      }
+  }
+  if (mLineIndex === null) {
+    return sdp;
+  }
+
+  // If Opus is available, set it as the default in m line.
+  for (i = 0; i < sdpLines.length; i++) {
+    if (sdpLines[i].search('opus/48000') !== -1) {
+      var opusPayload = extractSdp(sdpLines[i], /:(\d+) opus\/48000/i);
+      if (opusPayload) {
+        sdpLines[mLineIndex] = setDefaultCodec(sdpLines[mLineIndex], opusPayload);
+      }
+      break;
+    }
+  }
+
+  // Remove CN in m line and sdp.
+  sdpLines = removeCN(sdpLines, mLineIndex);
+
+  sdp = sdpLines.join('\r\n');
+  return sdp;
+}
+
+// Strip CN from sdp before CN constraints is ready.
+function removeCN(sdpLines, mLineIndex) {
+  var mLineElements = sdpLines[mLineIndex].split(' ');
+  // Scan from end for the convenience of removing an item.
+  for (var i = sdpLines.length-1; i >= 0; i--) {
+    var payload = extractSdp(sdpLines[i], /a=rtpmap:(\d+) CN\/\d+/i);
+    if (payload) {
+      var cnPos = mLineElements.indexOf(payload);
+      if (cnPos !== -1) {
+        // Remove CN payload from m line.
+        mLineElements.splice(cnPos, 1);
+      }
+      // Remove CN line in sdp
+      sdpLines.splice(i, 1);
+    }
+  }
+
+  sdpLines[mLineIndex] = mLineElements.join(' ');
+  return sdpLines;
+}
+
+function extractSdp(sdpLine, pattern) {
+  var result = sdpLine.match(pattern);
+  return result && result.length === 2 ? result[1] : null;
+}
+
+// Set the selected codec to the first in m line.
+function setDefaultCodec(mLine, payload) {
+  var elements = mLine.split(' ');
+  var newLine = [];
+  var index = 0;
+  for (var i = 0; i < elements.length; i++) {
+    if (index === 3) { // Format of media starts from the fourth.
+      newLine[index++] = payload; // Put target payload to the first.
+    }
+    if (elements[i] !== payload) {
+      newLine[index++] = elements[i];
+    }
+  }
+  return newLine.join(' ');
 }

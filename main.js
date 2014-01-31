@@ -86,8 +86,6 @@ function callToUser(){
 
 function acceptCall(){
     accept(opponentUserID);
-    
-    startSetupConnection();
 }
 
 function rejectCall(){
@@ -126,7 +124,7 @@ function onConnectionSuccess(user_id) {
     
     // start local video
     var localVideo = document.getElementById("localVideo");
-    webrtcGetUserMedia(localVideo);
+    getUserMedia(localVideo);
 }
 
 function onConnectionDisconnected(){
@@ -149,7 +147,9 @@ function onCall(fromUserID){
 function onAccept(fromUserID){
     console.log('onAccept: ' + fromUserID);
     
-    startSetupConnection();
+    createPeerConnection();
+    //
+    createOffer();
 }
 
 function onReject(fromUserID){
@@ -160,23 +160,50 @@ function onReject(fromUserID){
 
 function onOffer(fromUserID, description){
     console.log('onOffer: ' + fromUserID + ', description: ' + description);
+    
+    createPeerConnection();
+    //
+    pc.setRemoteDescription(new RTCSessionDescription(description));
+    //
+    createAnswer();
 }
 
 function onAnswer(fromUserID, description){
     console.log('onAnswer: ' + fromUserID + ', description: ' + description);
+    
+    pc.setRemoteDescription(new RTCSessionDescription(description));
 }
 
-function onCandidate(fromUserID, candidate){
+function onCandidate(fromUserID, candidateRawData){
     console.log('onCandidate: ' + fromUserID + ', candidate: ' + candidate);
+    
+    addCandidate(candidateRawData);
 }
 
 function onStop(fromUserID, reason){
     console.log('onStop: ' + fromUserID + ', reason: ' + reason);
+    
+    hangup();
 }
 
 /*
- * WebRTC methods 
+ * WebRTC callbacks 
  */
-function startSetupConnection(){
-    createPeerConnection();
+ 
+function onLocalSessionDescription(description){
+	if (description.type === 'offer') {
+		offer(opponentUserID, sessionDescription);
+	}else if (description.type === 'answer') {
+		answer(opponentUserID, sessionDescription);
+	}
 }
+
+function onCandidate(candidate){
+  	
+  	// Send ICE candidates to opponent
+	candidate(opponentUserID, {
+      					label: candidate.sdpMLineIndex,
+      					   id: candidate.sdpMid,
+      				candidate: candidate.candidate});
+}
+
