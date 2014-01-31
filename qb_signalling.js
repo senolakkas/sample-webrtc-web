@@ -35,8 +35,8 @@ var connection, userJID;
   	- call(userID)
   	- accept(userID)
   	- reject(userID)
-  	- sendOffer(userID, sessionDescription)
-  	- sendAnswer(userID, sessionDescription)
+  	- sendOffer(userID, sdpStringRepresentation)
+  	- sendAnswer(userID, sdpStringRepresentation)
   	- sendCandidate(userID, candidate)
   	- stop(userID, reason)
 
@@ -77,30 +77,37 @@ function connect(params){
 }
 
 function call(userID) {
+	trace('call ' + userID);
     sendMessage(userID, QB_CALL, null);
 }
 
 function accept(userID) {
+	trace('accept ' + userID);
     sendMessage(userID, QB_ACCEPT, null);
 }
 
 function reject(userID) {
+	trace('reject ' + userID);
     sendMessage(userID, QB_REJECT, null);
 }
 
 function sendOffer(userID, sessionDescription) {
+	trace('sendOffer ' + userID);
     sendMessage(userID, QB_OFFER, sessionDescription);
 }
 
 function sendAnswer(userID, sessionDescription) {
+	trace('sendAnswer ' + userID);
     sendMessage(userID, QB_ANSWER, sessionDescription);
 }
 
 function sendCandidate(userID, candidate) {
+	trace('sendCandidate ' + userID);
     sendMessage(userID, QB_CANDIDATE, candidate);
 }
 
 function stop(userID, reason) {
+	trace('stop ' + userID);
     sendMessage(userID, QB_STOPCALL, reason);
 }
 
@@ -214,5 +221,9 @@ function sendMessage(userID, type, data) {
             .cnode(Strophe.xmlElement('body', body));
         
     connection.send(reply);
+}
+
+function trace(text) {
+ 	 console.log("[qb_signalling]: " + text);
 }
 

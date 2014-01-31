@@ -164,20 +164,22 @@ function onReject(fromUserID){
     alert("Call rejected");
 }
 
-function onOffer(fromUserID, description){
+function onOffer(fromUserID, sdpStringRepresentation){
     console.log('onOffer: ' + fromUserID + ', description: ' + description);
     
     createPeerConnection();
     //
-    pc.setRemoteDescription(new RTCSessionDescription(description));
+    pc.setRemoteDescription(new RTCSessionDescription({sdp: sdpStringRepresentation, 
+                                                      type: 'offer'}));
     //
     createAnswer();
 }
 
-function onAnswer(fromUserID, description){
+function onAnswer(fromUserID, sdpStringRepresentation){
     console.log('onAnswer: ' + fromUserID + ', description: ' + description);
     
-    pc.setRemoteDescription(new RTCSessionDescription(description));
+    pc.setRemoteDescription(new RTCSessionDescription({sdp: sdpStringRepresentation, 
+                                                      type: 'answer'}));
 }
 
 function onCandidate(fromUserID, candidateRawData){
@@ -199,12 +201,14 @@ function onStop(fromUserID, reason){
 function onLocalSessionDescription(sessionDescription){
 	console.log('onLocalSessionDescription');
 
-	return;
+	// Send only string representation of sdp
+	// http://www.w3.org/TR/webrtc/#rtcsessiondescription-class
+	var sdpStringRepresentation = sessionDescription.sdp;
 
 	if (sessionDescription.type === 'offer') {
-		sendOffer(opponentID, sessionDescription);
+		sendOffer(opponentID, sdpStringRepresentation);
 	}else if (sessionDescription.type === 'answer') {
-		sendAnswer(opponentID, sessionDescription);
+		sendAnswer(opponentID, sdpStringRepresentation);
 	}
 }
 
