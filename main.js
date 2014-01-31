@@ -180,10 +180,10 @@ function onAnswer(fromUserID, sdpStringRepresentation){
     setRemoteDescription(sdpStringRepresentation, 'answer');
 }
 
-function onCandidate(fromUserID, candidateRawData){
-    traceM('onCandidate: ' + fromUserID + ', candidate: ' + candidateRawData);
+function onCandidate(fromUserID, candidateData){
+    traceM('onCandidate: ' + fromUserID + ', candidate: ' + JSON.stringify(candidateData));
     
-    addCandidate(candidateRawData);
+    addCandidate(candidateData);
 }
 
 function onStop(fromUserID, reason){
