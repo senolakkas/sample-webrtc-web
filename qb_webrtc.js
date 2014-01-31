@@ -94,8 +94,8 @@ function onIceCandidate(event) {
   	trace('onIceCandidate event: ', event);
   	
   	if (event.candidate) {
-  		trace('candidates: ' + event.candidate);
-  		//onCandidate(event.candidate);
+  		trace('candidate: ' + event.candidate.candidate);
+  		onIceCandidate(event.candidate);
   	} else {
    	 	trace('No candidates');
   	}

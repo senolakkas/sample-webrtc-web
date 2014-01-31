@@ -217,7 +217,7 @@ function onAddedRemoteDescription(sessionDescription){
     }
 }
 
-function onCandidate(candidate){
+function onIceCandidate(candidate){
   	
   	// Send ICE candidates to opponent
 	sendCandidate(opponentID, {
