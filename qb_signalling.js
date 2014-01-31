@@ -173,7 +173,7 @@ function onMessage(msg) {
     var from = msg.getAttribute('from');
     var type = msg.getAttribute('type');
     var elems = msg.getElementsByTagName('body');
-    var body = elems[0];
+    var body = Strophe.getText(elems[0]);
          
 	console.log('onMessage: from ' + from + ',type: ' + type);
          
