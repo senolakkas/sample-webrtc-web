@@ -165,7 +165,7 @@ function onReject(fromUserID){
 }
 
 function onOffer(fromUserID, sdpStringRepresentation){
-    console.log('onOffer: ' + fromUserID + ', description: ' + description);
+    console.log('onOffer: ' + fromUserID);
     
     createPeerConnection();
     //
@@ -176,7 +176,7 @@ function onOffer(fromUserID, sdpStringRepresentation){
 }
 
 function onAnswer(fromUserID, sdpStringRepresentation){
-    console.log('onAnswer: ' + fromUserID + ', description: ' + description);
+    console.log('onAnswer: ' + fromUserID);
     
     pc.setRemoteDescription(new RTCSessionDescription({sdp: sdpStringRepresentation, 
                                                       type: 'answer'}));
