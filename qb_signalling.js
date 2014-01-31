@@ -35,8 +35,8 @@ var connection, userJID;
   	- call(userID)
   	- accept(userID)
   	- reject(userID)
-  	- offer(userID, sessionDescription)
-  	- answer(userID, sessionDescription)
+  	- sendOffer(userID, sessionDescription)
+  	- sendAnswer(userID, sessionDescription)
   	- sendCandidate(userID, candidate)
   	- stop(userID, reason)
 
@@ -88,11 +88,11 @@ function reject(userID) {
     sendMessage(userID, QB_REJECT, null);
 }
 
-function offer(userID, sessionDescription) {
+function sendOffer(userID, sessionDescription) {
     sendMessage(userID, QB_OFFER, sessionDescription);
 }
 
-function answer(userID, sessionDescription) {
+function sendAnswer(userID, sessionDescription) {
     sendMessage(userID, QB_ANSWER, sessionDescription);
 }
 

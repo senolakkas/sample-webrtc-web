@@ -200,9 +200,9 @@ function onLocalSessionDescription(sessionDescription){
 	console.log('onLocalSessionDescription');
 
 	if (sessionDescription.type === 'offer') {
-		offer(opponentID, sessionDescription);
+		sendOffer(opponentID, sessionDescription);
 	}else if (sessionDescription.type === 'answer') {
-		answer(opponentID, sessionDescription);
+		sendAnswer(opponentID, sessionDescription);
 	}
 }
 
