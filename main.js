@@ -181,6 +181,7 @@ function onAnswer(fromUserID, sdpStringRepresentation){
 }
 
 function onCandidate(fromUserID, candidateData){
+    traceM('onCandidate');
     traceM('onCandidate: ' + fromUserID + ', candidate: ' + JSON.stringify(candidateData));
     
     addCandidate(candidateData);
