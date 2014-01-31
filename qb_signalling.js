@@ -29,9 +29,18 @@ var QB_STOPCALL = 'qbvideochat_stopCall';
 
 var connection, userJID;
 
-
 /*
- * Public interface. In additional to next public methods there are next callbacks:
+  Public methods:
+  	- connect(params)
+  	- call(userID)
+  	- accept(userID)
+  	- reject(userID)
+  	- offer(userID)
+  	- answer(userID)
+  	- candidate(userID)
+  	- stop(userID)
+
+  Public callbacks:
    	- onConnectionSuccess(user_id)
 	- onConnectionFailed(error)
 	- onCall(fromUserID)
@@ -43,6 +52,9 @@ var connection, userJID;
 	- onStop(fromUserID, reason)
  */
  
+/*
+ * Public interface
+ */
 function connect(params){
 	// Init QB application
 	//

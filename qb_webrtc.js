@@ -18,6 +18,19 @@ var sdpConstraints = {'mandatory': {
 var localStream;
 var pc;
 
+/*
+ * In additional to next public methods there are next callbacks:
+   	- onConnectionSuccess(user_id)
+	- onConnectionFailed(error)
+	- onCall(fromUserID)
+	- onAccept(fromUserID)
+	- onReject(fromUserID)
+	- onOffer(fromUserID, description)
+	- onAnswer(fromUserID, description)
+	- onCandidate(fromUserID, candidate)
+	- onStop(fromUserID, reason)
+ */
+
 
 /*
  * GetUserMedia 
@@ -78,6 +91,7 @@ function createPeerConnection() {
 function handleIceCandidate(event) {
   	console.log('handleIceCandidate event: ', event);
   	if (event.candidate) {
+  	
   	    // Send ICE candidates to opponent
    	 	sendMessage({
      		 type: 'candidate',
