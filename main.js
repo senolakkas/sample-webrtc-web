@@ -106,7 +106,7 @@ function rejectCall(){
  * Signalling 
  */
 function onConnectionFailed(error) {
-    console.log('onConnectionFailed: ' + error);
+    traceM('onConnectionFailed: ' + error);
  
 	$('#connecting, #chat').hide().prev('#auth').show();
 	$('#wrap').removeClass('connect_message');
@@ -134,14 +134,14 @@ function onConnectionSuccess(user_id) {
 }
 
 function onConnectionDisconnected(){
-    console.log('onConnectionDisconnected');
+    traceM('onConnectionDisconnected');
     
     $('.chat-content').html('');
     $('#chat, #qb_login_form').hide().prevAll('#auth, #buttons').show();
 }
 
 function onCall(fromUserID){
-    console.log('onCall: ' + fromUserID);
+    traceM('onCall: ' + fromUserID);
     
     $('#incomingCallControls').show();
     
@@ -151,7 +151,7 @@ function onCall(fromUserID){
 }
 
 function onAccept(fromUserID){
-    console.log('onAccept: ' + fromUserID);
+    traceM('onAccept: ' + fromUserID);
     
     var remoteVideo = document.getElementById("remoteVideo");
     createPeerConnection(remoteVideo);
@@ -160,13 +160,13 @@ function onAccept(fromUserID){
 }
 
 function onReject(fromUserID){
-    console.log('onReject: ' + fromUserID);
+    traceM('onReject: ' + fromUserID);
     
     alert("Call rejected");
 }
 
 function onOffer(fromUserID, sdpStringRepresentation){
-    console.log('onOffer: ' + fromUserID);
+    traceM('onOffer: ' + fromUserID);
     
     var remoteVideo = document.getElementById("remoteVideo");
     createPeerConnection(remoteVideo);
@@ -175,19 +175,19 @@ function onOffer(fromUserID, sdpStringRepresentation){
 }
 
 function onAnswer(fromUserID, sdpStringRepresentation){
-    console.log('onAnswer: ' + fromUserID);
+    traceM('onAnswer: ' + fromUserID);
     
     setRemoteDescription(sdpStringRepresentation, 'answer');
 }
 
 function onCandidate(fromUserID, candidateRawData){
-    console.log('onCandidate: ' + fromUserID + ', candidate: ' + candidate);
+    traceM('onCandidate: ' + fromUserID + ', candidate: ' + candidate);
     
     addCandidate(candidateRawData);
 }
 
 function onStop(fromUserID, reason){
-    console.log('onStop: ' + fromUserID + ', reason: ' + reason);
+    traceM('onStop: ' + fromUserID + ', reason: ' + reason);
     
     hangup();
 }
@@ -195,9 +195,8 @@ function onStop(fromUserID, reason){
 /*
  * WebRTC callbacks 
  */
- 
 function onLocalSessionDescription(sessionDescription){
-	console.log('onLocalSessionDescription');
+	traceM('onLocalSessionDescription');
 
 	// Send only string representation of sdp
 	// http://www.w3.org/TR/webrtc/#rtcsessiondescription-class
@@ -226,3 +225,9 @@ function onIceCandidate(candidate){
       				candidate: candidate.candidate});
 }
 
+/*
+ * Helpers 
+ */
+function traceM(text) {
+ 	 console.log("[main]: " + text);
+}

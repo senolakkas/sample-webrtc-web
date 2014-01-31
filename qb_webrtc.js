@@ -39,7 +39,7 @@ var pc;
  * GetUserMedia 
  */
 function getUserMedia(localVideoEl) {
-    trace("webrtcGetUserMedia....");
+    traceW("webrtcGetUserMedia....");
 
 	navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
@@ -48,7 +48,7 @@ function getUserMedia(localVideoEl) {
 	var constraints = {video: true, audio: true};
 
 	function successCallback(localMediaStream) {
-	    trace("getUserMedia Success");
+	    traceW("getUserMedia Success");
 	
 	    // save local stream & video element
 	    localStream = localMediaStream;
@@ -60,7 +60,7 @@ function getUserMedia(localVideoEl) {
 	}
 
 	function errorCallback(error){
-	   trace("getUserMedia error: ", error);
+	   traceW("getUserMedia error: ", error);
 	}
 
     // Get User media
@@ -82,45 +82,45 @@ function createPeerConnection(remoteVideoEl) {
    	 	// save remote video element
    	 	remoteVideoElement = remoteVideoEl;
    
-   	 	trace('Created RTCPeerConnnection');
+   	 	traceW('Created RTCPeerConnnection');
   	} catch (e) {
-   	 	trace('Failed to create PeerConnection, exception: ' + e.message);
+   	 	traceW('Failed to create PeerConnection, exception: ' + e.message);
    	 	alert('Cannot create RTCPeerConnection object.');
       	return;
 	}
 }
 
 function onIceCandidate(event) {
-  	trace('onIceCandidate event: ' + event);
+  	traceW('onIceCandidate event: ' + event);
   	
   	if (event.candidate) {
-  		trace('candidate: ' + event.candidate.candidate);
+  		traceW('candidate: ' + event.candidate.candidate);
   		onIceCandidate(event.candidate);
   	} else {
-   	 	trace('No candidates');
+   	 	traceW('No candidates');
   	}
 }
 
 function onRemoteStreamAdded(event) {
- 	trace('Stream added');
+ 	traceW('Stream added');
  	
  	remoteVideoElement.src = window.URL.createObjectURL(event.stream);
   	remoteStream = event.stream;
 }
 
 function onRemoteStreamRemoved(event) {
-  	trace('Stream removed. Event: ', event);
+  	traceW('Stream removed. Event: ', event);
 }
 
 function setRemoteDescription(descriptionSDP, descriptionType){
 	var sessionDescription = new RTCSessionDescription({sdp: descriptionSDP, type: descriptionType});
-	trace('setRemoteDescription: ' + descriptionSDP + ', pc:' + pc);
+	traceW('setRemoteDescription: ' + descriptionSDP + ', pc:' + pc);
 	
    	pc.setRemoteDescription(sessionDescription,
    		function onSuccess(){
             onAddedRemoteDescription(sessionDescription);
   		},function onError(error){
-  			trace('setRemoteDescription error: ' + error);
+  			traceW('setRemoteDescription error: ' + error);
   		}
   	);
 }
@@ -129,12 +129,12 @@ function setRemoteDescription(descriptionSDP, descriptionType){
  * Offer/Answer 
  */ 
 function createOffer() {
-  	trace('Creating offer to peer...');
+  	traceW('Creating offer to peer...');
   	pc.createOffer(sessionDescriptionSuccessCallback, createOfferFailureCallback);
 }
 
 function createAnswer() {
-  	trace('Creating answer to peer...');
+  	traceW('Creating answer to peer...');
   	pc.createAnswer(sessionDescriptionSuccessCallback, createAnswerFailureCallback, sdpConstraints);
 }
 
@@ -142,23 +142,23 @@ function sessionDescriptionSuccessCallback(sessionDescription) {
   	// Set Opus as the preferred codec in SDP if Opus is present.
   	sessionDescription.sdp = preferOpus(sessionDescription.sdp);
   	
-  	trace('sessionDescriptionSuccessCallback: ' + sessionDescription);
+  	traceW('sessionDescriptionSuccessCallback: ' + sessionDescription);
   	
   	pc.setLocalDescription(sessionDescription, 
   		function onSuccess(){
   			onLocalSessionDescription(sessionDescription);
   		},function onError(error){
-  			trace('setLocalDescription error: ' + error);
+  			traceW('setLocalDescription error: ' + error);
   		}
   	);
 }
 
 function createOfferFailureCallback(event){
-  	trace('createOffer() error: ', event);
+  	traceW('createOffer() error: ', event);
 }
 
 function createAnswerFailureCallback(event){
-  	trace('createAnswer() error: ', event);
+  	traceW('createAnswer() error: ', event);
 }
 
 /*
@@ -176,7 +176,7 @@ function addCandidate(candidateRawData){
  * Cleanup 
  */ 
 function hangup() {
-  	trace("Closed RTC");
+  	traceW("Closed RTC");
   	pc.close();
   	pc = null;
 }
@@ -261,6 +261,6 @@ function setDefaultCodec(mLine, payload) {
   return newLine.join(' ');
 }
 
-function trace(text) {
+function traceW(text) {
  	 console.log("[qb_webrtc]: " + text);
 }

@@ -77,37 +77,37 @@ function connect(params){
 }
 
 function call(userID) {
-	trace('call ' + userID);
+	traceS('call ' + userID);
     sendMessage(userID, QB_CALL, null);
 }
 
 function accept(userID) {
-	trace('accept ' + userID);
+	traceS('accept ' + userID);
     sendMessage(userID, QB_ACCEPT, null);
 }
 
 function reject(userID) {
-	trace('reject ' + userID);
+	traceS('reject ' + userID);
     sendMessage(userID, QB_REJECT, null);
 }
 
 function sendOffer(userID, sessionDescription) {
-	trace('sendOffer ' + userID);
+	traceS('sendOffer ' + userID);
     sendMessage(userID, QB_OFFER, sessionDescription);
 }
 
 function sendAnswer(userID, sessionDescription) {
-	trace('sendAnswer ' + userID);
+	traceS('sendAnswer ' + userID);
     sendMessage(userID, QB_ANSWER, sessionDescription);
 }
 
 function sendCandidate(userID, candidate) {
-	trace('sendCandidate ' + userID);
+	traceS('sendCandidate ' + userID);
     sendMessage(userID, QB_CANDIDATE, candidate);
 }
 
 function stop(userID, reason) {
-	trace('stop ' + userID);
+	traceS('stop ' + userID);
     sendMessage(userID, QB_STOPCALL, reason);
 }
 
@@ -120,10 +120,10 @@ function xmppConnect(user_id, password) {
 	connection.rawOutput = rawOutput;
 	connection.addHandler(onMessage, null, 'message', null, null,  null); 
  
-	console.log(connection);
+	traceS(connection);
 
 	userJID = user_id + "-" + QBPARAMS.app_id + "@" + CHAT.server;
-	console.log('Connecting to Chat: userJID=' + userJID + ', password=' + password);
+	traceS('Connecting to Chat: userJID=' + userJID + ', password=' + password);
 	
 	connection.connect(userJID, password, function (status) {
 		switch (status) {
@@ -161,11 +161,11 @@ function xmppConnect(user_id, password) {
 }
 
 function rawInput(data) {
-    console.log('RECV: ' + data);
+    traceS('RECV: ' + data);
 }
 
 function rawOutput(data) {
-    console.log('SENT: ' + data);
+    traceS('SENT: ' + data);
 }
 
 function onMessage(msg) {
@@ -175,7 +175,7 @@ function onMessage(msg) {
     var elems = msg.getElementsByTagName('body');
     var body = Strophe.getText(elems[0]);
          
-	console.log('onMessage: from ' + from + ',type: ' + type);
+	traceS('onMessage: from ' + from + ',type: ' + type);
          
 	fromUserID = from.split('-')[0];
 	
@@ -223,7 +223,7 @@ function sendMessage(userID, type, data) {
     connection.send(reply);
 }
 
-function trace(text) {
+function traceS(text) {
  	 console.log("[qb_signalling]: " + text);
 }
 
