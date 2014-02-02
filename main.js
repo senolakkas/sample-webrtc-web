@@ -181,9 +181,8 @@ function onAnswer(fromUserID, sdpStringRepresentation){
 }
 
 function onCandidate(fromUserID, candidateData){
-	var candidateDecoded = xmlDecode(candidateData);
-	traceM('onCandidate ' + candidateDecoded);
-    var jsonCandidate = JSON.parse(candidateDecoded);
+	traceM('onCandidate ' + candidateData);
+    var jsonCandidate = parseXMPPBody(candidateData);
     traceM('onCandidate ' + jsonCandidate);
     
     addCandidate(jsonCandidate);
@@ -220,12 +219,15 @@ function onAddedRemoteDescription(sessionDescription){
 }
 
 function onIceCandidate(candidate){
+
+    var iceData = {sdpMLineIndex: candidate.sdpMLineIndex,
+      					  sdpMid: candidate.sdpMid,
+      				   candidate: candidate.candidate}
+    
+    var iceDataAsmessage = Strophe.escapeNode(JSON.stringify(iceData));
   	
   	// Send ICE candidates to opponent
-	sendCandidate(opponentID, {
-      					label: candidate.sdpMLineIndex,
-      					   id: candidate.sdpMid,
-      				candidate: candidate.candidate});
+	sendCandidate(opponentID, iceDataAsmessage);
 }
 
 /*

@@ -102,8 +102,8 @@ function sendAnswer(userID, sessionDescription) {
 }
 
 function sendCandidate(userID, candidate) {
-	traceS('sendCandidate ' + userID + ', candidate: ' + JSON.stringify(candidate));
-    sendMessage(userID, QB_CANDIDATE, JSON.stringify(candidate));
+	traceS('sendCandidate ' + userID + ', candidate: ' + candidate);
+    sendMessage(userID, QB_CANDIDATE, candidate);
 }
 
 function stop(userID, reason) {
