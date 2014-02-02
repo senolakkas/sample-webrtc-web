@@ -232,7 +232,7 @@ function xmppTextToDictionary(data) {
 }
 
 function xmppDictionaryToText(data) {
-	return Strophe.escapeNode(JSON.stringify(iceData));
+	return Strophe.escapeNode(JSON.stringify(data));
 }
 
 function traceS(text) {
