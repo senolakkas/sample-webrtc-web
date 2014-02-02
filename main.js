@@ -181,9 +181,10 @@ function onAnswer(fromUserID, sdpStringRepresentation){
 }
 
 function onCandidate(fromUserID, candidateData){
-    traceM('onCandidate');
-    var jsonCandidate = JSON.parse(candidateData);
-    traceM('onCandidate: ' + fromUserID + ', candidate: ' + JSON.stringify(jsonCandidate));
+	var candidateDecoded = xmlDecode(candidateData);
+	traceM('onCandidate ' + candidateDecoded);
+    var jsonCandidate = JSON.parse(candidateDecoded);
+    traceM('onCandidate ' + jsonCandidate);
     
     addCandidate(jsonCandidate);
 }
