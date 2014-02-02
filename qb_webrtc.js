@@ -169,9 +169,9 @@ function createAnswerFailureCallback(event){
  */ 
 function addCandidate(candidateRawData){
 	var candidate = new RTCIceCandidate({
-     	sdpMLineIndex: candidateRawData.label,
+     	sdpMLineIndex: candidateRawData.sdpMLineIndex,
       		candidate: candidateRawData.candidate,
-      		   sdpMid: candidateRawData.id
+      		   sdpMid: candidateRawData.sdpMid
     });
     pc.addIceCandidate(candidate);
 }

@@ -223,7 +223,18 @@ function sendMessage(userID, type, data) {
     connection.send(reply);
 }
 
+function xmppTextToDictionary(data) {
+	try {
+		return $.parseJSON(Strophe.unescapeNode(data));
+	} catch(err) {
+		return Strophe.unescapeNode(data);
+	}
+}
+
+function xmppDictionaryToText(data) {
+	return Strophe.escapeNode(JSON.stringify(iceData));
+}
+
 function traceS(text) {
  	 console.log("[qb_signalling]: " + text);
 }
-

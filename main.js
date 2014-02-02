@@ -182,8 +182,8 @@ function onAnswer(fromUserID, sdpStringRepresentation){
 
 function onCandidate(fromUserID, candidateData){
 	traceM('onCandidate ' + candidateData);
-    var jsonCandidate = parseXMPPBody(candidateData);
-    traceM('onCandidate ' + jsonCandidate);
+    var jsonCandidate = xmppTextToDictionary(candidateData);
+    traceM('onCandidate ' + JSON.stringify(jsonCandidate));
     
     addCandidate(jsonCandidate);
 }
@@ -224,7 +224,7 @@ function onIceCandidate(candidate){
       					  sdpMid: candidate.sdpMid,
       				   candidate: candidate.candidate}
     
-    var iceDataAsmessage = Strophe.escapeNode(JSON.stringify(iceData));
+    var iceDataAsmessage = xmppDictionaryToText(iceData);
   	
   	// Send ICE candidates to opponent
 	sendCandidate(opponentID, iceDataAsmessage);
