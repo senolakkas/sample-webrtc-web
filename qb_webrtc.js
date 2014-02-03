@@ -108,6 +108,8 @@ function onRemoteStreamAdded(event) {
  	traceW('Stream added');
  	
  	remoteVideoElement.src = window.URL.createObjectURL(event.stream);
+ 	remoteVideoElement.play();
+ 	//
   	remoteStream = event.stream;
 }
 
