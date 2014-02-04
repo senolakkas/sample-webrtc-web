@@ -74,7 +74,7 @@ function getUserMedia(localVideoEl) {
  */
 function createPeerConnection(remoteVideoEl) {
   	try {
-   		pc = new RTCPeerConnection(null);
+   		pc = new RTCPeerConnection(pc_config);
    		pc.onicecandidate = onIceCandidateCallback;
    	 	pc.onaddstream = onRemoteStreamAdded;
    	 	pc.onremovestream = onRemoteStreamRemoved;
