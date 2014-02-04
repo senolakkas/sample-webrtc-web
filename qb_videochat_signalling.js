@@ -25,8 +25,6 @@ var QB_REJECT = 'qbvideochat_rejectCall';
 var QB_CANDIDATE = 'qbvideochat_candidate';
 var QB_STOPCALL = 'qbvideochat_stopCall';
 
-var connection, userJID;
-
 /*
   Public methods:
   	- connect({login: login, password: password})
@@ -48,22 +46,22 @@ var connection, userJID;
  
 function QBVideoChatSignaling(){
 
-	function xmppConnect(user_id, password) {
-		connection = new Strophe.Connection(CHAT.bosh_url);
-		connection.rawInput = rawInput;
-		connection.rawOutput = rawOutput;
-		connection.addHandler(onMessage, null, 'message', QB_CALL, null,  null);
-		connection.addHandler(onMessage, null, 'message', QB_ACCEPT, null,  null); 
-		connection.addHandler(onMessage, null, 'message', QB_REJECT, null,  null); 
-		connection.addHandler(onMessage, null, 'message', QB_CANDIDATE, null,  null);
-		connection.addHandler(onMessage, null, 'message', QB_STOPCALL, null,  null); 
+	this.xmppConnect = function(user_id, password) {
+		this.connection = new Strophe.Connection(CHAT.bosh_url);
+		this.connection.rawInput = this.rawInput;
+		this.connection.rawOutput = this.rawOutput;
+		this.connection.addHandler(this.onMessage, null, 'message', QB_CALL, null,  null);
+		this.connection.addHandler(this.onMessage, null, 'message', QB_ACCEPT, null,  null); 
+		this.connection.addHandler(this.onMessage, null, 'message', QB_REJECT, null,  null); 
+		this.connection.addHandler(this.onMessage, null, 'message', QB_CANDIDATE, null,  null);
+		this.connection.addHandler(this.onMessage, null, 'message', QB_STOPCALL, null,  null); 
  
 		traceS(connection);
 
-		userJID = user_id + "-" + QBPARAMS.app_id + "@" + CHAT.server;
+		this.userJID = user_id + "-" + QBPARAMS.app_id + "@" + CHAT.server;
 		traceS('Connecting to Chat: userJID=' + userJID + ', password=' + password);
 	
-		connection.connect(userJID, password, function (status) {
+		this.connection.connect(userJID, password, function (status) {
 			switch (status) {
 			case Strophe.Status.ERROR:
 				traceS('[Connection] Error');
@@ -96,6 +94,48 @@ function QBVideoChatSignaling(){
 				break;
 			}
 		});
+	}
+	
+	this.rawInput = function(data) {
+    	traceS('RECV: ' + data);
+	}
+
+	this.rawOutput = function(data) {
+    	traceS('SENT: ' + data);
+	}	
+
+	this.onMessage = function(msg) {
+		var to = msg.getAttribute('to');
+		var from = msg.getAttribute('from');
+		var type = msg.getAttribute('type');
+		var elems = msg.getElementsByTagName('body');
+		var body = Strophe.getText(elems[0]);
+		 
+		traceS('onMessage: from ' + from + ',type: ' + type);
+		 
+		var fromUserID = from.split('-')[0];
+	
+		switch (type) {
+		case QB_CALL:
+			onCall(fromUserID, body);
+			break;
+		case QB_ACCEPT:
+			onAccept(fromUserID, body);
+			break;
+		case QB_REJECT:
+			onReject(fromUserID);
+			break;
+		case QB_CANDIDATE:
+			onCandidate(fromUserID, body);
+			break;
+		case QB_STOPCALL:
+			onStop(fromUserID, body);
+			break;
+		}
+
+		// we must return true to keep the handler alive.  
+		// returning false would remove it after it finishes.
+		return true;
 	}
 }
  
@@ -148,47 +188,7 @@ QBVideoChatSignaling.prototype.stop = function(userID, reason, sessionID) {
 
 
 
-function rawInput(data) {
-    traceS('RECV: ' + data);
-}
 
-function rawOutput(data) {
-    traceS('SENT: ' + data);
-}
-
-function onMessage(msg) {
-    var to = msg.getAttribute('to');
-    var from = msg.getAttribute('from');
-    var type = msg.getAttribute('type');
-    var elems = msg.getElementsByTagName('body');
-    var body = Strophe.getText(elems[0]);
-         
-	traceS('onMessage: from ' + from + ',type: ' + type);
-         
-	fromUserID = from.split('-')[0];
-	
-	switch (type) {
-	case QB_CALL:
-		onCall(fromUserID, body);
-		break;
-	case QB_ACCEPT:
-		onAccept(fromUserID, body);
-		break;
-	case QB_REJECT:
-		onReject(fromUserID);
-		break;
-	case QB_CANDIDATE:
-		onCandidate(fromUserID, body);
-		break;
-	case QB_STOPCALL:
-		onStop(fromUserID, body);
-		break;
-	}
-
-    // we must return true to keep the handler alive.  
-    // returning false would remove it after it finishes.
-    return true;
-}
 
 /*
  * Helpers 
