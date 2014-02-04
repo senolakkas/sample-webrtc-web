@@ -97,6 +97,9 @@ function createPeerConnection(remoteVideoEl) {
 
 function onIceCandidateCallback(event) {  
     var candidate = event.candidate;	
+    
+    traceW('iceGatheringState: ' + event.target.iceGatheringState);
+    
   	if (candidate) {
   		traceW('onIceCandidateCallback, candidate: ' + candidate.candidate + 
   			', sdpMLineIndex: ' + candidate.sdpMLineIndex + ', sdpMid: ' + candidate.sdpMid);
