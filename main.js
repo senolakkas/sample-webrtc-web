@@ -131,6 +131,9 @@ function onConnectionSuccess(user_id) {
     // start local video
     var localVideo = document.getElementById("localVideo");
     getUserMedia(localVideo);
+    
+    var remoteVideo = document.getElementById("remoteVideo");
+    createPeerConnection(remoteVideo);
 }
 
 function onConnectionDisconnected(){
