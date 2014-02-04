@@ -59,9 +59,6 @@ function getUserMedia(localVideoEl) {
         // play own stream
 	    localVideoElement.src = window.URL.createObjectURL(localMediaStream);
 	    localVideoElement.play();
-	    
-	        var remoteVideo = document.getElementById("remoteVideo");
-    createPeerConnection(remoteVideo);
 	}
 
 	function errorCallback(error){
