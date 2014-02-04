@@ -148,7 +148,7 @@ function createAnswer() {
 
 function sessionDescriptionSuccessCallback(sessionDescription) {
   	// Set Opus as the preferred codec in SDP if Opus is present.
-  	sessionDescription.sdp = preferOpus(sessionDescription.sdp);
+  	//sessionDescription.sdp = preferOpus(sessionDescription.sdp);
   	
   	traceW('sessionDescriptionSuccessCallback: ' + sessionDescription);
   	
