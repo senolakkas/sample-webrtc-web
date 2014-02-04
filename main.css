@@ -42,8 +42,6 @@ button:hover {
 	position:relative;
 	height:99%;
 	max-width:1366px;
-	border:1px solid #cacaca;
-	border-radius:5px;
 }
 #wrap.connect_message {
 	background:#fbfbfb;
