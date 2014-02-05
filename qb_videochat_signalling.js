@@ -37,6 +37,7 @@ var QB_STOPCALL = 'qbvideochat_stopCall';
   Public callbacks:
    	- onConnectionSuccess(user_id)
 	- onConnectionFailed(error)
+	- onConnectionDisconnected()
 	- onCall(fromUserID, sessionDescription)
 	- onAccept(fromUserID, sessionDescription)
 	- onReject(fromUserID)
@@ -70,24 +71,32 @@ function QBVideoChatSignaling(){
 				traceS('[Connection] Connecting');
 				break;
 			case Strophe.Status.CONNFAIL:
-				onConnectionFailed('[Connection] Failed to connect');
+				if (this.onConnectionFailed && typeof(this.onConnectionFailed) === "function") {
+					this.onConnectionFailed('[Connection] Failed to connect');
+				}
 				break;
 			case Strophe.Status.AUTHENTICATING:
 				traceS('[Connection] Authenticating');
 				break;
 			case Strophe.Status.AUTHFAIL:
-				onConnectionFailed('[Connection] Unauthorized');
+				if (this.onConnectionFailed && typeof(this.onConnectionFailed) === "function") {
+					this.onConnectionFailed('[Connection] Unauthorized');
+				}
 				break;
 			case Strophe.Status.CONNECTED:
 				traceS('[Connection] Connected');
-				onConnectionSuccess(user_id);
+				if (this.onConnectionSuccess && typeof(this.onConnectionSuccess) === "function") {
+					this.onConnectionSuccess(user_id);
+				}
 				break;
 			case Strophe.Status.DISCONNECTED:
 				traceS('[Connection] Disconnected');
 				break;
 			case Strophe.Status.DISCONNECTING:
 				traceS('[Connection] Disconnecting');
-				onConnectionDisconnected();
+				if (this.onConnectionDisconnected && typeof(this.onConnectionDisconnected) === "function") {
+					this.onConnectionDisconnected();
+				}
 				break;
 			case Strophe.Status.ATTACHED:
 				traceS('[Connection] Attached');
@@ -117,25 +126,59 @@ function QBVideoChatSignaling(){
 	
 		switch (type) {
 		case QB_CALL:
-			onCall(fromUserID, body);
+			if (this.onCall && typeof(this.onCall) === "function") {
+				this.onCall(fromUserID, body);
+			}
 			break;
 		case QB_ACCEPT:
-			onAccept(fromUserID, body);
+			if (this.onAccept && typeof(this.onAccept) === "function") {
+				this.onAccept(fromUserID, body);
+			}
 			break;
 		case QB_REJECT:
-			onReject(fromUserID);
+			if (this.onReject && typeof(this.onReject) === "function") {
+				this.onReject(fromUserID);
+			}
 			break;
 		case QB_CANDIDATE:
-			onCandidate(fromUserID, body);
+			if (this.onCandidate && typeof(this.onCandidate) === "function") {
+				this.onCandidate(fromUserID, body);
+			}
 			break;
 		case QB_STOPCALL:
-			onStop(fromUserID, body);
+			if (this.onStop && typeof(this.onStop) === "function") {
+				this.onStop(fromUserID, body);
+			}
 			break;
 		}
 
 		// we must return true to keep the handler alive.  
 		// returning false would remove it after it finishes.
 		return true;
+	}
+	
+	this.sendMessage = function(userID, type, data, sessionID) {
+		var opponentJID = userID + "-" + QBPARAMS.app_id + "@" + CHAT.server;
+		var body = data == null ? '' : data;
+	
+		var reply = $msg({to: opponentJID, 
+						 from: userJID, 
+						 type: type})
+				.cnode(Strophe.xmlElement('body', body));
+		
+		this.connection.send(reply);
+	}
+
+	this.xmppTextToDictionary = function(data) {
+		try {
+			return $.parseJSON(Strophe.unescapeNode(data));
+		} catch(err) {
+			return Strophe.unescapeNode(data);
+		}
+	}
+
+	this.xmppDictionaryToText = function(data) {
+		return Strophe.escapeNode(JSON.stringify(data));
 	}
 }
  
@@ -148,7 +191,9 @@ QBVideoChatSignaling.prototype.login = function (params){
 	// 
 	QB.createSession(params, function(err, result){
 		if (err) {
-			onConnectionFailed(err.detail);
+			if (this.onConnectionFailed && typeof(this.onConnectionFailed) === "function") {
+				this.onConnectionFailed(err.detail);
+			}
 
 		} else {
 			traceS(result);
@@ -186,37 +231,6 @@ QBVideoChatSignaling.prototype.stop = function(userID, reason, sessionID) {
 }
 
 
-
-
-
-
-/*
- * Helpers 
- */
-function sendMessage(userID, type, data, sessionID) {
-    var opponentJID = userID + "-" + QBPARAMS.app_id + "@" + CHAT.server;
-	var body = data == null ? '' : data;
-    
-    var reply = $msg({to: opponentJID, 
-                     from: userJID, 
-                     type: type})
-            .cnode(Strophe.xmlElement('body', body));
-        
-    connection.send(reply);
-}
-
-function xmppTextToDictionary(data) {
-	try {
-		return $.parseJSON(Strophe.unescapeNode(data));
-	} catch(err) {
-		return Strophe.unescapeNode(data);
-	}
-}
-
-function xmppDictionaryToText(data) {
-	return Strophe.escapeNode(JSON.stringify(data));
-}
-
 function traceS(text) {
- 	 console.log("[qb_videochat_signalling]: " + text);
+	console.log("[qb_videochat_signalling]: " + text);
 }
