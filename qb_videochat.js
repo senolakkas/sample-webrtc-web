@@ -17,7 +17,25 @@ var sdpConstraints = {'mandatory': {
 	'OfferToReceiveVideo':true }
 };
 
-function QBVideoChat(localStreamElement, remoteStreamElement, constraints){
+/*
+  Public methods:
+  	- call(userID)
+  	- accept(userID)
+  	- reject(userID)
+    - stop(userID)
+
+  Public callbacks:
+   	- onConnectionSuccess(user_id)
+	- onConnectionFailed(error)
+	- onConnectionDisconnected()
+	- onCall(fromUserID, sessionDescription)
+	- onAccept(fromUserID, sessionDescription)
+	- onReject(fromUserID)
+	- onCandidate(fromUserID, candidate)
+	- onStop(fromUserID, reason)
+ */
+
+function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signalingService){
 
     // save local & remote <video> elements
     this.localStreamElement = localStreamElement;
@@ -30,14 +48,12 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints){
     this.sessionID = new Date().getTime()/1000;
     traceVC("QBVideoChat INIT, sessionID: " + this.sessionID);
     
+    // Set signaling service
+    this.signalingService = signalingService;
     
-    // Logger
-    function traceVC(text) {
- 		console.log("[qb_videochat]: " + text);
-	}
     
     // MediaStream getUserMedia 
-	var getUserMedia = function () {
+	this.getUserMedia = function () {
 		traceVC("getUserMedia...");
 
 		navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
@@ -62,7 +78,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints){
 	}
 	
 	// RTCPeerConnection creation
-	var createRTCPeerConnection = function () {
+	this.createRTCPeerConnection = function () {
 		traceVC("createRTCPeerConnection...");
 		try {
 			this.pc = new RTCPeerConnection(pc_config);
@@ -81,7 +97,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints){
 	
 	
 	// onIceCandidate callback
-	function onIceCandidateCallback(event) {  
+	this.onIceCandidateCallback(event) {  
 		var candidate = event.candidate;	
 	
 		traceVC('iceGatheringState: ' + event.target.iceGatheringState);
@@ -97,7 +113,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints){
 	}
 
 	// onRemoteStreamAdded callback
-	function onRemoteStreamAddedCallback(event) {
+	this.onRemoteStreamAddedCallback(event) {
  		traceVC('Remote stream added: ' + event);
  	
  	 	// save remote stream
@@ -109,12 +125,12 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints){
 	}
 
 	// onRemoteStreamRemoved callback
-	function onRemoteStreamRemovedCallback(event) {
+	this.onRemoteStreamRemovedCallback(event) {
   		 traceVC('Remote stream removed: ' + event);
 	}
 	
 	// set Remote description
-	var setRemoteDescription = function (descriptionSDP, descriptionType){
+	this.setRemoteDescription = function (descriptionSDP, descriptionType){
 		var sessionDescription = new RTCSessionDescription({sdp: descriptionSDP, type: descriptionType});
 		traceVC('setRemoteDescription: ' + descriptionSDP + ', pc:' + pc);
 	
@@ -127,7 +143,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints){
 		);
 	}
 	
-	function onGetSessionDescriptionSuccessCallback(sessionDescription) {
+	this.onGetSessionDescriptionSuccessCallback = function(sessionDescription) {
 		traceVC('sessionDescriptionSuccessCallback: ' + sessionDescription);
 	
 		this.pc.setLocalDescription(sessionDescription, 
@@ -138,9 +154,9 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints){
 				var sdpStringRepresentation = sessionDescription.sdp;
 
 				if (sessionDescription.type === 'offer') {
-					call(opponentID, sdpStringRepresentation, this.sessionID); // qb_videochat_signaling.js
+					this.signalingService.call(opponentID, sdpStringRepresentation, this.sessionID);
 				}else if (sessionDescription.type === 'answer') {
-					accept(opponentID, sdpStringRepresentation, this.sessionID); // qb_videochat_signaling.js
+					this.signalingService.accept(opponentID, sdpStringRepresentation, this.sessionID);
 				}
 				
 			},function onError(error){
@@ -149,11 +165,11 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints){
 		);
 	}
 
-	function onCreateOfferFailureCallback(event){
+	this.onCreateOfferFailureCallback = function(event){
 		traceVC('createOffer() error: ', event);
 	}
 
-	function onCreateAnswerFailureCallback(event){
+	this.onCreateAnswerFailureCallback = function(event){
 		traceVC('createAnswer() error: ', event);
 	}
 	
@@ -172,11 +188,6 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints){
   		traceVC("Closed RTC");
   		this.pc.close();
   		this.pc = null;
-	}
-	
-	// Logger
-	this.traceW = function (text) {
- 	 	console.log("[qb_webrtc]: " + text);
 	}
 }
     
@@ -198,10 +209,15 @@ QBVideoChat.prototype.accept = function(userID) {
 
 // Reject call from user  
 QBVideoChat.prototype.reject = function(userID) {
-
+	this.signalingService.reject(userID, this.sessionID);
 }
 
 // Stap call with user
 QBVideoChat.prototype.stop = function(userID) {
+	this.signalingService.stops(userID, "manual", this.sessionID);
+}
 
+// Logger
+function traceVC(text) {
+	console.log("[qb_videochat]: " + text);
 }
