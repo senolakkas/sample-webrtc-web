@@ -95,7 +95,6 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 		}
 	}
 	
-	
 	// onIceCandidate callback
 	this.onIceCandidateCallback(event) {  
 		var candidate = event.candidate;	
@@ -103,10 +102,17 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 		traceVC('iceGatheringState: ' + event.target.iceGatheringState);
 	
 		if (candidate) {
-			traceVC('onIceCandidateCallback, candidate: ' + candidate.candidate + 
-				', sdpMLineIndex: ' + candidate.sdpMLineIndex + ', sdpMid: ' + candidate.sdpMid);
+			var iceData = {sdpMLineIndex: candidate.sdpMLineIndex,
+      					  		  sdpMid: candidate.sdpMid,
+      				   		   candidate: candidate.candidate}
+      				   		   
+      		traceVC('onIceCandidateCallback: ' + JSON.stringify(iceData));
 			
-			//onIceCandidate(candidate);
+    		var iceDataAsmessage = xmppDictionaryToText(iceData);
+  	
+  			// Send ICE candidate to opponent
+			this.signalingService.sendCandidate(this.opponentID, iceDataAsmessage, this.sessionID);
+
 		} else {
 			traceVC('No candidates');
 		}
@@ -136,7 +142,10 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 	
 		this.pc.setRemoteDescription(sessionDescription,
 			function onSuccess(){
-				//onAddedRemoteDescription(sessionDescription);
+				if(sessionDescription.type === 'offer'){
+  					traceVC('Creating answer to peer...');
+  					this.pc.createAnswer(onGetSessionDescriptionSuccessCallback, onCreateAnswerFailureCallback, sdpConstraints);
+  				}
 			},function onError(error){
 				traceVC('setRemoteDescription error: ' + error);
 			}
@@ -154,9 +163,9 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 				var sdpStringRepresentation = sessionDescription.sdp;
 
 				if (sessionDescription.type === 'offer') {
-					this.signalingService.call(opponentID, sdpStringRepresentation, this.sessionID);
+					this.signalingService.call(this.opponentID, sdpStringRepresentation, this.sessionID);
 				}else if (sessionDescription.type === 'answer') {
-					this.signalingService.accept(opponentID, sdpStringRepresentation, this.sessionID);
+					this.signalingService.accept(this.opponentID, sdpStringRepresentation, this.sessionID);
 				}
 				
 			},function onError(error){
@@ -195,6 +204,8 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 QBVideoChat.prototype.call = function(userID) {
 	traceVC("Call");
 	
+	this.opponentID = userID;
+	
 	traceVC('Creating offer to peer...');
   	this.pc.createOffer(onGetSessionDescriptionSuccessCallback, onCreateOfferFailureCallback);
 }
@@ -202,9 +213,11 @@ QBVideoChat.prototype.call = function(userID) {
 // Accept call from user 
 QBVideoChat.prototype.accept = function(userID) {
 	traceVC("Accept");
-
-  	traceVC('Creating answer to peer...');
-  	this.pc.createAnswer(onGetSessionDescriptionSuccessCallback, onCreateAnswerFailureCallback, sdpConstraints);
+	
+	this.opponentID = userID;
+	
+	// set remote description here
+	this.setRemoteDescription(this.potentialRemoteSessionDescription, "offer");
 }
 
 // Reject call from user  

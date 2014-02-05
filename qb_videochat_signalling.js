@@ -38,8 +38,8 @@ var QB_STOPCALL = 'qbvideochat_stopCall';
    	- onConnectionSuccess(user_id)
 	- onConnectionFailed(error)
 	- onConnectionDisconnected()
-	- onCall(fromUserID, sessionDescription)
-	- onAccept(fromUserID, sessionDescription)
+	- onCall(fromUserID, sessionDescription, sessionID)
+	- onAccept(fromUserID, sessionDescription, sessionID)
 	- onReject(fromUserID)
 	- onCandidate(fromUserID, candidate)
 	- onStop(fromUserID, reason)
@@ -127,12 +127,12 @@ function QBVideoChatSignaling(){
 		switch (type) {
 		case QB_CALL:
 			if (this.onCall && typeof(this.onCall) === "function") {
-				this.onCall(fromUserID, body);
+				this.onCall(fromUserID, body, sessionID);
 			}
 			break;
 		case QB_ACCEPT:
 			if (this.onAccept && typeof(this.onAccept) === "function") {
-				this.onAccept(fromUserID, body);
+				this.onAccept(fromUserID, body, sessionID);
 			}
 			break;
 		case QB_REJECT:
@@ -142,7 +142,8 @@ function QBVideoChatSignaling(){
 			break;
 		case QB_CANDIDATE:
 			if (this.onCandidate && typeof(this.onCandidate) === "function") {
-				this.onCandidate(fromUserID, body);
+			  	var jsonCandidate = xmppTextToDictionary(body);
+				this.onCandidate(fromUserID, jsonCandidate);
 			}
 			break;
 		case QB_STOPCALL:
