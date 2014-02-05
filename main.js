@@ -1,6 +1,6 @@
 /*
  * QuickBlox WebRTC Sample
- * version 0.1
+ * version 0.02
  *
  * Author: Igor Khomenko (igor@quickblox.com)
  *
@@ -25,6 +25,12 @@ var TESTUSERS = {
 var WIDGET_WIDTH = $('body').width();
 var WIDGET_HEIGHT = $('body').height();
 
+var localVideo, remoteVideo;
+
+var videoChatSignaling;
+var videoChat;
+
+
 /*------------------- DOM is ready -------------------------*/
 $(document).ready(function(){
 	$('#auth').show();
@@ -48,15 +54,34 @@ $(document).ready(function(){
 	$("#hangUp").click(function() {
 		recipientVideo.stop();
 	});
+	
+	localVideo = document.getElementById("localVideo");
+	remoteVideo = document.getElementById("remoteVideo");
 });
 
 /*
  * Actions 
  */
-function authQB(user) {
+function login(user) {
     $('#auth').hide().next('#connecting').show();
 	$('#wrap').addClass('connect_message');
+
 	
+	// Create signaling instance
+	//
+	videoChatSignaling = QBVideoChatSignaling();
+	
+	// set callbacks
+	videoChatSignaling.onConnectionSuccess = onConnectionSuccess;
+	videoChatSignaling.onConnectionFailed = onConnectionFailed;
+	videoChatSignaling.onConnectionDisconnected = onConnectionDisconnected;
+	videoChatSignaling.onCall = onCall;
+	videoChatSignaling.onAccept = onAccept;
+	videoChatSignaling.onReject = onReject;
+	videoChatSignaling.onCandidate = onCandidate;
+	
+	// Login To Chat
+	//
 	var login, password;
 	if (user == 1) {
 		login = TESTUSERS.login1;
@@ -75,47 +100,35 @@ function authQB(user) {
 		
 		opponentID = TESTUSERS.id1;
 	}
+	//
 	var params = {login: login, password: password};
-	
-	connect(params); // qb_signalling.js
+	videoChatSignaling.login(params);
 }
 
 function callToUser(){
-   call(opponentID);
+	videoChat.call(opponentID);
 }
 
-function acceptCall(){
-    accept(opponentID);
+function acceptCall(){    
+    videoChat.accept(opponentID);
     
     $('#incomingCallControls').hide();
-    
     $('#incomingCallAudio')[0].pause();
-    
     $('#remoteVideoContainer').show();
 }
 
 function rejectCall(){
-    reject(opponentID);
+    videoChat.reject(opponentID);
     
     $('#incomingCallControls').hide();
-        
     $('#incomingCallAudio')[0].pause()
 }
 
 /*
- * Signalling 
+ * Signalling callbacks
  */
-function onConnectionFailed(error) {
-    traceM('onConnectionFailed: ' + error);
- 
-	$('#connecting, #chat').hide().prev('#auth').show();
-	$('#wrap').removeClass('connect_message');
-	$('#qb_login_form input').addClass('error');
-}
-
 function onConnectionSuccess(user_id) {
     console.log('onConnectionSuccess');
-    
     
     $('#connecting').hide();
     $('#webrtc').show();
@@ -128,9 +141,17 @@ function onConnectionSuccess(user_id) {
     $('#localVideoContainer').show();
     $('#remoteVideoContainer').show();
     
-    // start local video
-    var localVideo = document.getElementById("localVideo");
-    getUserMedia(localVideo);
+    // Create video chat instance
+    videoChat = QBVideoChat(localVideo, remoteVideo, 
+							{video: true, audio: true}, videoChatSignaling);
+}
+
+function onConnectionFailed(error) {
+    traceM('onConnectionFailed: ' + error);
+ 
+	$('#connecting, #chat').hide().prev('#auth').show();
+	$('#wrap').removeClass('connect_message');
+	$('#qb_login_form input').addClass('error');
 }
 
 function onConnectionDisconnected(){
@@ -140,23 +161,20 @@ function onConnectionDisconnected(){
     $('#chat, #qb_login_form').hide().prevAll('#auth, #buttons').show();
 }
 
-function onCall(fromUserID){
+function onCall(fromUserID, sessionDescription, sessionID){
     traceM('onCall: ' + fromUserID);
     
+    videoChat.sessionID = sessionID;
+    videoChat.potentialRemoteSessionDescription = sessionDescription;
+    
     $('#incomingCallControls').show();
-    
     $('#incomingCallAudio')[0].play();
-    
-    opponentID = fromUserID;
 }
 
-function onAccept(fromUserID){
+function onAccept(fromUserID, sessionDescription, sessionID){
     traceM('onAccept: ' + fromUserID);
     
-    var remoteVideo = document.getElementById("remoteVideo");
-    createPeerConnection(remoteVideo);
-    //
-    createOffer();
+    videoChat.setRemoteDescription(sessionDescription, "answer"); //TODO: refactor this (hide)
 }
 
 function onReject(fromUserID){
@@ -165,70 +183,16 @@ function onReject(fromUserID){
     alert("Call rejected");
 }
 
-function onOffer(fromUserID, sdpStringRepresentation){
-    traceM('onOffer: ' + fromUserID);
-    
-    var remoteVideo = document.getElementById("remoteVideo");
-    createPeerConnection(remoteVideo);
-    //
-    setRemoteDescription(sdpStringRepresentation, 'offer');
-}
-
-function onAnswer(fromUserID, sdpStringRepresentation){
-    traceM('onAnswer: ' + fromUserID);
-    
-    setRemoteDescription(sdpStringRepresentation, 'answer');
-}
-
-function onCandidate(fromUserID, candidateData){
-	traceM('onCandidate ' + candidateData);
-    var jsonCandidate = xmppTextToDictionary(candidateData);
-    traceM('onCandidate ' + JSON.stringify(jsonCandidate));
-    
-    addCandidate(jsonCandidate);
+function onCandidate(fromUserID, candidate){
+	traceM('onCandidate ' + JSON.stringify(jsonCandidate));
+	
+    videoChat.addCandidate(candidate);
 }
 
 function onStop(fromUserID, reason){
     traceM('onStop: ' + fromUserID + ', reason: ' + reason);
-    
-    hangup();
 }
 
-/*
- * WebRTC callbacks 
- */
-function onLocalSessionDescription(sessionDescription){
-	traceM('onLocalSessionDescription');
-
-	// Send only string representation of sdp
-	// http://www.w3.org/TR/webrtc/#rtcsessiondescription-class
-	var sdpStringRepresentation = sessionDescription.sdp;
-
-	if (sessionDescription.type === 'offer') {
-		sendOffer(opponentID, sdpStringRepresentation);
-	}else if (sessionDescription.type === 'answer') {
-		sendAnswer(opponentID, sdpStringRepresentation);
-	}
-}
-
-function onAddedRemoteDescription(sessionDescription){
-    //
-    if(sessionDescription.type === 'offer'){
-    	createAnswer();
-    }
-}
-
-function onIceCandidate(candidate){
-
-    var iceData = {sdpMLineIndex: candidate.sdpMLineIndex,
-      					  sdpMid: candidate.sdpMid,
-      				   candidate: candidate.candidate}
-    
-    var iceDataAsmessage = xmppDictionaryToText(iceData);
-  	
-  	// Send ICE candidates to opponent
-	sendCandidate(opponentID, iceDataAsmessage);
-}
 
 /*
  * Helpers 
