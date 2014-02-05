@@ -96,7 +96,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 	}
 	
 	// onIceCandidate callback
-	this.onIceCandidateCallback(event) {  
+	this.onIceCandidateCallback = function(event) {  
 		var candidate = event.candidate;	
 	
 		traceVC('iceGatheringState: ' + event.target.iceGatheringState);
@@ -119,7 +119,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 	}
 
 	// onRemoteStreamAdded callback
-	this.onRemoteStreamAddedCallback(event) {
+	this.onRemoteStreamAddedCallback = function(event) {
  		traceVC('Remote stream added: ' + event);
  	
  	 	// save remote stream
@@ -131,7 +131,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 	}
 
 	// onRemoteStreamRemoved callback
-	this.onRemoteStreamRemovedCallback(event) {
+	this.onRemoteStreamRemovedCallback = function(event) {
   		 traceVC('Remote stream removed: ' + event);
 	}
 	
