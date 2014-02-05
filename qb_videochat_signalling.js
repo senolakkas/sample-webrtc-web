@@ -47,6 +47,15 @@ var QB_STOPCALL = 'qbvideochat_stopCall';
  
 function QBVideoChatSignaling(){
 
+	// set callbacks
+	this.onConnectionSuccess = null;
+	this.onConnectionFailed = null;
+	this.onConnectionDisconnected = null;
+	this.onCall = null;
+	this.onAccept = null;
+	this.onReject = null;
+	this.onCandidate = null;
+
 	this.xmppConnect = function(user_id, password) {
 		this.connection = new Strophe.Connection(CHAT.bosh_url);
 		this.connection.rawInput = this.rawInput;
