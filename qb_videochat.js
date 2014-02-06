@@ -52,12 +52,11 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
     // Set signaling service
     this.signalingService = signalingService;
     
+    var self = this;
     
     // MediaStream getUserMedia 
 	this.getUserMedia = function () {
 		traceVC("getUserMedia...");
-
-    	var self = this;
 
 		navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
@@ -87,12 +86,12 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 	this.createRTCPeerConnection = function () {
 		traceVC("createRTCPeerConnection...");
 		try {
-			this.pc = new RTCPeerConnection(pc_config);
-			this.pc.onicecandidate = onIceCandidateCallback;
-			this.pc.onaddstream = onRemoteStreamAddedCallback;
-			this.pc.onremovestream = onRemoteStreamRemovedCallback;
+			self.pc = new RTCPeerConnection(pc_config);
+			self.pc.onicecandidate = onIceCandidateCallback;
+			self.pc.onaddstream = onRemoteStreamAddedCallback;
+			self.pc.onremovestream = onRemoteStreamRemovedCallback;
 		
-			this.pc.addStream(this.localStream);
+			self.pc.addStream(self.localStream);
    
 			traceVC('Created RTCPeerConnnection');
 		} catch (e) {
