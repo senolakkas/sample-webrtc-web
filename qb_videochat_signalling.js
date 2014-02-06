@@ -57,7 +57,7 @@ function QBVideoChatSignaling(){
 		this.connection.addHandler(this.onMessage, null, 'message', QB_CANDIDATE, null,  null);
 		this.connection.addHandler(this.onMessage, null, 'message', QB_STOPCALL, null,  null); 
  
-		traceS(connection);
+		traceS(this.connection);
 
 		this.userJID = user_id + "-" + QBPARAMS.app_id + "@" + CHAT.server;
 		traceS('Connecting to Chat: userJID=' + userJID + ', password=' + password);
