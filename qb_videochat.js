@@ -164,7 +164,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 	this.onGetSessionDescriptionSuccessCallback = function(sessionDescription) {
 		traceVC('sessionDescriptionSuccessCallback: ' + sessionDescription);
 	
-		this.pc.setLocalDescription(sessionDescription, 
+		self.pc.setLocalDescription(sessionDescription, 
 			function onSuccess(){
 				
 				// Send only string representation of sdp
@@ -172,9 +172,9 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 				var sdpStringRepresentation = sessionDescription.sdp;
 
 				if (sessionDescription.type === 'offer') {
-					this.signalingService.call(this.opponentID, sdpStringRepresentation, this.sessionID);
+					self.signalingService.call(this.opponentID, sdpStringRepresentation, this.sessionID);
 				}else if (sessionDescription.type === 'answer') {
-					this.signalingService.accept(this.opponentID, sdpStringRepresentation, this.sessionID);
+					self.signalingService.accept(this.opponentID, sdpStringRepresentation, this.sessionID);
 				}
 				
 			},function onError(error){
