@@ -134,7 +134,7 @@ function QBVideoChatSignaling(){
 		var elems = msg.getElementsByTagName('body');
 		var body = Strophe.getText(elems[0]);
 		 
-		traceS('onMessage: from ' + from + ',type: ' + type + self);
+		traceS('onMessage: from ' + from + ',type: ' + type + self.onCall);
 		 
 		var fromUserID = from.split('-')[0];
 	
