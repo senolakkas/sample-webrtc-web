@@ -60,7 +60,7 @@ function QBVideoChatSignaling(){
 		traceS(this.connection);
 
 		this.userJID = user_id + "-" + QBPARAMS.app_id + "@" + CHAT.server;
-		traceS('Connecting to Chat: userJID=' + userJID + ', password=' + password);
+		traceS('Connecting to Chat: userJID=' + this.userJID + ', password=' + password);
 	
 		this.connection.connect(userJID, password, function (status) {
 			switch (status) {
