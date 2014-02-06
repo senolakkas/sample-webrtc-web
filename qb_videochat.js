@@ -54,6 +54,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
     
     
     // MediaStream getUserMedia 
+    var self = this.
 	this.getUserMedia = function () {
 		traceVC("getUserMedia...");
 
@@ -63,11 +64,11 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 			traceVC("getUserMedia successCallback");
 	
 			// save local stream
-			this.localStream = localMediaStream;
+			self.localStream = localMediaStream;
 
 			// play own stream
-			this.localStreamElement.src = window.URL.createObjectURL(localMediaStream);
-			this.localStreamElement.play();
+			self.localStreamElement.src = window.URL.createObjectURL(localMediaStream);
+			self.localStreamElement.play();
 		}
 
 		function errorCallback(error){
