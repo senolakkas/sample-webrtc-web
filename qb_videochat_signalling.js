@@ -55,6 +55,8 @@ function QBVideoChatSignaling(){
  	this.onAccept = null;
  	this.onReject = null;
  	this.onCandidate = null;
+ 	
+ 	var self = this; 
 
 	this.xmppConnect = function(user_id, password) {
 		this.connection = new Strophe.Connection(CHAT.bosh_url);
@@ -71,7 +73,7 @@ function QBVideoChatSignaling(){
 		this.userJID = user_id + "-" + QBPARAMS.app_id + "@" + CHAT.server;
 		traceS('Connecting to Chat: userJID=' + this.userJID + ', password=' + password);
 	
-		var self = this; 
+
 		this.connection.connect(this.userJID, password, function (status) {
 			switch (status) {
 			case Strophe.Status.ERROR:
@@ -138,8 +140,8 @@ function QBVideoChatSignaling(){
 	
 		switch (type) {
 		case QB_CALL:
-			if (this.onCall && typeof(this.onCall) === "function") {
-				this.onCall(fromUserID, body, sessionID);
+			if (self.onCall && typeof(self.onCall) === "function") {
+				self.onCall(fromUserID, body, sessionID);
 			}
 			break;
 		case QB_ACCEPT:
