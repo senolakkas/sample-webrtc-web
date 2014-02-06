@@ -54,9 +54,10 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
     
     
     // MediaStream getUserMedia 
-    var self = this.
 	this.getUserMedia = function () {
 		traceVC("getUserMedia...");
+
+    	var self = this;
 
 		navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
