@@ -69,7 +69,7 @@ function login(user) {
 	
 	// Create signaling instance
 	//
-	videoChatSignaling = QBVideoChatSignaling();
+	videoChatSignaling = new QBVideoChatSignaling();
 	
 	// set callbacks
 	videoChatSignaling.onConnectionSuccess = onConnectionSuccess;
@@ -142,7 +142,7 @@ function onConnectionSuccess(user_id) {
     $('#remoteVideoContainer').show();
     
     // Create video chat instance
-    videoChat = QBVideoChat(localVideo, remoteVideo, 
+    videoChat = new QBVideoChat(localVideo, remoteVideo, 
 							{video: true, audio: true}, videoChatSignaling);
 }
 
