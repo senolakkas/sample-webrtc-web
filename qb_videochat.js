@@ -120,7 +120,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
     		var iceDataAsmessage = self.signalingService.xmppDictionaryToText(iceData);
   	
   			// Send ICE candidate to opponent
-			this.signalingService.sendCandidate(this.opponentID, iceDataAsmessage, this.sessionID);
+			self.signalingService.sendCandidate(this.opponentID, iceDataAsmessage, this.sessionID);
 
 		} else {
 			traceVC('No candidates');
