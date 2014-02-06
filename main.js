@@ -128,7 +128,7 @@ function rejectCall(){
  * Signalling callbacks
  */
 function onConnectionSuccess(user_id) {
-    console.log('onConnectionSuccess');
+   	traceM('onConnectionSuccess');
     
     $('#connecting').hide();
     $('#webrtc').show();
@@ -140,6 +140,10 @@ function onConnectionSuccess(user_id) {
     
     $('#localVideoContainer').show();
     $('#remoteVideoContainer').show();
+    
+    traceM(localVideo);
+    traceM(remoteVideo);
+    traceM(videoChatSignaling);
     
     // Create video chat instance
     videoChat = new QBVideoChat(localVideo, remoteVideo, 

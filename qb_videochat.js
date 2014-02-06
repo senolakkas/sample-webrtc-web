@@ -36,7 +36,8 @@ var sdpConstraints = {'mandatory': {
  */
 
 function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signalingService){
-
+ 	traceVC("QBVideoChat INIT");
+ 	
     // save local & remote <video> elements
     this.localStreamElement = localStreamElement;
     this.remoteStreamElement = remoteStreamElement;
@@ -46,7 +47,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
     
     // VideoChat session ID
     this.sessionID = new Date().getTime()/1000;
-    traceVC("QBVideoChat INIT, sessionID: " + this.sessionID);
+    traceVC("sessionID: " + this.sessionID);
     
     // Set signaling service
     this.signalingService = signalingService;
