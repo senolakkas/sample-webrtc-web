@@ -96,6 +96,7 @@ function QBVideoChatSignaling(onConnectionSuccess){
 				break;
 			case Strophe.Status.CONNECTED:
 				traceS('[Connection] Connected');
+				 traceS('callback: ' + this.onConnectionSuccess);
 				if (this.onConnectionSuccess && typeof(this.onConnectionSuccess) === "function") {
 					this.onConnectionSuccess(user_id);
 				}else{
