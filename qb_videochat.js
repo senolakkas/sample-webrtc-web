@@ -91,9 +91,9 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 		traceVC("createRTCPeerConnection...");
 		try {
 			this.pc = new RTCPeerConnection(pc_config);
-			this.pc.onicecandidate = onIceCandidateCallback;
-			this.pc.onaddstream = onRemoteStreamAddedCallback;
-			this.pc.onremovestream = onRemoteStreamRemovedCallback;
+			this.pc.onicecandidate = this.onIceCandidateCallback;
+			this.pc.onaddstream = this.onRemoteStreamAddedCallback;
+			this.pc.onremovestream = this.onRemoteStreamRemovedCallback;
 		
 			this.pc.addStream(this.localStream);
    
