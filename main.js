@@ -72,7 +72,7 @@ function login(user) {
 	videoChatSignaling = new QBVideoChatSignaling();
 	
 	// set callbacks
-	videoChatSignaling.onConnectionSuccess = onConnectionSuccess;
+	videoChatSignaling.onConnectionSuccess = onConnectionSuccessr;
 	videoChatSignaling.onConnectionFailed = onConnectionFailed;
 	videoChatSignaling.onConnectionDisconnected = onConnectionDisconnected;
 	videoChatSignaling.onCall = onCall;
@@ -127,7 +127,7 @@ function rejectCall(){
 /*
  * Signalling callbacks
  */
-function onConnectionSuccess(user_id) {
+function onConnectionSuccessr(user_id) {
     console.log('onConnectionSuccess');
     
     $('#connecting').hide();
