@@ -45,10 +45,10 @@ var QB_STOPCALL = 'qbvideochat_stopCall';
 	- onStop(fromUserID, reason)
  */
  
-function QBVideoChatSignaling(onConnectionSuccess){
+function QBVideoChatSignaling(){
 
 	// set callbacks
-	this.onConnectionSuccess = onConnectionSuccess;
+	this.onConnectionSuccess = null;
 	this.onConnectionFailed = null;
  	this.onConnectionDisconnected = null;
 	this.onCall = null;
@@ -73,6 +73,7 @@ function QBVideoChatSignaling(onConnectionSuccess){
 		this.userJID = user_id + "-" + QBPARAMS.app_id + "@" + CHAT.server;
 		traceS('Connecting to Chat: userJID=' + this.userJID + ', password=' + password);
 	
+		var self = this; 
 		this.connection.connect(this.userJID, password, function (status) {
 			switch (status) {
 			case Strophe.Status.ERROR:
@@ -82,23 +83,22 @@ function QBVideoChatSignaling(onConnectionSuccess){
 				traceS('[Connection] Connecting');
 				break;
 			case Strophe.Status.CONNFAIL:
-				if (this.onConnectionFailed && typeof(this.onConnectionFailed) === "function") {
-					this.onConnectionFailed('[Connection] Failed to connect');
+				if (self.onConnectionFailed && typeof(self.onConnectionFailed) === "function") {
+					self.onConnectionFailed('[Connection] Failed to connect');
 				}
 				break;
 			case Strophe.Status.AUTHENTICATING:
 				traceS('[Connection] Authenticating');
 				break;
 			case Strophe.Status.AUTHFAIL:
-				if (this.onConnectionFailed && typeof(this.onConnectionFailed) === "function") {
-					this.onConnectionFailed('[Connection] Unauthorized');
+				if (self.onConnectionFailed && typeof(self.onConnectionFailed) === "function") {
+					self.onConnectionFailed('[Connection] Unauthorized');
 				}
 				break;
 			case Strophe.Status.CONNECTED:
 				traceS('[Connection] Connected');
-				 traceS('callback: ' + this.onConnectionSuccess);
-				if (this.onConnectionSuccess && typeof(this.onConnectionSuccess) === "function") {
-					this.onConnectionSuccess(user_id);
+				if (self.onConnectionSuccess && typeof(self.onConnectionSuccess) === "function") {
+					self.onConnectionSuccess(user_id);
 				}else{
 					traceS('[Connection] Connected: no callback');
 				}
@@ -108,8 +108,8 @@ function QBVideoChatSignaling(onConnectionSuccess){
 				break;
 			case Strophe.Status.DISCONNECTING:
 				traceS('[Connection] Disconnecting');
-				if (this.onConnectionDisconnected && typeof(this.onConnectionDisconnected) === "function") {
-					this.onConnectionDisconnected();
+				if (self.onConnectionDisconnected && typeof(self.onConnectionDisconnected) === "function") {
+					self.onConnectionDisconnected();
 				}
 				break;
 			case Strophe.Status.ATTACHED:
