@@ -117,7 +117,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
       				   		   
       		traceVC('onIceCandidateCallback: ' + JSON.stringify(iceData));
 			
-    		var iceDataAsmessage = xmppDictionaryToText(iceData);
+    		var iceDataAsmessage = self.signalingService.xmppDictionaryToText(iceData);
   	
   			// Send ICE candidate to opponent
 			this.signalingService.sendCandidate(this.opponentID, iceDataAsmessage, this.sessionID);

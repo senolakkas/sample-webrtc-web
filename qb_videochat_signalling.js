@@ -175,7 +175,7 @@ function QBVideoChatSignaling(){
 		var body = data == null ? '' : data;
 	
 		var reply = $msg({to: opponentJID, 
-						 from: userJID, 
+						 from: this.userJID, 
 						 type: type})
 				.cnode(Strophe.xmlElement('body', body));
 		
