@@ -77,6 +77,9 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 		// Get User media
 		navigator.getUserMedia(this.constraints, successCallback, errorCallback);
 	}
+	//
+	// Call getUserMedia
+	this.getUserMedia();
 	
 	// RTCPeerConnection creation
 	this.createRTCPeerConnection = function () {

@@ -141,10 +141,6 @@ function onConnectionSuccess(user_id) {
     $('#localVideoContainer').show();
     $('#remoteVideoContainer').show();
     
-    traceM(localVideo);
-    traceM(remoteVideo);
-    traceM(videoChatSignaling);
-    
     // Create video chat instance
     videoChat = new QBVideoChat(localVideo, remoteVideo, 
 							{video: true, audio: true}, videoChatSignaling);
