@@ -55,6 +55,8 @@ function QBVideoChatSignaling(onConnectionSuccess){
  	this.onAccept = null;
  	this.onReject = null;
  	this.onCandidate = null;
+ 	
+ 	traceS('callback: ' + this.onConnectionSuccess);
 
 	this.xmppConnect = function(user_id, password) {
 		this.connection = new Strophe.Connection(CHAT.bosh_url);
