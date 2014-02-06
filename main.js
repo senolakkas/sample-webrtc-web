@@ -73,7 +73,6 @@ function login(user) {
 	
 	// set callbacks
 	videoChatSignaling.onConnectionSuccess = onConnectionSuccess;
-	traceM('ddd: ' + videoChatSignaling.onConnectionSuccess);
 	
 	videoChatSignaling.onConnectionFailed = onConnectionFailed;
 	videoChatSignaling.onConnectionDisconnected = onConnectionDisconnected;
