@@ -45,10 +45,10 @@ var QB_STOPCALL = 'qbvideochat_stopCall';
 	- onStop(fromUserID, reason)
  */
  
-function QBVideoChatSignaling(){
+function QBVideoChatSignaling(onConnectionSuccess){
 
 	// set callbacks
-	this.onConnectionSuccess = null;
+	this.onConnectionSuccess = onConnectionSuccess;
 	this.onConnectionFailed = null;
  	this.onConnectionDisconnected = null;
 	this.onCall = null;

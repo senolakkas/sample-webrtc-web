@@ -69,14 +69,10 @@ function login(user) {
 	
 	// Create signaling instance
 	//
-	videoChatSignaling = new QBVideoChatSignaling();
-	
-	var ff = function(user_id) {
-	};
+	videoChatSignaling = new QBVideoChatSignaling(onConnectionSuccess);
 	
 	// set callbacks
-	videoChatSignaling.onConnectionSuccess = ff;
-	
+	//videoChatSignaling.onConnectionSuccess = onConnectionSuccess;
 	videoChatSignaling.onConnectionFailed = onConnectionFailed;
 	videoChatSignaling.onConnectionDisconnected = onConnectionDisconnected;
 	videoChatSignaling.onCall = onCall;
