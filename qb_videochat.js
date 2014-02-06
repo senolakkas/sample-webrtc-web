@@ -69,6 +69,10 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 			// play own stream
 			self.localStreamElement.src = window.URL.createObjectURL(localMediaStream);
 			self.localStreamElement.play();
+			
+			//
+			// Create RTC peer connection
+			this.createRTCPeerConnection();
 		}
 
 		function errorCallback(error){
