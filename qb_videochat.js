@@ -72,7 +72,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 			
 			//
 			// Create RTC peer connection
-			this.createRTCPeerConnection();
+			self.createRTCPeerConnection();
 		}
 
 		function errorCallback(error){
