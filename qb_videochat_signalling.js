@@ -190,10 +190,11 @@ QBVideoChatSignaling.prototype.login = function (params){
 	
 	// Create session
 	// 
+	var self = this; 
 	QB.createSession(params, function(err, result){
 		if (err) {
-			if (this.onConnectionFailed && typeof(this.onConnectionFailed) === "function") {
-				this.onConnectionFailed(err.detail);
+			if (self.onConnectionFailed && typeof(self.onConnectionFailed) === "function") {
+				self.onConnectionFailed(err.detail);
 			}
 
 		} else {
@@ -201,7 +202,7 @@ QBVideoChatSignaling.prototype.login = function (params){
 		
 		    // Login to Chat
 		    //
-		    this.xmppConnect(result.user_id, params['password']);
+		    self.xmppConnect(result.user_id, params['password']);
 		}
 	});
 }
