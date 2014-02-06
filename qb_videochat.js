@@ -86,12 +86,12 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 	this.createRTCPeerConnection = function () {
 		traceVC("createRTCPeerConnection...");
 		try {
-			self.pc = new RTCPeerConnection(pc_config);
-			self.pc.onicecandidate = onIceCandidateCallback;
-			self.pc.onaddstream = onRemoteStreamAddedCallback;
-			self.pc.onremovestream = onRemoteStreamRemovedCallback;
+			this.pc = new RTCPeerConnection(pc_config);
+			this.pc.onicecandidate = onIceCandidateCallback;
+			this.pc.onaddstream = onRemoteStreamAddedCallback;
+			this.pc.onremovestream = onRemoteStreamRemovedCallback;
 		
-			self.pc.addStream(self.localStream);
+			this.pc.addStream(this.localStream);
    
 			traceVC('Created RTCPeerConnnection');
 		} catch (e) {
@@ -211,7 +211,7 @@ QBVideoChat.prototype.call = function(userID) {
 	
 	this.opponentID = userID;
 	
-	traceVC('Creating offer to peer...');
+	traceVC('Creating offer to peer...' + this.pc);
   	this.pc.createOffer(this.onGetSessionDescriptionSuccessCallback, this.onCreateOfferFailureCallback);
 }
 
