@@ -71,7 +71,7 @@ function login(user) {
 	//
 	videoChatSignaling = new QBVideoChatSignaling();
 	
-	var ff = function onConnectionSuccess(user_id) {
+	var ff = function(user_id) {
 	};
 	
 	// set callbacks
