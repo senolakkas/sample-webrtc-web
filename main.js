@@ -143,7 +143,7 @@ function onConnectionSuccess(user_id) {
     
     // Create video chat instance
     videoChat = new QBVideoChat(localVideo, remoteVideo, 
-							{video: true, audio: true}, videoChatSignaling);
+							{video: true, audio: false}, videoChatSignaling);
 }
 
 function onConnectionFailed(error) {
