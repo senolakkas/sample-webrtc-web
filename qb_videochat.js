@@ -108,8 +108,6 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 	this.onIceCandidateCallback = function(event) {  
 		var candidate = event.candidate;	
 	
-	    return;
-	
 		traceVC('iceGatheringState: ' + event.target.iceGatheringState);
 	
 		if (candidate) {
