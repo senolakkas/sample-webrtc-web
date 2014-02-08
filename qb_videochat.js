@@ -134,11 +134,11 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
  		traceVC('Remote stream added: ' + event);
  	
  	 	// save remote stream
-  		this.remoteStream = event.stream;
+  		self.remoteStream = event.stream;
   		
   		// play remote stream
- 		this.remoteStreamElement.src = window.URL.createObjectURL(event.stream);
- 		this.remoteStreamElement.play();
+ 		self.remoteStreamElement.src = window.URL.createObjectURL(event.stream);
+ 		self.remoteStreamElement.play();
 	}
 
 	// onRemoteStreamRemoved callback
@@ -155,7 +155,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 			function onSuccess(){
 				if(sessionDescription.type === 'offer'){
   					traceVC('Creating answer to peer...');
-  					this.pc.createAnswer(onGetSessionDescriptionSuccessCallback, onCreateAnswerFailureCallback, sdpConstraints);
+  					self.pc.createAnswer(self.onGetSessionDescriptionSuccessCallback, self.onCreateAnswerFailureCallback, sdpConstraints);
   				}
 			},function onError(error){
 				traceVC('setRemoteDescription error: ' + error);
