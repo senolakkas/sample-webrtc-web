@@ -184,7 +184,7 @@ function onReject(fromUserID){
 }
 
 function onCandidate(fromUserID, candidate){
-	traceM('onCandidate ' + JSON.stringify(jsonCandidate));
+	traceM('onCandidate ' + JSON.stringify(candidate));
 	
     videoChat.addCandidate(candidate);
 }
