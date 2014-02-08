@@ -140,13 +140,15 @@ function QBVideoChatSignaling(){
 	
 		switch (type) {
 		case QB_CALL:
+		 	traceS('1:');
 			if (self.onCall && typeof(self.onCall) === "function") {
+			   traceS('2:');
 				self.onCall(fromUserID, body, sessionID);
 			}
 			break;
 		case QB_ACCEPT:
 			if (self.onAccept && typeof(self.onAccept) === "function") {
-				self.onAccept(fromUserID, body, sessionID);
+				self.onAccept(fromUserID, bo dy, sessionID);
 			}
 			break;
 		case QB_REJECT:
