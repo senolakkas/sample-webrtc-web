@@ -145,24 +145,24 @@ function QBVideoChatSignaling(){
 			}
 			break;
 		case QB_ACCEPT:
-			if (this.onAccept && typeof(this.onAccept) === "function") {
-				this.onAccept(fromUserID, body, sessionID);
+			if (self.onAccept && typeof(self.onAccept) === "function") {
+				self.onAccept(fromUserID, body, sessionID);
 			}
 			break;
 		case QB_REJECT:
-			if (this.onReject && typeof(this.onReject) === "function") {
-				this.onReject(fromUserID);
+			if (self.onReject && typeof(self.onReject) === "function") {
+				self.onReject(fromUserID);
 			}
 			break;
 		case QB_CANDIDATE:
-			if (this.onCandidate && typeof(this.onCandidate) === "function") {
+			if (self.onCandidate && typeof(self.onCandidate) === "function") {
 			  	var jsonCandidate = xmppTextToDictionary(body);
-				this.onCandidate(fromUserID, jsonCandidate);
+				self.onCandidate(fromUserID, jsonCandidate);
 			}
 			break;
 		case QB_STOPCALL:
-			if (this.onStop && typeof(this.onStop) === "function") {
-				this.onStop(fromUserID, body);
+			if (self.onStop && typeof(self.onStop) === "function") {
+				self.onStop(fromUserID, body);
 			}
 			break;
 		}
