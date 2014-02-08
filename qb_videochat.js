@@ -192,20 +192,16 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 	}
 	
 	// Add ICE candidates 
-	this.addCandidate = function (candidateRawData){
-		var candidate = new RTCIceCandidate({
-			sdpMLineIndex: candidateRawData.sdpMLineIndex,
-				candidate: candidateRawData.candidate,
-				   sdpMid: candidateRawData.sdpMid
-		});
-		this.pc.addIceCandidate(candidate);
+	this.addCandidate = function (candidate){
+		traceVC('addCandidate');
+		self.pc.addIceCandidate(candidate);
 	}
 
 	// Cleanup 
 	this.hangup = function () {
   		traceVC("Closed RTC");
-  		this.pc.close();
-  		this.pc = null;
+  		self.pc.close();
+  		self.pc = null;
 	}
 }
     
