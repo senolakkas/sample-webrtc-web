@@ -120,7 +120,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
     		var iceDataAsmessage = self.signalingService.xmppDictionaryToText(iceData);
   	
   			// Send ICE candidate to opponent
-			self.signalingService.sendCandidate(this.opponentID, iceDataAsmessage, this.sessionID);
+			self.signalingService.sendCandidate(self.opponentID, iceDataAsmessage, self.sessionID);
 
 		} else {
 			traceVC('No candidates');
@@ -172,9 +172,9 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 				var sdpStringRepresentation = sessionDescription.sdp;
 
 				if (sessionDescription.type === 'offer') {
-					self.signalingService.call(this.opponentID, sdpStringRepresentation, this.sessionID);
+					self.signalingService.call(self.opponentID, sdpStringRepresentation, self.sessionID);
 				}else if (sessionDescription.type === 'answer') {
-					self.signalingService.accept(this.opponentID, sdpStringRepresentation, this.sessionID);
+					self.signalingService.accept(self.opponentID, sdpStringRepresentation, self.sessionID);
 				}
 				
 			},function onError(error){
