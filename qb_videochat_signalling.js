@@ -139,17 +139,16 @@ function QBVideoChatSignaling(){
 		var fromUserID = from.split('-')[0];
 	
 		switch (type) {
-		case QB_CALL:{
+		case QB_CALL:
 		 	traceS('1:');
 			if (self.onCall && typeof(self.onCall) === "function") {
 			   traceS('2:');
 				self.onCall(fromUserID, body, sessionID);
 			}
-			}
 			break;
 		case QB_ACCEPT:
 			if (self.onAccept && typeof(self.onAccept) === "function") {
-				self.onAccept(fromUserID, bo dy, sessionID);
+				self.onAccept(fromUserID, body, sessionID);
 			}
 			break;
 		case QB_REJECT:
