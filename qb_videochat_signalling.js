@@ -157,6 +157,7 @@ function QBVideoChatSignaling(){
 			}
 			break;
 		case QB_CANDIDATE:
+		    traceS('self.onCandidate: ' + self.onCandidate);
 			if (self.onCandidate && typeof(self.onCandidate) === "function") {
 			  	var jsonCandidate = xmppTextToDictionary(body);
 				self.onCandidate(fromUserID, jsonCandidate);
