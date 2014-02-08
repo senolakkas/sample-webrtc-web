@@ -96,7 +96,7 @@ function QBVideoChatSignaling(){
 				}
 				break;
 			case Strophe.Status.CONNECTED:
-				traceS('[Connection] Connected');
+				traceS('[Connection] Connected' + self.onConnectionSuccess);
 				if (self.onConnectionSuccess && typeof(self.onConnectionSuccess) === "function") {
 					self.onConnectionSuccess(user_id);
 				}else{
@@ -140,7 +140,7 @@ function QBVideoChatSignaling(){
 	
 		switch (type) {
 		case QB_CALL:
-		    traceS('oncall ' + self.onCall + this.onCall);
+		    traceS('oncall ' + self.onCall);
 			if (self.onCall && typeof(self.onCall) === "function") {
 				self.onCall(fromUserID, body, sessionID);
 			}
