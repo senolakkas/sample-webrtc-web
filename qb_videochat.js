@@ -149,7 +149,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 	// set Remote description
 	this.setRemoteDescription = function (descriptionSDP, descriptionType){
 		var sessionDescription = new RTCSessionDescription({sdp: descriptionSDP, type: descriptionType});
-		traceVC('setRemoteDescription: ' + descriptionSDP + ', pc:' + pc);
+		traceVC('setRemoteDescription: ' + descriptionSDP + ', pc:' + this.pc);
 	
 		this.pc.setRemoteDescription(sessionDescription,
 			function onSuccess(){
