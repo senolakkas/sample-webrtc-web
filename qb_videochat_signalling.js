@@ -140,9 +140,8 @@ function QBVideoChatSignaling(){
 	
 		switch (type) {
 		case QB_CALL:
-		 	traceS('1:');
+		    traceS('oncall ' + self.onCall);
 			if (self.onCall && typeof(self.onCall) === "function") {
-			   traceS('2:');
 				self.onCall(fromUserID, body, sessionID);
 			}
 			break;
