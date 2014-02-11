@@ -17,6 +17,13 @@ var sdpConstraints = {'mandatory': {
 	'OfferToReceiveVideo':true }
 };
 
+// Video chat state
+var VIDEOCHAT_STATE = {
+                        INACTIVE      : 'INACTIVE',
+                        ESTABLISHING  : 'ESTABLISHING',
+                        ACTIVE        : 'ACTIVE'
+};
+
 /*
   Public methods:
   	- call(userID)
@@ -37,6 +44,8 @@ var sdpConstraints = {'mandatory': {
 
 function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signalingService){
  	traceVC("QBVideoChat INIT");
+ 	
+ 	this.state = VIDEOCHAT_STATE.INACTIVE;
  	
     // save local & remote <video> elements
     this.localStreamElement = localStreamElement;
@@ -217,6 +226,8 @@ QBVideoChat.prototype.call = function(userID) {
 	
 	traceVC('Creating offer to peer...' + this.pc);
   	this.pc.createOffer(this.onGetSessionDescriptionSuccessCallback, this.onCreateOfferFailureCallback);
+  	
+  	this.state = VIDEOCHAT_STATE.ESTABLISHING;
 }
 
 // Accept call from user 
@@ -227,16 +238,22 @@ QBVideoChat.prototype.accept = function(userID) {
 	
 	// set remote description here
 	this.setRemoteDescription(this.potentialRemoteSessionDescription, "offer");
+	
+	this.state = VIDEOCHAT_STATE.ESTABLISHING;
 }
 
 // Reject call from user  
 QBVideoChat.prototype.reject = function(userID) {
 	this.signalingService.reject(userID, this.sessionID);
+	
+	this.state = VIDEOCHAT_STATE.INACTIVE;
 }
 
 // Stap call with user
 QBVideoChat.prototype.stop = function(userID) {
 	this.signalingService.stops(userID, "manual", this.sessionID);
+	
+	this.state = VIDEOCHAT_STATE.INACTIVE;
 }
 
 // Logger
