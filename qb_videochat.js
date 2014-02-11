@@ -164,6 +164,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 	this.onGetSessionDescriptionSuccessCallback = function(sessionDescription) {
 		traceVC('sessionDescriptionSuccessCallback: ' + sessionDescription);
 	
+	    /*
 		self.pc.setLocalDescription(sessionDescription, 
 			function onSuccess(){
 				
@@ -180,7 +181,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 			},function onError(error){
 				traceVC('setLocalDescription error: ' + error);
 			}
-		);
+		);*/
 	}
 
 	this.onCreateOfferFailureCallback = function(event){
