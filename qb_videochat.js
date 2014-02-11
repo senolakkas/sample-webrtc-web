@@ -163,14 +163,14 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 	
 	this.onGetSessionDescriptionSuccessCallback = function(sessionDescription) {
 		traceVC('sessionDescriptionSuccessCallback: ' + sessionDescription);
-	
-	    // setLocalDescription causes ICE gathering
 	    
 		self.pc.setLocalDescription(sessionDescription, 
 			function onSuccess(){
 				traceVC('setLocalDescription onSuccess');
 				
-				/*
+				// ICE gathering starts work here
+				//
+				
 				// Send only string representation of sdp
 				// http://www.w3.org/TR/webrtc/#rtcsessiondescription-class
 				var sdpStringRepresentation = sessionDescription.sdp;
@@ -180,7 +180,6 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 				}else if (sessionDescription.type === 'answer') {
 					self.signalingService.accept(self.opponentID, sdpStringRepresentation, self.sessionID);
 				}
-				*/
 				
 			},function onError(error){
 				traceVC('setLocalDescription error: ' + error);
