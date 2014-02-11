@@ -164,9 +164,11 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 	this.onGetSessionDescriptionSuccessCallback = function(sessionDescription) {
 		traceVC('sessionDescriptionSuccessCallback: ' + sessionDescription);
 	
-	    /*
+	    // setLocalDescription causes ICE gathering
+	    
 		self.pc.setLocalDescription(sessionDescription, 
 			function onSuccess(){
+				traceVC('setLocalDescription onSuccess');
 				
 				// Send only string representation of sdp
 				// http://www.w3.org/TR/webrtc/#rtcsessiondescription-class
@@ -181,7 +183,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 			},function onError(error){
 				traceVC('setLocalDescription error: ' + error);
 			}
-		);*/
+		);
 	}
 
 	this.onCreateOfferFailureCallback = function(event){
