@@ -170,6 +170,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 			function onSuccess(){
 				traceVC('setLocalDescription onSuccess');
 				
+				/*
 				// Send only string representation of sdp
 				// http://www.w3.org/TR/webrtc/#rtcsessiondescription-class
 				var sdpStringRepresentation = sessionDescription.sdp;
@@ -179,6 +180,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 				}else if (sessionDescription.type === 'answer') {
 					self.signalingService.accept(self.opponentID, sdpStringRepresentation, self.sessionID);
 				}
+				*/
 				
 			},function onError(error){
 				traceVC('setLocalDescription error: ' + error);
