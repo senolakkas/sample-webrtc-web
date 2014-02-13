@@ -173,6 +173,8 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 	
 	// set Remote description
 	this.setRemoteDescription = function (descriptionSDP, descriptionType){
+	  	this.state = VIDEOCHAT_STATE.ESTABLISHING;
+	  	
 		var sessionDescription = new RTCSessionDescription({sdp: descriptionSDP, type: descriptionType});
 		traceVC('setRemoteDescription: ' + descriptionSDP + ', pc:' + this.pc);
 	
@@ -250,8 +252,6 @@ QBVideoChat.prototype.call = function(userID) {
 	
 	traceVC('Creating offer to peer...' + this.pc);
   	this.pc.createOffer(this.onGetSessionDescriptionSuccessCallback, this.onCreateOfferFailureCallback);
-  	
-  	this.state = VIDEOCHAT_STATE.ESTABLISHING;
 }
 
 // Accept call from user 
