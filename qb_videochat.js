@@ -60,8 +60,9 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
   		traceVC("VideoChat onplaying");
 	};
 	
+	// candidates queue
+	this.candidatesQueue = new Array();
 	
-    
     // Media constraints. Video & Audio always can be configured later
     this.constraints = constraints;
     
@@ -140,7 +141,8 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
     		var iceDataAsmessage = self.signalingService.xmppDictionaryToText(iceData);
   	
   			if(this.state == VIDEOCHAT_STATE.INACTIVE){
-  			    // save
+  			    // save to queue
+  			    self.candidatesQueue.push(iceDataAsmessage);
   			}else{
   			    // Send ICE candidate to opponent
 				self.signalingService.sendCandidate(self.opponentID, iceDataAsmessage, self.sessionID);
@@ -183,6 +185,12 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 				traceVC('setRemoteDescription error: ' + error);
 			}
 		);
+		
+		// send candidates
+		for (var i=0; i<this.candidatesQueue.length; i++) {
+			var candidate = this.candidatesQueue.pop();
+			self.signalingService.sendCandidate(self.opponentID, candidate, self.sessionID);
+		}
 	}
 	
 	this.onGetSessionDescriptionSuccessCallback = function(sessionDescription) {
