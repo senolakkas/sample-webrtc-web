@@ -50,6 +50,17 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
     // save local & remote <video> elements
     this.localStreamElement = localStreamElement;
     this.remoteStreamElement = remoteStreamElement;
+    this.remoteStreamElement.loadedmetadata = function(e) {
+  		traceVC("VideoChat loadedmetadata");
+	};
+	this.remoteStreamElement.oncanplay = function(e) {
+  		traceVC("VideoChat oncanplay");
+	};
+	this.remoteStreamElement.onplaying = function(e) {
+  		traceVC("VideoChat onplaying");
+	};
+	
+	
     
     // Media constraints. Video & Audio always can be configured later
     this.constraints = constraints;

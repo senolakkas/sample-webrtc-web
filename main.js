@@ -191,6 +191,8 @@ function onCandidate(fromUserID, candidate){
 
 function onStop(fromUserID, reason){
     traceM('onStop: ' + fromUserID + ', reason: ' + reason);
+    
+    videoChat = null;
 }
 
 
