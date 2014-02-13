@@ -142,6 +142,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
   	
   			if(self.state == VIDEOCHAT_STATE.INACTIVE){
   			    // save to queue
+  			    traceVC('candidate queued');
   			    self.candidatesQueue.push(iceDataAsmessage);
   			}else{
   			    // Send ICE candidate to opponent
