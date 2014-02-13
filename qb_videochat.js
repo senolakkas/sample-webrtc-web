@@ -140,7 +140,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 			
     		var iceDataAsmessage = self.signalingService.xmppDictionaryToText(iceData);
   	
-  			if(this.state == VIDEOCHAT_STATE.INACTIVE){
+  			if(self.state == VIDEOCHAT_STATE.INACTIVE){
   			    // save to queue
   			    self.candidatesQueue.push(iceDataAsmessage);
   			}else{
