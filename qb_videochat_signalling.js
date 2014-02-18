@@ -48,13 +48,13 @@ var QB_STOPCALL = 'qbvideochat_stopCall';
 function QBVideoChatSignaling(){
 
 	// set callbacks
-	this.onConnectionSuccess = null;
-	this.onConnectionFailed = null;
- 	this.onConnectionDisconnected = null;
-	this.onCall = null;
- 	this.onAccept = null;
- 	this.onReject = null;
- 	this.onCandidate = null;
+	this.onConnectionSuccess = [];
+	this.onConnectionFailed = [];
+ 	this.onConnectionDisconnected = [];
+	this.onCall = [];
+ 	this.onAccept = [];
+ 	this.onReject = [];
+ 	this.onCandidate = [];
  	
  	var self = this; 
 
@@ -246,6 +246,37 @@ QBVideoChatSignaling.prototype.sendCandidate = function(userID, candidate, sessi
 QBVideoChatSignaling.prototype.stop = function(userID, reason, sessionID) {
 	traceS('stop ' + userID);
     this.sendMessage(userID, QB_STOPCALL, reason, sessionID);
+}
+
+
+// callbacks
+
+QBVideoChatSignaling.prototype.addOnConnectionSuccessCallback = function(callback) {
+	this.onConnectionSuccess.push(callback);
+}
+
+QBVideoChatSignaling.prototype.addOnConnectionFailedCallback = function(callback) {
+	this.onConnectionFailed.push(callback);
+}
+
+QBVideoChatSignaling.prototype.addOnConnectionDisconnectedCallback = function(callback) {
+	this.onConnectionDisconnected.push(callback);
+}
+
+QBVideoChatSignaling.prototype.addOnCallCallback = function(callback) {
+	this.onCall.push(callback);
+}
+
+QBVideoChatSignaling.prototype.addOnAcceptCallback = function(callback) {
+	this.onAccept.push(callback);
+}
+
+QBVideoChatSignaling.prototype.addOnRejectCallback = function(callback) {
+	this.onReject.push(callback);
+}
+
+QBVideoChatSignaling.prototype.addOnCandidateCallback = function(callback) {
+	this.onCandidate.push(callback);
 }
 
 
