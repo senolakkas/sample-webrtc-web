@@ -72,7 +72,7 @@ function login(user) {
 	videoChatSignaling = new QBVideoChatSignaling();
 	
 	// set callbacks
-	videoChatSignaling.onConnectionSuccess = onConnectionSuccess;
+	videoChatSignaling.addOnConnectionSuccessCallback(onConnectionSuccess);
 	videoChatSignaling.onConnectionFailed = onConnectionFailed;
 	videoChatSignaling.onConnectionDisconnected = onConnectionDisconnected;
 	videoChatSignaling.onCall = onCall;
