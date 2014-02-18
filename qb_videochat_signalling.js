@@ -98,6 +98,7 @@ function QBVideoChatSignaling(){
 			case Strophe.Status.CONNECTED:
 				traceS('[Connection] Connected');
 				for (var callback in self.onConnectionSuccessCallbacks) {
+					traceS('callback=' + callback);
 					if (typeof(callback) === "function") {
 						callback(user_id);
 					}
@@ -254,7 +255,7 @@ QBVideoChatSignaling.prototype.stop = function(userID, reason, sessionID) {
 
 QBVideoChatSignaling.prototype.addOnConnectionSuccessCallback = function(callback) {
 	this.onConnectionSuccessCallbacks.push(callback);
-	traceS("addOnConnectionSuccessCallback: " + this.onConnectionSuccessCallbacks);
+	traceS("addOnConnectionSuccessCallback, count= " + this.onConnectionSuccessCallbacks.length);
 }
 
 QBVideoChatSignaling.prototype.addOnConnectionFailedCallback = function(callback) {
