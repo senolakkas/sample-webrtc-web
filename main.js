@@ -73,12 +73,12 @@ function login(user) {
 	
 	// set callbacks
 	videoChatSignaling.addOnConnectionSuccessCallback(onConnectionSuccess);
-	videoChatSignaling.onConnectionFailed = onConnectionFailed;
-	videoChatSignaling.onConnectionDisconnected = onConnectionDisconnected;
-	videoChatSignaling.onCall = onCall;
-	videoChatSignaling.onAccept = onAccept;
-	videoChatSignaling.onReject = onReject;
-	videoChatSignaling.onCandidate = onCandidate;
+	videoChatSignaling.addOnConnectionFailed(onConnectionFailed);
+	videoChatSignaling.addOnConnectionDisconnected(onConnectionDisconnected);
+	videoChatSignaling.addOnCall(onCall);
+	videoChatSignaling.addOnAccept(onAccept);
+	videoChatSignaling.addOnReject(onReject);
+	videoChatSignaling.addOnCandidate(onCandidate);
 	
 	// Login To Chat
 	//
