@@ -51,10 +51,12 @@ function QBVideoChatSignaling(){
 	this.onConnectionSuccessCallbacks = [];
 	this.onConnectionFailedCallbacks = [];
  	this.onConnectionDisconnectedCallbacks = [];
+ 	//
 	this.onCallCallbacks = [];
  	this.onAcceptCallbacks = [];
  	this.onRejectCallbacks = [];
  	this.onCandidateCallbacks = [];
+ 	this.onStopCallbacks = [];
  	
  	var self = this; 
 
@@ -83,16 +85,22 @@ function QBVideoChatSignaling(){
 				traceS('[Connection] Connecting');
 				break;
 			case Strophe.Status.CONNFAIL:
-				if (self.onConnectionFailed && typeof(self.onConnectionFailed) === "function") {
-					self.onConnectionFailed('[Connection] Failed to connect');
+				for (var i=0; i < self.onConnectionFailedCallbacks.length; i++) {
+					var callback = self.onConnectionFailedCallbacks[i];
+					if (typeof(callback) === "function") {
+						callback('[Connection] Failed to connect');
+					}
 				}
 				break;
 			case Strophe.Status.AUTHENTICATING:
 				traceS('[Connection] Authenticating');
 				break;
 			case Strophe.Status.AUTHFAIL:
-				if (self.onConnectionFailed && typeof(self.onConnectionFailed) === "function") {
-					self.onConnectionFailed('[Connection] Unauthorized');
+				for (var i=0; i < self.onConnectionFailedCallbacks.length; i++) {
+					var callback = self.onConnectionFailedCallbacks[i];
+					if (typeof(callback) === "function") {
+						callback('[Connection] Unauthorized');
+					}
 				}
 				break;
 			case Strophe.Status.CONNECTED:
@@ -110,8 +118,11 @@ function QBVideoChatSignaling(){
 				break;
 			case Strophe.Status.DISCONNECTING:
 				traceS('[Connection] Disconnecting');
-				if (self.onConnectionDisconnected && typeof(self.onConnectionDisconnected) === "function") {
-					self.onConnectionDisconnected();
+				for (var i=0; i < self.onConnectionDisconnectedCallbacks.length; i++) {
+					var callback = self.onConnectionDisconnectedCallbacks[i];
+					if (typeof(callback) === "function") {
+						callback();
+					}
 				}
 				break;
 			case Strophe.Status.ATTACHED:
@@ -144,29 +155,44 @@ function QBVideoChatSignaling(){
 	
 		switch (type) {
 		case QB_CALL:
-			if (self.onCall && typeof(self.onCall) === "function") {
-				self.onCall(fromUserID, body, sessionID);
+			for (var i=0; i < self.onCallCallbacks.length; i++) {
+				var callback = self.onCallCallbacks[i];
+				if (typeof(callback) === "function") {
+					callback(fromUserID, body, sessionID);
+				}
 			}
 			break;
 		case QB_ACCEPT:
-			if (self.onAccept && typeof(self.onAccept) === "function") {
-				self.onAccept(fromUserID, body, sessionID);
+			for (var i=0; i < self.onAcceptCallbacks.length; i++) {
+				var callback = self.onAcceptCallbacks[i];
+				if (typeof(callback) === "function") {
+					callback(fromUserID, body, sessionID);
+				}
 			}
 			break;
 		case QB_REJECT:
-			if (self.onReject && typeof(self.onReject) === "function") {
-				self.onReject(fromUserID);
+			for (var i=0; i < self.onRejectCallbacks.length; i++) {
+				var callback = self.onRejectCallbacks[i];
+				if (typeof(callback) === "function") {
+					callback(fromUserID);
+				}
 			}
 			break;
 		case QB_CANDIDATE:
-			if (self.onCandidate && typeof(self.onCandidate) === "function") {
-			  	var jsonCandidate = self.xmppTextToDictionary(body);
-				self.onCandidate(fromUserID, jsonCandidate);
+			for (var i=0; i < self.onCandidateCallbacks.length; i++) {
+				var callback = self.onCandidateCallbacks[i];
+				if (typeof(callback) === "function") {
+					var jsonCandidate = self.xmppTextToDictionary(body);
+					callback(fromUserID, jsonCandidate);
+				}
 			}
 			break;
 		case QB_STOPCALL:
-			if (self.onStop && typeof(self.onStop) === "function") {
-				self.onStop(fromUserID, body);
+			for (var i=0; i < self.onStopCallbacks.length; i++) {
+				var callback = self.onStopCallbacks[i];
+				if (typeof(callback) === "function") {
+					callback(fromUserID, body);
+				}
 			}
 			break;
 		}
@@ -211,8 +237,11 @@ QBVideoChatSignaling.prototype.login = function (params){
 	var self = this; 
 	QB.createSession(params, function(err, result){
 		if (err) {
-			if (self.onConnectionFailed && typeof(self.onConnectionFailed) === "function") {
-				self.onConnectionFailed(err.detail);
+			for (var i=0; i < self.onConnectionFailedCallbacks.length; i++) {
+				var callback = self.onConnectionFailedCallbacks[i];
+				if (typeof(callback) === "function") {
+					callback(err.detail);
+				}
 			}
 
 		} else {
