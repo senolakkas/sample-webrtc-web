@@ -254,6 +254,7 @@ QBVideoChatSignaling.prototype.stop = function(userID, reason, sessionID) {
 
 QBVideoChatSignaling.prototype.addOnConnectionSuccessCallback = function(callback) {
 	this.onConnectionSuccessCallbacks.push(callback);
+	traceS("addOnConnectionSuccessCallback: " + this.onConnectionSuccessCallbacks);
 }
 
 QBVideoChatSignaling.prototype.addOnConnectionFailedCallback = function(callback) {
