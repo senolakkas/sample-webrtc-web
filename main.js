@@ -78,7 +78,6 @@ function login(user) {
 	videoChatSignaling.addOnCallCallback(onCall);
 	videoChatSignaling.addOnAcceptCallback(onAccept);
 	videoChatSignaling.addOnRejectCallback(onReject);
-	videoChatSignaling.addOnCandidateCallback(onCandidate);
 	
 	// Login To Chat
 	//
@@ -164,17 +163,12 @@ function onConnectionDisconnected(){
 function onCall(fromUserID, sessionDescription, sessionID){
     traceM('onCall: ' + fromUserID);
     
-    videoChat.sessionID = sessionID;
-    videoChat.potentialRemoteSessionDescription = sessionDescription;
-    
     $('#incomingCallControls').show();
     $('#incomingCallAudio')[0].play();
 }
 
 function onAccept(fromUserID, sessionDescription, sessionID){
     traceM('onAccept: ' + fromUserID);
-    
-    videoChat.setRemoteDescription(sessionDescription, "answer"); //TODO: refactor this (hide)
 }
 
 function onReject(fromUserID){
@@ -183,13 +177,7 @@ function onReject(fromUserID){
     alert("Call rejected");
 }
 
-function onCandidate(fromUserID, candidate){
-	traceM('onCandidate ' + JSON.stringify(candidate));
-	
-    videoChat.addCandidate(candidate);
-}
-
-function onStop(fromUserID, reason){
+function onStop(fromUserID, reason, sessionID){
     traceM('onStop: ' + fromUserID + ', reason: ' + reason);
     
     videoChat = null;

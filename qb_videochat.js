@@ -73,21 +73,28 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
     var self = this;
     
     // Signalling callbacks
-	this.onCall = function (fromUserID, sessionDescription, sessionID){
+	this.onCallSignalingCallback = function (fromUserID, sessionDescription, sessionID){
 		traceVC("onCall");
+		
+		self.sessionID = sessionID;
+    	self.remoteSessionDescription = sessionDescription;
 	};
-	this.onAccept = function (fromUserID, sessionDescription, sessionID){
+	this.onAcceptSignalingCallback = function (fromUserID, sessionDescription, sessionID){
 		traceVC("onAccept");
+		
+		self.setRemoteDescription(sessionDescription, "answer"); //TODO: refactor this (hide)
 	};
-	this.onCandidate = function (fromUserID, candidate){
-		traceVC("onCandidate");
+	this.onCandidateSignalingCallback = function (fromUserID, candidate, sessionID){
+		traceVC("onCandidate: " + JSON.stringify(candidate));
+	
+    	self.addCandidate(candidate);
 	};
     
     // Set signaling service
     this.signalingService = signalingService;
-    this.signalingService.addOnCallCallback(this.onCall);
-	this.signalingService.addOnAcceptCallback(this.onAccept);
-	this.signalingService.addOnCandidateCallback(this.onCandidate);
+    this.signalingService.addOnCallCallback(this.onCallSignalingCallback);
+	this.signalingService.addOnAcceptCallback(this.onAcceptSignalingCallback);
+	this.signalingService.addOnCandidateCallback(this.onCandidateSignalingCallback);
 	    
     
     // MediaStream getUserMedia 
@@ -276,7 +283,7 @@ QBVideoChat.prototype.accept = function(userID) {
 	this.opponentID = userID;
 	
 	// set remote description here
-	this.setRemoteDescription(this.potentialRemoteSessionDescription, "offer");
+	this.setRemoteDescription(this.remoteSessionDescription, "offer");
 	
 	this.state = VIDEOCHAT_STATE.ESTABLISHING;
 }

@@ -183,7 +183,7 @@ function QBVideoChatSignaling(){
 				var callback = self.onCandidateCallbacks[i];
 				if (typeof(callback) === "function") {
 					var jsonCandidate = self.xmppTextToDictionary(body);
-					callback(fromUserID, jsonCandidate);
+					callback(fromUserID, jsonCandidate, sessionID);
 				}
 			}
 			break;
@@ -191,7 +191,7 @@ function QBVideoChatSignaling(){
 			for (var i=0; i < self.onStopCallbacks.length; i++) {
 				var callback = self.onStopCallbacks[i];
 				if (typeof(callback) === "function") {
-					callback(fromUserID, body);
+					callback(fromUserID, body, sessionID);
 				}
 			}
 			break;
