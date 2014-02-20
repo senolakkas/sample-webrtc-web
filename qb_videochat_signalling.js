@@ -137,7 +137,7 @@ function QBVideoChatSignaling(){
 	}
 
 	this.rawOutput = function(data) {
-    	//traceS('SENT: ' + data);
+    	traceS('SENT: ' + data);
 	}	
 
 	this.onMessage = function(msg) {
@@ -179,7 +179,6 @@ function QBVideoChatSignaling(){
 			}
 			break;
 		case QB_CANDIDATE:
-			traceS("QB_CANDIDATE");
 			for (var i=0; i < self.onCandidateCallbacks.length; i++) {
 				var callback = self.onCandidateCallbacks[i];
 				if (typeof(callback) === "function") {
