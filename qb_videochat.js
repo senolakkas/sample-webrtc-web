@@ -72,30 +72,23 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
         
     var self = this;
     
-    traceVC("1");
-    
     // Signalling callbacks
 	this.onCall = function (fromUserID, sessionDescription, sessionID){
 		traceVC("onCall");
 	};
-	traceVC("2");
 	this.onAccept = function (fromUserID, sessionDescription, sessionID){
 		traceVC("onAccept");
 	};
 	this.onCandidate = function (fromUserID, candidate){
 		traceVC("onCandidate");
 	};
-	
-	traceVC("3");
     
     // Set signaling service
     this.signalingService = signalingService;
     this.signalingService.addOnCallCallback(this.onCall);
 	this.signalingService.addOnAcceptCallback(this.onAccept);
 	this.signalingService.addOnCandidateCallback(this.onCandidate);
-	
-	traceVC("4");
-    
+	    
     
     // MediaStream getUserMedia 
 	this.getUserMedia = function () {
