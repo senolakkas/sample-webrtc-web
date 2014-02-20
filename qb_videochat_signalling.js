@@ -179,6 +179,7 @@ function QBVideoChatSignaling(){
 			}
 			break;
 		case QB_CANDIDATE:
+			traceS("QB_CANDIDATE");
 			for (var i=0; i < self.onCandidateCallbacks.length; i++) {
 				var callback = self.onCandidateCallbacks[i];
 				if (typeof(callback) === "function") {
@@ -270,7 +271,7 @@ QBVideoChatSignaling.prototype.reject = function(userID, sessionID) {
 }
 
 QBVideoChatSignaling.prototype.sendCandidate = function(userID, candidate, sessionID) {
-	traceS('sendCandidate ' + userID + ', candidate: ' + candidate);
+	//traceS('sendCandidate ' + userID + ', candidate: ' + candidate);
     this.sendMessage(userID, QB_CANDIDATE, candidate, sessionID);
 }
 
