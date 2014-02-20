@@ -64,11 +64,12 @@ function QBVideoChatSignaling(){
 		this.connection = new Strophe.Connection(CHAT.bosh_url);
 		this.connection.rawInput = this.rawInput;
 		this.connection.rawOutput = this.rawOutput;
-		this.connection.addHandler(this.onMessage, null, 'message', QB_CALL, null,  null);
-		this.connection.addHandler(this.onMessage, null, 'message', QB_ACCEPT, null,  null); 
-		this.connection.addHandler(this.onMessage, null, 'message', QB_REJECT, null,  null); 
-		this.connection.addHandler(this.onMessage, null, 'message', QB_CANDIDATE, null,  null);
-		this.connection.addHandler(this.onMessage, null, 'message', QB_STOPCALL, null,  null); 
+		this.connection.addHandler(this.onMessage, null, 'message', null, null,  null);
+// 		this.connection.addHandler(this.onMessage, null, 'message', QB_CALL, null,  null);
+// 		this.connection.addHandler(this.onMessage, null, 'message', QB_ACCEPT, null,  null); 
+// 		this.connection.addHandler(this.onMessage, null, 'message', QB_REJECT, null,  null); 
+// 		this.connection.addHandler(this.onMessage, null, 'message', QB_CANDIDATE, null,  null);
+// 		this.connection.addHandler(this.onMessage, null, 'message', QB_STOPCALL, null,  null); 
  
 		traceS(this.connection);
 
@@ -133,7 +134,7 @@ function QBVideoChatSignaling(){
 	}
 	
 	this.rawInput = function(data) {
-    	traceS('RECV: ' + data);
+    	//traceS('RECV: ' + data);
 	}
 
 	this.rawOutput = function(data) {
