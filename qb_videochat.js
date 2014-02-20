@@ -158,7 +158,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
       					  		  sdpMid: candidate.sdpMid,
       				   		   candidate: candidate.candidate}
       				   		   
-      		traceVC('onIceCandidateCallback: ' + JSON.stringify(iceData));
+      		//traceVC('onIceCandidateCallback: ' + JSON.stringify(iceData));
 			
     		var iceDataAsmessage = self.signalingService.xmppDictionaryToText(iceData);
   	

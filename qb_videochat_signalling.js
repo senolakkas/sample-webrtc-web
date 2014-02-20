@@ -270,7 +270,7 @@ QBVideoChatSignaling.prototype.reject = function(userID, sessionID) {
 }
 
 QBVideoChatSignaling.prototype.sendCandidate = function(userID, candidate, sessionID) {
-	//traceS('sendCandidate ' + userID + ', candidate: ' + candidate);
+	traceS('sendCandidate ' + userID + ', candidate: ' + candidate);
     this.sendMessage(userID, QB_CANDIDATE, candidate, sessionID);
 }
 
