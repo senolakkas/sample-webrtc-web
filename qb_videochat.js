@@ -158,7 +158,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
       					  		  sdpMid: candidate.sdpMid,
       				   		   candidate: candidate.candidate}
       				   		   
-      		//traceVC('onIceCandidateCallback: ' + JSON.stringify(iceData));
+      		traceVC('onIceCandidateCallback: ' + JSON.stringify(iceData));
 			
     		var iceDataAsmessage = self.signalingService.xmppDictionaryToText(iceData);
   	
@@ -198,10 +198,11 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 	  	this.state = VIDEOCHAT_STATE.ESTABLISHING;
 	  	
 		var sessionDescription = new RTCSessionDescription({sdp: descriptionSDP, type: descriptionType});
-		traceVC('setRemoteDescription: ' + descriptionSDP + ', pc:' + this.pc);
+		//traceVC('setRemoteDescription: ' + descriptionSDP + ', pc:' + this.pc);
 	
 		this.pc.setRemoteDescription(sessionDescription,
 			function onSuccess(){
+				traceVC("Added remote description");
 				if(sessionDescription.type === 'offer'){
   					traceVC('Creating answer to peer...');
   					self.pc.createAnswer(self.onGetSessionDescriptionSuccessCallback, self.onCreateAnswerFailureCallback, sdpConstraints);
@@ -254,7 +255,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 	
 	// Add ICE candidates 
 	this.addCandidate = function (candidate){
-		traceVC("add remote candidate: " + JSON.stringify(candidate));
+		traceVC("Added remote candidate: " + JSON.stringify(candidate));
 		self.pc.addIceCandidate(candidate);
 	}
 
