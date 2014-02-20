@@ -85,7 +85,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 		self.setRemoteDescription(sessionDescription, "answer"); //TODO: refactor this (hide)
 	};
 	this.onCandidateSignalingCallback = function (fromUserID, candidate, sessionID){
-		traceVC("onCandidate: " + JSON.stringify(candidate));
+		//traceVC("onCandidate: " + JSON.stringify(candidate));
 	
     	self.addCandidate(candidate);
 	};
@@ -151,20 +151,20 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 	this.onIceCandidateCallback = function(event) {  
 		var candidate = event.candidate;	
 	
-		traceVC('iceGatheringState: ' + event.target.iceGatheringState);
+		//traceVC('iceGatheringState: ' + event.target.iceGatheringState);
 	
 		if (candidate) {
 			var iceData = {sdpMLineIndex: candidate.sdpMLineIndex,
       					  		  sdpMid: candidate.sdpMid,
       				   		   candidate: candidate.candidate}
       				   		   
-      		traceVC('onIceCandidateCallback: ' + JSON.stringify(iceData));
+      		//traceVC('onIceCandidateCallback: ' + JSON.stringify(iceData));
 			
     		var iceDataAsmessage = self.signalingService.xmppDictionaryToText(iceData);
   	
   			if(self.state == VIDEOCHAT_STATE.INACTIVE){
   			    // save to queue
-  			    traceVC('candidate queued');
+  			    //traceVC('candidate queued');
   			    self.candidatesQueue.push(iceDataAsmessage);
   			}else{
   			    // Send ICE candidate to opponent
@@ -172,7 +172,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 			}
 
 		} else {
-			traceVC('No candidates');
+			//traceVC('No candidates');
 		}
 	}
 
@@ -254,7 +254,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 	
 	// Add ICE candidates 
 	this.addCandidate = function (candidate){
-		traceVC('addCandidate');
+		traceVC("add remote candidate: " + JSON.stringify(candidate));
 		self.pc.addIceCandidate(candidate);
 	}
 
