@@ -85,9 +85,9 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 		self.setRemoteDescription(sessionDescription, "answer"); //TODO: refactor this (hide)
 	};
 	this.onCandidateSignalingCallback = function (fromUserID, candidate, sessionID){
-		traceVC("onCandidate: " + JSON.stringify(candidate));
+		//traceVC("onCandidate: " + JSON.stringify(candidate));
 	
-    	//self.addCandidate(candidate);
+    	self.addCandidate(candidate);
 	};
     
     // Set signaling service
@@ -256,7 +256,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 	// Add ICE candidates 
 	this.addCandidate = function (candidate){
 		traceVC("Added remote candidate: " + JSON.stringify(candidate));
-		self.pc.addIceCandidate(candidate);
+		//self.pc.addIceCandidate(candidate);
 	}
 
 	// Cleanup 
