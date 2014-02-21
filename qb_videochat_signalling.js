@@ -181,13 +181,13 @@ function QBVideoChatSignaling(){
 			}
 			break;
 		case QB_CANDIDATE:
-			for (var i=0; i < self.onCandidateCallbacks.length; i++) {
-				var callback = self.onCandidateCallbacks[i];
-				if (typeof(callback) === "function") {
-					var jsonCandidate = self.xmppTextToDictionary(body);
-					callback(fromUserID, jsonCandidate, sessionID);
-				}
-			}
+			// for (var i=0; i < self.onCandidateCallbacks.length; i++) {
+// 				var callback = self.onCandidateCallbacks[i];
+// 				if (typeof(callback) === "function") {
+// 					var jsonCandidate = self.xmppTextToDictionary(body);
+// 					callback(fromUserID, jsonCandidate, sessionID);
+// 				}
+// 			}
 			break;
 		case QB_STOPCALL:
 			for (var i=0; i < self.onStopCallbacks.length; i++) {
