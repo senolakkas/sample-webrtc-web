@@ -134,7 +134,7 @@ function QBVideoChatSignaling(){
 	}
 	
 	this.rawInput = function(data) {
-    	//traceS('RECV: ' + data);
+    	traceS('RECV: ' + data);
 	}
 
 	this.rawOutput = function(data) {
