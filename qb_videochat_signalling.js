@@ -134,7 +134,7 @@ function QBVideoChatSignaling(){
 	}
 	
 	this.rawInput = function(data) {
-    	traceS('RECV: ' + data);
+    	//traceS('RECV: ' + data);
 	}
 
 	this.rawOutput = function(data) {
@@ -142,7 +142,6 @@ function QBVideoChatSignaling(){
 	}	
 
 	this.onMessage = function(msg) {
-	    traceS('onMessage...');
 		var to = msg.getAttribute('to');
 		var from = msg.getAttribute('from');
 		var type = msg.getAttribute('type');
@@ -185,7 +184,7 @@ function QBVideoChatSignaling(){
 				var callback = self.onCandidateCallbacks[i];
 				if (typeof(callback) === "function") {
 					var jsonCandidate = self.xmppTextToDictionary(body);
-					//callback(fromUserID, jsonCandidate, sessionID);
+					callback(fromUserID, jsonCandidate, sessionID);
 				}
 			}
 			break;
