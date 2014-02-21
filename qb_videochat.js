@@ -254,9 +254,14 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 	}
 	
 	// Add ICE candidates 
-	this.addCandidate = function (candidate){
-		traceVC("Added remote candidate: " + JSON.stringify(candidate));
-		//self.pc.addIceCandidate(candidate);
+	this.addCandidate = function (jsonCandidate){
+		traceVC("Added remote candidate: " + JSON.stringify(jsonCandidate));
+		var candidate = new RTCIceCandidate({
+			sdpMLineIndex: jsonCandidate.sdpMLineIndex,
+				candidate: jsonCandidate.candidate,
+				   sdpMid: jsonCandidate.sdpMid
+		});
+		self.pc.addIceCandidate(candidate);
 	}
 
 	// Cleanup 
