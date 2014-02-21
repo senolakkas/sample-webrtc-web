@@ -142,6 +142,7 @@ function QBVideoChatSignaling(){
 	}	
 
 	this.onMessage = function(msg) {
+	    traceS('onMessage...');
 		var to = msg.getAttribute('to');
 		var from = msg.getAttribute('from');
 		var type = msg.getAttribute('type');
