@@ -221,24 +221,20 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 	
 	this.onGetSessionDescriptionSuccessCallback = function(sessionDescription) {
 		traceVC('sessionDescriptionSuccessCallback: ' + sessionDescription);
-		
-		self.localSessionDescription = sessionDescription;
 	    
 		self.pc.setLocalDescription(sessionDescription, 
 			function onSuccess(){
 				traceVC('setLocalDescription onSuccess');
 				
+				self.localSessionDescription = sessionDescription;
+				
 				// ICE gathering starts work here
 				//
-				
-				// Send only string representation of sdp
-				// http://www.w3.org/TR/webrtc/#rtcsessiondescription-class
-				var sdpStringRepresentation = sessionDescription.sdp;
 
 				if (sessionDescription.type === 'offer') {
-					self.signalingService.call(self.opponentID, sdpStringRepresentation, self.sessionID);
+					self.sendCallRequest();
 				}else if (sessionDescription.type === 'answer') {
-					self.signalingService.accept(self.opponentID, sdpStringRepresentation, self.sessionID);
+					self.sendAceptRequest();
 				}
 				
 			},function onError(error){
@@ -264,6 +260,21 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 				   sdpMid: jsonCandidate.sdpMid
 		});
 		self.pc.addIceCandidate(candidate);
+	}
+	
+	
+	this.sendCallRequest = function () {
+		// Send only string representation of sdp
+		// http://www.w3.org/TR/webrtc/#rtcsessiondescription-class
+	
+		self.signalingService.call(self.opponentID, self.localSessionDescription.sdp, self.sessionID);
+	}
+	
+	this.sendAceptRequest = function () {
+		// Send only string representation of sdp
+		// http://www.w3.org/TR/webrtc/#rtcsessiondescription-class
+	
+		self.signalingService.accept(self.opponentID, self.localSessionDescription.sdp, self.sessionID);
 	}
 
 	// Cleanup 
