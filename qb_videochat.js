@@ -221,6 +221,8 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 	
 	this.onGetSessionDescriptionSuccessCallback = function(sessionDescription) {
 		traceVC('sessionDescriptionSuccessCallback: ' + sessionDescription);
+		
+		self.localSessionDescription = sessionDescription;
 	    
 		self.pc.setLocalDescription(sessionDescription, 
 			function onSuccess(){
@@ -275,6 +277,10 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 // Call to user  
 QBVideoChat.prototype.call = function(userID) {
 	traceVC("Call");
+	
+	if(self.localSessionDescription != null){
+		return;
+	}
 	
 	this.opponentID = userID;
 	
