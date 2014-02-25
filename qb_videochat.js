@@ -8,8 +8,8 @@
 
 // STUN/TURN servers
 var pc_config = {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}, 
-								{'url': 'turn:turnserver.quickblox.com:3478?transport=udp'},
-								{'url': 'turn:turnserver.quickblox.com:3478?transport=tcp'}]};
+								{'url': 'turn:turnserver.quickblox.com:3478?transport=udp', 'username': 'user'},
+								{'url': 'turn:turnserver.quickblox.com:3478?transport=tcp', 'username': 'user'}]};
 
 // SDP constraints 
 var sdpConstraints = {'mandatory': {
