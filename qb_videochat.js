@@ -100,9 +100,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
     // MediaStream getUserMedia 
 	this.getUserMedia = function () {
 		traceVC("getUserMedia...");
-
-		navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-
+		
 		function successCallback(localMediaStream) {
 			traceVC("getUserMedia successCallback");
 	
@@ -110,8 +108,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 			self.localStream = localMediaStream;
 
 			// play own stream
-			self.localStreamElement.src = window.URL.createObjectURL(localMediaStream);
-			self.localStreamElement.play();
+			attachMediaStream(self.localStreamElement, localMediaStream);
 			
 			//
 			// Create RTC peer connection
@@ -123,7 +120,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
 		}
 
 		// Get User media
-		navigator.getUserMedia(this.constraints, successCallback, errorCallback);
+		getUserMedia(this.constraints, successCallback, errorCallback);
 	}
 	//
 	// Call getUserMedia
@@ -184,8 +181,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
   		self.remoteStream = event.stream;
   		
   		// play remote stream
- 		self.remoteStreamElement.src = window.URL.createObjectURL(event.stream);
- 		self.remoteStreamElement.play();
+ 		attachMediaStream(self.remoteStreamElement, event.stream);
 	}
 
 	// onRemoteStreamRemoved callback
