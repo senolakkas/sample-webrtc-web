@@ -103,7 +103,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
     
     // MediaStream getUserMedia 
 	this.getUserMedia = function () {
-		traceVC("getUserMedia... constraints=" + this.constraints);
+		traceVC("getUserMedia... constraints=" + JSON.stringify(this.constraints));
 		
 		function successCallback(localMediaStream) {
 			traceVC("getUserMedia successCallback");
