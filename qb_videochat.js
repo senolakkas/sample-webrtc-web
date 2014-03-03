@@ -77,6 +77,7 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
     var self = this;
     
     // Signalling callbacks
+    //
 	this.onCallSignalingCallback = function (fromUserID, sessionDescription, sessionID){
 		traceVC("onCall");
 		
@@ -282,6 +283,27 @@ function QBVideoChat(localStreamElement, remoteStreamElement, constraints, signa
   		traceVC("Closed RTC");
   		self.pc.close();
   		self.pc = null;
+	}
+	
+	
+	// Utils
+	//
+	function maybePreferAudioSendCodec(sdp) {
+	  if (audio_send_codec == '') {
+	    console.log('No preference on audio send codec.');
+	    return sdp;
+	  }
+	  console.log('Prefer audio send codec: ' + audio_send_codec);
+	  return preferAudioCodec(sdp, audio_send_codec);
+	}
+	
+	function maybePreferAudioReceiveCodec(sdp) {
+	  if (audio_receive_codec == '') {
+	    console.log('No preference on audio receive codec.');
+	    return sdp;
+	  }
+	  console.log('Prefer audio receive codec: ' + audio_receive_codec);
+	  return preferAudioCodec(sdp, audio_receive_codec);
 	}
 }
     
