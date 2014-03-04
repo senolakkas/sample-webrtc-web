@@ -223,7 +223,11 @@ function QBVideoChatSignaling(){
 	}
 
 	this.xmppDictionaryToText = function(data) {
-		return Strophe.xmlescape(JSON.stringify(data));
+	    var dataAsString = JSON.stringify(data);
+	    var escapedString = Strophe.xmlescape(dataAsString);
+	    traceS('dataAsString: ' + dataAsString);
+	    traceS('escapedString: ' + escapedString);
+		return escapedString;
 	}
 }
  
