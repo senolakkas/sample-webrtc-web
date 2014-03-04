@@ -205,14 +205,14 @@ function QBVideoChatSignaling(){
 	this.sendMessage = function(userID, type, data, sessionID) {
 		var opponentJID = userID + "-" + QBPARAMS.app_id + "@" + CHAT.server;
 		var body = data == null ? '' : data;
-		//var nodeBody = Strophe.xmlElement('body', body);
+		var nodeBody = Strophe.xmlElement('body', body);
 		
 		traceS('sendMessage body: ' + body);
-		//traceS('sendMessage nodeBody: ' + Strophe.getText(nodeBody));
+		traceS('sendMessage nodeBody: ' + nodeBody.toString());
 	
 		var reply = $msg({to: opponentJID, 
 						 from: this.userJID, 
-						 type: type}).c('body', null, body);
+						 type: type}).cnode(nodeBody);
 		
 		traceS('sendMessage reply:' + reply);
 		
