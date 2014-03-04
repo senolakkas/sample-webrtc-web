@@ -231,8 +231,7 @@ function QBVideoChatSignaling(){
 
 	this.xmppDictionaryToText = function(data) {
 	    var dataAsString = JSON.stringify(data);
-	    var escapedString = Strophe.xmlescape(dataAsString);
-		return escapedString;
+		return dataAsString;
 	}
 }
  
