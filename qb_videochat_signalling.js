@@ -207,22 +207,20 @@ function QBVideoChatSignaling(){
 		var body = data == null ? '' : data;
 		var nodeBody = Strophe.xmlElement('body', body);
 		
-		traceS('sendMessage body: ' + body);
-		traceS('sendMessage nodeBody: ' + Strophe.getText(nodeBody));
-	
 		var reply = $msg({to: opponentJID, 
 						 from: this.userJID, 
 						 type: type}).cnode(nodeBody);
-		
-		traceS('sendMessage reply:' + reply);
 		
 		this.connection.send(reply);
 	}
 
 	this.xmppTextToDictionary = function(data) {
 		try {
+		    traceS('this.xmppTextToDictionary data:' + data);
 		    var xmlUnescaped = Strophe.xmlunescape(data);
+		    traceS('this.xmppTextToDictionary xmlUnescaped:' + xmlUnescaped);
 		    var parsedJson = $.parseJSON(xmlUnescaped);
+		    traceS('this.xmppTextToDictionary parsedJson:' + parsedJson);
 			return parsedJson;
 		} catch(err) {
 			return data;
