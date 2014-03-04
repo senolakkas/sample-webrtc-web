@@ -133,7 +133,7 @@ function QBVideoChatSignaling(){
 	}
 	
 	this.rawInput = function(data) {
-    	//traceS('RECV: ' + data);
+    	traceS('RECV: ' + data);
 	}
 
 	this.rawOutput = function(data) {
@@ -217,12 +217,9 @@ function QBVideoChatSignaling(){
 	this.xmppTextToDictionary = function(data) {
 		try {
 		    var xmlUnescaped = Strophe.xmlunescape(data);
-		    traceS('xmppDictionaryToText xmlUnescaped: ' + xmlUnescaped);
 		    var parsedJson = $.parseJSON(xmlUnescaped);
-		    traceS('xmppDictionaryToText parsedJson: ' + parsedJson);
 			return parsedJson;
 		} catch(err) {
-		    traceS('xmppDictionaryToText err: ' + err);
 			return data;
 		}
 	}
@@ -230,7 +227,6 @@ function QBVideoChatSignaling(){
 	this.xmppDictionaryToText = function(data) {
 	    var dataAsString = JSON.stringify(data);
 	    var escapedString = Strophe.xmlescape(dataAsString);
-	    traceS('xmppDictionaryToText escapedString: ' + escapedString);
 		return escapedString;
 	}
 }
