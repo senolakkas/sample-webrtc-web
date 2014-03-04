@@ -208,7 +208,7 @@ function QBVideoChatSignaling(){
 		var nodeBody = Strophe.xmlElement('body', body);
 		
 		traceS('sendMessage body: ' + body);
-		traceS('sendMessage nodeBody: ' + nodeBody);
+		traceS('sendMessage nodeBody: ' + Strophe.getText(nodeBody));
 	
 		var reply = $msg({to: opponentJID, 
 						 from: this.userJID, 
