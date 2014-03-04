@@ -216,7 +216,9 @@ function QBVideoChatSignaling(){
 
 	this.xmppTextToDictionary = function(data) {
 		try {
-		    var parsedJson = $.parseJSON(data);
+		    var xmlUnescaped = Strophe.xmlunescape(data);
+		    traceS('xmppDictionaryToText xmlUnescaped: ' + xmlUnescaped);
+		    var parsedJson = $.parseJSON(xmlUnescaped);
 		    traceS('xmppDictionaryToText parsedJson: ' + parsedJson);
 			return parsedJson;
 		} catch(err) {
