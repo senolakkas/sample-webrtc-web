@@ -11,10 +11,14 @@ var opponentID;
 
 // Test users
 var TESTUSERS = {
-                        id1         : '298',
-                        login1      : 'bobbobbob',
-                        password1   : 'bobbobbob',
-                        name1       : 'Bob',
+//                        id1         : '298',
+//                        login1      : 'bobbobbob',
+//                        password1   : 'bobbobbob',
+//                        name1       : 'Bob',
+id1         : '909907',
+login1      : 'katekate',
+password1   : 'katekate',
+name1       : 'Kate',
                         id2         : '299',
                         login2      : 'samsamsam',
                         password2   : 'samsamsam',
