@@ -216,14 +216,14 @@ function QBVideoChatSignaling(){
 
 	this.xmppTextToDictionary = function(data) {
 		try {
-			return $.parseJSON(Strophe.unescapeNode(data));
+			return $.parseJSON(data);
 		} catch(err) {
-			return Strophe.unescapeNode(data);
+			return data;
 		}
 	}
 
 	this.xmppDictionaryToText = function(data) {
-		return Strophe.escapeNode(JSON.stringify(data));
+		return Strophe.xmlescape(JSON.stringify(data));
 	}
 }
  
