@@ -216,7 +216,7 @@ function QBVideoChatSignaling(){
 		
 		traceS('sendMessage reply:' + reply);
 		
-		this.connection.send(reply);
+		this.connection.send(reply.tree());
 	}
 
 	this.xmppTextToDictionary = function(data) {
