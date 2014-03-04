@@ -207,12 +207,12 @@ function QBVideoChatSignaling(){
 		var body = data == null ? '' : data;
 		var nodeBody = Strophe.xmlElement('body', body);
 		
+		traceS('sendMessage body: ' + body);
 		traceS('sendMessage nodeBody: ' + nodeBody);
 	
 		var reply = $msg({to: opponentJID, 
 						 from: this.userJID, 
-						 type: type})
-				.cnode(nodeBody);
+						 type: type}).cnode(nodeBody);
 		
 		traceS('sendMessage reply:' + reply);
 		
@@ -278,7 +278,7 @@ QBVideoChatSignaling.prototype.reject = function(userID, sessionID) {
 }
 
 QBVideoChatSignaling.prototype.sendCandidate = function(userID, candidate, sessionID) {
-	traceS('sendCandidate ' + userID + ', candidate: ' + candidate);
+	//traceS('sendCandidate ' + userID + ', candidate: ' + candidate);
     this.sendMessage(userID, QB_CANDIDATE, candidate, sessionID);
 }
 
