@@ -137,7 +137,7 @@ function QBVideoChatSignaling(){
 	}
 
 	this.rawOutput = function(data) {
-    	traceS('SENT: ' + data);
+    	//traceS('SENT: ' + data);
 	}	
 
 	this.onMessage = function(msg) {
@@ -205,11 +205,16 @@ function QBVideoChatSignaling(){
 	this.sendMessage = function(userID, type, data, sessionID) {
 		var opponentJID = userID + "-" + QBPARAMS.app_id + "@" + CHAT.server;
 		var body = data == null ? '' : data;
+		var nodeBody = Strophe.xmlElement('body', body);
+		
+		traceS('sendMessage nodeBody: ' + nodeBody);
 	
 		var reply = $msg({to: opponentJID, 
 						 from: this.userJID, 
 						 type: type})
-				.cnode(Strophe.xmlElement('body', body));
+				.cnode(nodeBody);
+		
+		traceS('sendMessage reply:' + reply);
 		
 		this.connection.send(reply);
 	}
@@ -274,7 +279,7 @@ QBVideoChatSignaling.prototype.reject = function(userID, sessionID) {
 }
 
 QBVideoChatSignaling.prototype.sendCandidate = function(userID, candidate, sessionID) {
-	//traceS('sendCandidate ' + userID + ', candidate: ' + candidate);
+	traceS('sendCandidate ' + userID + ', candidate: ' + candidate);
     this.sendMessage(userID, QB_CANDIDATE, candidate, sessionID);
 }
 
