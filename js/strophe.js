@@ -829,6 +829,15 @@ Strophe = {
         return text;
     },
     
+    /*  Function: xmlunescape
+     *  Unexcapes invalid xml characters.
+     *
+     *  Parameters:
+     *     (String) text - text to unescape.
+     *
+     *	Returns:
+     *      Unescaped text.
+     */
     xmlunescape: function(text)
     {
         text = text.replace(/\&amp;/g, "&");
