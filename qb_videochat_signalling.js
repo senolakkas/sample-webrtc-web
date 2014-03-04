@@ -216,8 +216,11 @@ function QBVideoChatSignaling(){
 
 	this.xmppTextToDictionary = function(data) {
 		try {
-			return $.parseJSON(data);
+		    var parsedJson = $.parseJSON(data);
+		    traceS('xmppDictionaryToText parsedJson: ' + parsedJson);
+			return parsedJson;
 		} catch(err) {
+		    traceS('xmppDictionaryToText err: ' + err);
 			return data;
 		}
 	}
@@ -225,8 +228,7 @@ function QBVideoChatSignaling(){
 	this.xmppDictionaryToText = function(data) {
 	    var dataAsString = JSON.stringify(data);
 	    var escapedString = Strophe.xmlescape(dataAsString);
-	    traceS('dataAsString: ' + dataAsString);
-	    traceS('escapedString: ' + escapedString);
+	    traceS('xmppDictionaryToText escapedString: ' + escapedString);
 		return escapedString;
 	}
 }
