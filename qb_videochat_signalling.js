@@ -214,7 +214,7 @@ function QBVideoChatSignaling(){
 						 from: this.userJID, 
 						 type: type}).cnode(nodeBody);
 		
-		traceS('sendMessage reply:' + reply);
+		traceS('sendMessage reply:' + reply.tree());
 		
 		this.connection.send(reply.tree());
 	}
