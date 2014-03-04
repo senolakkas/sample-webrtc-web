@@ -137,7 +137,7 @@ function QBVideoChatSignaling(){
 	}
 
 	this.rawOutput = function(data) {
-    	//traceS('SENT: ' + data);
+    	traceS('SENT: ' + data);
 	}	
 
 	this.onMessage = function(msg) {
