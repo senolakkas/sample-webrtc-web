@@ -5,7 +5,7 @@
 	<meta charset="utf-8" />
 	<title>XMPP WebRTC DEMO sample</title>
 	
-	<link rel="stylesheet" href="demo.css" />
+	<link rel="stylesheet" href="main.css" />
 	
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 </head>
@@ -17,11 +17,11 @@
 		<div id="auth">			
 			<div class="main-wrap">
 				<div class="logo"><img src="images/logo.png" alt="QuickBlox logo" /></div>
-				<div class="welcome">Welcome to<br />QuickBlox WebRTC DEMO sample</div>
+				<div class="welcome">Welcome to<br />QuickBlox WebRTC DEMO sample, v0.1</div>
 				
 				<div id="buttons">
-					<p><button onclick="authQB(1)">Sign in with User1</button></p>
-					<p><button onclick="authQB(2)">Sign in with User2</button></p>
+					<p><button onclick="login(1)">Sign in with Bob</button></p>
+					<p><button onclick="login(2)">Sign in with Sam</button></p>
 				</div>
 			</div>
 			
@@ -39,19 +39,31 @@
 		<!-- VideoChat block-->
 		<div id="webrtc">
 		
-		    <!-- local video stream -->
-            <video id="localVideo" autoplay style="display:none;"></video>
-            
-            <!-- remote video stream -->
-            <video id="remoteVideo" autoplay style="display:none;"></video>
-            
-            <!-- call user -->
-            <button id="callToUser" onclick="callToUser() style="display:none;">Сall to opponent</button>
+			<div>
+				<!-- local video container -->
+				<div id="localVideoContainer" style="display:none;">
+					<video id="localVideo" autoplay muted="true"></video>
+					<p id="currentUserName"></p>
+				</div>
+			
+				<!-- remote video container -->
+				<div id="remoteVideoContainer" style="display:none;">
+					<video id="remoteVideo" autoplay></video>
+					<!-- video callbacks http://www.w3.org/html/wg/drafts/html/master/embedded-content-0.html#mediaevents -->
+					<p id="opponentUserName"></p>
+				</div>
+				
+				<!-- call user -->
+                <button id="callToUserButton" onclick="callToUser()" style="display:none;"></button>
+            </div>
+
+            <!-- incoming call alert -->
+            <audio id="incomingCallAudio" src="./ring.mp3"></audio>
 
             <!-- accept/reject buttons -->
 			<div id="incomingCallControls" style="display:none;">
-				<button id="acceptCall">Accept call</button>
-				<button id="declineCall">Decline call</button>
+				<button id="acceptCallButton" onclick="acceptCall()">Accept call</button>
+				<button id="rejectCallButton" onclick="rejectCall()">Reject call</button>
 			</div>
 
             <!-- hung up button -->
@@ -69,11 +81,9 @@
 	
 	<script src="js/quickblox.js"></script>
 	<script src="js/strophe.js"></script>
-	<script src="js/jquery.base64.min.js"></script>
-	<script src="js/jquery.formatDateTime.js"></script>
-	<script src="js/jquery.scrollTo-min.js"></script>
-	<script src="qb_signalling.js"></script>
-	<script src="qb_webrtc.js"></script>
-    <script src="demo.js"></script>
+	<script src='js/adapter.js'></script>
+	<script src="qb_videochat_signalling.js"></script>
+	<script src="qb_videochat.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>
