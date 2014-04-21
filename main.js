@@ -1,11 +1,3 @@
-/*
- * QuickBlox WebRTC Sample
- * version 0.02
- *
- * Author: Igor Khomenko (igor@quickblox.com)
- *
- */
-
 var myName, opponentName;
 var opponentID;
 
