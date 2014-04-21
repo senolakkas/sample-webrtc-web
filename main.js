@@ -30,7 +30,8 @@ $(document).ready(function() {
 			// events
 			$('#loginForm button').click(login);
 			$('#logout').click(logout);
-			$('#videocall').click(createVideoChatInstance);
+			$('#doCall').click(doCall);
+			$('#stopCall').click(stopCall);
 		}
 	});
 });
@@ -67,10 +68,8 @@ function connectChat() {
 		onConnectFailed: onConnectFailed,
 		onConnectSuccess: onConnectSuccess,
 		onConnectClosed: onConnectClosed,
-		onChatMessage: onChatMessage,
-		onChatState: onChatState,
 
-		debug: true
+		debug: false
 	};
 	
 	chatService = new QBChat(params);
@@ -80,16 +79,50 @@ function connectChat() {
 }
 
 function logout() {
-	// close the connection
+	stopCall();
 	chatService.disconnect();
 }
 
 function createSignalingInstance() {
-	signaling = new QBVideoChatSignaling(QBAPP.appID, CHAT.server, connection);
-	signaling.onCallCallback = onCall;
-	signaling.onAcceptCallback = onAccept;
-	signaling.onRejectCallback = onReject;
-	signaling.onStopCallback = onStop;
+	// set parameters of Signaling object
+	params = {
+		onCallCallback: onCall,
+		onAcceptCallback: onAccept,
+		onRejectCallback: onReject,
+		onStopCallback: onStop,
+
+		debug: false
+	};
+	
+	signaling = new QBVideoChatSignaling(chatService, params);
+	createVideoChatInstance();
+}
+
+function createVideoChatInstance(sessionID, sessionDescription) {
+	var name = chooseOpponent(chatUser.login);
+	
+	// set parameters of videoChat object
+	params = {
+		sessionID: sessionID,
+		sessionDescription: sessionDescription,
+		
+		constraints: {audio: true, video: true},
+		
+		onGetUserMediaSuccess: function() {
+			getMediaSuccess(recipientID, name, sessionID)
+		},
+		
+		onGetUserMediaError: function() {
+			getMediaError(recipientID)
+		},
+
+		debug: false
+	};
+	
+	videoChat = new QBVideoChat(signaling, params);
+	
+	// set access to user media devices
+	videoChat.getUserMedia();
 }
 
 /* Callbacks
@@ -124,8 +157,35 @@ function onConnectClosed() {
 	videoChat = null;
 }
 
+function getMediaSuccess(qbID, name, sessionID) {
+	$('#doCall, #stopCall').attr('data-qb', qbID);
+	if (sessionID)
+		$('#doCall').hide().parent().find('#stopCall').show();
+	
+	videoChat.localStreamElement = $('#localVideo')[0];
+	videoChat.remoteStreamElement = $('#remoteVideo')[0];
+	videoChat.attachMediaStream(videoChat.localStreamElement, videoChat.localStream);
+	
+	if (sessionID) {
+		getRemoteStream();
+		videoChat.accept(qbID, chatUser.login);
+	}
+}
+
+function getMediaError(qbID) {
+	videoChat.reject(qbID, chatUser.login);
+}
+
 /* Helpers
 ----------------------------------------------------------*/
 function chooseOpponent(currentLogin) {
 	return currentLogin == 'Quick' ? 'Blox' : 'Quick';
+}
+
+function getRemoteStream() {
+	var miniVideo = $('#miniVideo')[0];
+	videoChat.reattachMediaStream(miniVideo, videoChat.localStreamElement);
+	
+	$('#localVideo').hide();
+	$('#remoteVideo, #miniVideo').show();
 }

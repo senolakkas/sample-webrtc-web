@@ -73,5 +73,74 @@ body {
 			opacity: 0.7;
 		}
 	#wrap .panel-body {
+		position: relative;
 		padding: 0;
 	}
+	
+/* Videochat
+----------------------------------------------------------*/
+.btn_call {
+	padding: 0 15px;
+	font-size: 14px;
+	line-height: 28px;
+	font-weight: bold;
+	color: #fff;
+	outline: 0;
+	border-radius: 4px;
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+	cursor: pointer;
+}
+.btn_call:hover {
+	opacity: 0.7;
+}
+.btn_call_green {
+	background: #02ad2a;
+	border: 1px solid #00821e;
+}
+.btn_call_red {
+	background: #841F22;
+	border: 1px solid #681416;
+}
+
+#remoteVideo,
+#miniVideo,
+#stopCall {
+	display: none;
+}
+
+.fullVideo {
+	height: 100%;
+	max-height: 100%;
+}
+.smallVideo {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	width: 20%;
+}
+#videochat {
+	height: 100%;
+	max-height: 480px;
+	margin: 0 auto;
+	font: 16px/20px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	text-align: center;
+	color: #c7c7c7;
+	background: #000;
+	-webkit-font-smoothing: antialiased;
+}
+	#videochat #localVideo,
+	#miniVideo {
+		-webkit-transform: scale(-1, 1);
+		transform: scale(-1, 1);
+	}
+	
+#videochat-footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: 50px;
+	padding: 10px 0;
+	text-align: center;
+	background: rgba(24, 24, 24, 0.7);
+}
