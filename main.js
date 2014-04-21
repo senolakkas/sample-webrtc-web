@@ -1,188 +1,131 @@
-var myName, opponentName;
-var opponentID;
+var params, chatUser, chatService, recipientID;
+var signaling, videoChat;
 
-// Test users
-var TESTUSERS = {
-                        id1         : '298',
-                        login1      : 'bobbobbob',
-                        password1   : 'bobbobbob',
-                        name1       : 'Bob',
-//id1         : '909907',
-//login1      : 'katekate',
-//password1   : 'katekate',
-//name1       : 'Kate',
-                        id2         : '299',
-                        login2      : 'samsamsam',
-                        password2   : 'samsamsam',
-                        name2       : 'Sam',
-}
+// Storage QB user ids by their logins
+var users = {
+	Quick: '999190',
+	Blox: '978816'
+};
 
-// Widget settings
-var WIDGET_WIDTH = $('body').width();
-var WIDGET_HEIGHT = $('body').height();
+var audio = {
+	ring: $('#ring')[0]
+};
 
-var localVideo, remoteVideo;
-
-var videoChatSignaling;
-var videoChat;
-
-
-/*------------------- DOM is ready -------------------------*/
-$(document).ready(function(){
-	$('#auth').show();
-	//
-	$('#connecting').hide();
-	//
-	$('#webrtc').hide();
-    //$('#callIncoming').hide();
-    //$('#userVideo').hide();
-    //$('#recipientVideoContainer').hide();
-    
-    
-    $("#acceptCall").click(function() {
-		document.getElementById("ring").pause();
-		$(".delay").fadeIn(200);
-		setTimeout(function(){$("#callIncoming").addClass("hidden")}, 3000);
-		setTimeout(function(){callActive = true; callTimer()}, 3000);
-		setTimeout(function(){$("#callIncoming").hide()}, 4000);
-		setTimeout(function(){$(".activeCallControls").fadeIn(500)}, 4000);
-	});
-	$("#hangUp").click(function() {
-		recipientVideo.stop();
-	});
+$(document).ready(function() {
+	// Web SDK initialization
+	QB.init(QBAPP.appID, QBAPP.authKey, QBAPP.authSecret);
 	
-	localVideo = document.getElementById("localVideo");
-	remoteVideo = document.getElementById("remoteVideo");
+	// QuickBlox session creation
+	QB.createSession(function(err, result) {
+		if (err) {
+			console.log(err.detail);
+		} else {
+			$('#loginForm').modal({
+				backdrop: 'static',
+				keyboard: false
+			});
+			
+			$('.tooltip-title').tooltip();
+			
+			// events
+			$('#loginForm button').click(login);
+			$('#logout').click(logout);
+			$('#videocall').click(createVideoChatInstance);
+		}
+	});
 });
 
-/*
- * Actions 
- */
-function login(user) {
-    $('#auth').hide().next('#connecting').show();
-	$('#wrap').addClass('connect_message');
-
+function login() {
+	$('#loginForm button').hide();
+	$('#loginForm .progress').show();
 	
-	// Create signaling instance
-	//
-	videoChatSignaling = new QBVideoChatSignaling();
+	params = {
+		login: $(this).val(),
+		password: '123123123' // default password
+	};
 	
-	// set callbacks
-	videoChatSignaling.addOnConnectionSuccessCallback(onConnectionSuccess);
-	videoChatSignaling.addOnConnectionFailedCallback(onConnectionFailed);
-	videoChatSignaling.addOnConnectionDisconnectedCallback(onConnectionDisconnected);
-	videoChatSignaling.addOnCallCallback(onCall);
-	videoChatSignaling.addOnAcceptCallback(onAccept);
-	videoChatSignaling.addOnRejectCallback(onReject);
+	// chat user authentication
+	QB.login(params, function(err, result) {
+		if (err) {
+			onConnectFailed();
+			console.log(err.detail);
+		} else {
+			chatUser = {
+				id: result.id,
+				login: params.login,
+				pass: params.password
+			};
+			
+			connectChat();
+		}
+	});
+}
+
+function connectChat() {
+	// set parameters of Chat object
+	params = {
+		onConnectFailed: onConnectFailed,
+		onConnectSuccess: onConnectSuccess,
+		onConnectClosed: onConnectClosed,
+		onChatMessage: onChatMessage,
+		onChatState: onChatState,
+
+		debug: true
+	};
 	
-	// Login To Chat
-	//
-	var login, password;
-	if (user == 1) {
-		login = TESTUSERS.login1;
-		password = TESTUSERS.password1;
-		
-		myName = TESTUSERS.name1;
-		opponentName = TESTUSERS.name2;
-		
-		opponentID = TESTUSERS.id2;
-	} else {
-		login = TESTUSERS.login2;
-		password = TESTUSERS.password2;
-		
-		myName = TESTUSERS.name2;
-		opponentName = TESTUSERS.name1;
-		
-		opponentID = TESTUSERS.id1;
-	}
-	//
-	var params = {login: login, password: password};
-	videoChatSignaling.login(params);
+	chatService = new QBChat(params);
+	
+	// connect to QB chat service
+	chatService.connect(chatUser);
 }
 
-function callToUser(){
-	videoChat.call(opponentID);
+function logout() {
+	// close the connection
+	chatService.disconnect();
 }
 
-function acceptCall(){    
-    videoChat.accept(opponentID);
-    
-    $('#incomingCallControls').hide();
-    $('#incomingCallAudio')[0].pause();
-    $('#remoteVideoContainer').show();
+function createSignalingInstance() {
+	signaling = new QBVideoChatSignaling(QBAPP.appID, CHAT.server, connection);
+	signaling.onCallCallback = onCall;
+	signaling.onAcceptCallback = onAccept;
+	signaling.onRejectCallback = onReject;
+	signaling.onStopCallback = onStop;
 }
 
-function rejectCall(){
-    videoChat.reject(opponentID);
-    
-    $('#incomingCallControls').hide();
-    $('#incomingCallAudio')[0].pause()
+/* Callbacks
+----------------------------------------------------------*/
+function onConnectFailed() {
+	$('#loginForm .progress').hide();
+	$('#loginForm button').show();
 }
 
-/*
- * Signalling callbacks
- */
-function onConnectionSuccess(user_id) {
-   	traceM('onConnectionSuccess');
-    
-    $('#connecting').hide();
-    $('#webrtc').show();
-    
-    $('#localVideoContainer').show();
-    $('#callToUserButton').show();
-    $('#currentUserName').text(myName);
-    $('#callToUserButton').text('Call to ' + opponentName);
-    
-    $('#localVideoContainer').show();
-    $('#remoteVideoContainer').show();
-    
-    // Create video chat instance
-    videoChat = new QBVideoChat(localVideo, remoteVideo, 
-							{video: true, audio: true}, videoChatSignaling);
+function onConnectSuccess() {
+	var opponent = chooseOpponent(chatUser.login);
+	recipientID = users[opponent];
+	
+	$('#loginForm').modal('hide');
+	$('#wrap').show();
+	$('.panel-title .opponent').text(opponent);
+	createSignalingInstance();
+	
+	// create a timer that will send presence each 60 seconds
+	chatService.startAutoSendPresence(60);
 }
 
-function onConnectionFailed(error) {
-    traceM('onConnectionFailed: ' + error);
- 
-	$('#connecting, #chat').hide().prev('#auth').show();
-	$('#wrap').removeClass('connect_message');
-	$('#qb_login_form input').addClass('error');
+function onConnectClosed() {
+	$('#wrap').hide();
+	$('#loginForm').modal('show');
+	$('#loginForm .progress').hide();
+	$('#loginForm button').show();
+	
+	chatUser = null;
+	chatService = null;
+	signaling = null;
+	videoChat = null;
 }
 
-function onConnectionDisconnected(){
-    traceM('onConnectionDisconnected');
-    
-    $('.chat-content').html('');
-    $('#chat, #qb_login_form').hide().prevAll('#auth, #buttons').show();
-}
-
-function onCall(fromUserID, sessionDescription, sessionID){
-    traceM('onCall: ' + fromUserID);
-    
-    $('#incomingCallControls').show();
-    $('#incomingCallAudio')[0].play();
-}
-
-function onAccept(fromUserID, sessionDescription, sessionID){
-    traceM('onAccept: ' + fromUserID);
-}
-
-function onReject(fromUserID){
-    traceM('onReject: ' + fromUserID);
-    
-    alert("Call rejected");
-}
-
-function onStop(fromUserID, reason, sessionID){
-    traceM('onStop: ' + fromUserID + ', reason: ' + reason);
-    
-    videoChat = null;
-}
-
-
-/*
- * Helpers 
- */
-function traceM(text) {
- 	 console.log("[main]: " + text);
+/* Helpers
+----------------------------------------------------------*/
+function chooseOpponent(currentLogin) {
+	return currentLogin == 'Quick' ? 'Blox' : 'Quick';
 }
