@@ -138,7 +138,7 @@ function onConnectSuccess() {
 	
 	$('#loginForm').modal('hide');
 	$('#wrap').show();
-	$('.panel-title .opponent').text(opponent);
+	$('#videochat-footer .opponent').text(opponent);
 	createSignalingInstance();
 	
 	// create a timer that will send presence each 60 seconds
