@@ -138,6 +138,7 @@ function onConnectSuccess() {
 	
 	$('#loginForm').modal('hide');
 	$('#wrap').show();
+	$('#videochat-footer').hide();
 	$('#videochat-footer .opponent').text(opponent);
 	createSignalingInstance();
 	
@@ -158,6 +159,7 @@ function onConnectClosed() {
 }
 
 function getMediaSuccess(qbID, name, sessionID) {
+	$('#videochat-footer').show();
 	$('#doCall, #stopCall').attr('data-qb', qbID);
 	if (sessionID)
 		$('#doCall').hide().parent().find('#stopCall').show();
