@@ -8,6 +8,6 @@ var QBAPP = {
 
 // Storage QB user ids by their logins
 var users = {
-	Bob: '999190',
-	Sam: '978816'
+	Bob: '1018619',
+	Sam: '1018620'
 };
