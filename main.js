@@ -249,12 +249,14 @@ function onReject(qbID) {
 }
 
 function onStop(qbID) {
-	if (qbID == $('#stopCall').data('qb')) {
-		$('#stopCall').hide().parent().find('#doCall').show();
-		videoChat.hangup();
-		videoChat.signaling = null;
-		videoChat = null;
-	}
+	$('#stopCall').hide().parent().find('#doCall').show();
+	videoChat.hangup();
+	videoChat.signaling = null;
+	videoChat = null;
+	
+	$('video').attr('src', '');
+	$('#localVideo').show();
+	$('#remoteVideo, #miniVideo').hide();
 	
 	var win = popups['remoteCall' + qbID];
 	if (win) {
