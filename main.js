@@ -155,6 +155,7 @@ function rejectCall(sessionID) {
 }
 
 function stopCall() {
+	$('#stopCall').hide().parent().find('#doCall').show();
 	videoChat.stop(recipientID, chatUser.name);
 	videoChat.hangup();
 	videoChat = null;
@@ -250,6 +251,7 @@ function onReject(qbID) {
 
 function onStop(qbID) {
 	if (qbID == $('#stopCall').data('qb')) {
+		$('#stopCall').hide().parent().find('#doCall').show();
 		videoChat.hangup();
 		videoChat = null;
 	}
