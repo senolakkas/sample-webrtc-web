@@ -158,7 +158,8 @@ function stopCall() {
 	$('#stopCall').hide().parent().find('#doCall').show();
 	videoChat.stop(recipientID, chatUser.name);
 	videoChat.hangup();
-	videoChat = null;
+	/*videoChat.signaling = null;
+	videoChat = null;*/
 }
 
 /* Callbacks
@@ -253,7 +254,8 @@ function onStop(qbID) {
 	if (qbID == $('#stopCall').data('qb')) {
 		$('#stopCall').hide().parent().find('#doCall').show();
 		videoChat.hangup();
-		videoChat = null;
+		/*videoChat.signaling = null;
+		videoChat = null;*/
 	}
 	
 	var win = popups['remoteCall' + qbID];
