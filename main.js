@@ -124,7 +124,8 @@ function createVideoChatInstance(event, sessionID, sessionDescription) {
 }
 
 function doCall() {
-	$(this).hide().parent().find('#stopCall').show();
+	$('#doCall').hide();
+	$('#stopCall').show();
 	videoChat.call(recipientID, chatUser.login);
 }
 
