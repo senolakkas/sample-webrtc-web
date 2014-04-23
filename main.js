@@ -92,7 +92,7 @@ function createSignalingInstance() {
 	signaling = new QBVideoChatSignaling(chatService, params);
 }
 
-function createVideoChatInstance(sessionID, sessionDescription) {
+function createVideoChatInstance(event, sessionID, sessionDescription) {
 	var name = chooseOpponent(chatUser.login);
 	
 	// set parameters of videoChat object
@@ -140,7 +140,7 @@ function acceptCall() {
 	delete popups['remoteCall' + recipientID];
 	
 	stopRing(popups);
-	createVideoChatInstance(sessionID, sessionDescription);
+	createVideoChatInstance(null, sessionID, sessionDescription);
 }
 
 function rejectCall(sessionID) {
