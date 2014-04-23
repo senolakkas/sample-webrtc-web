@@ -1,11 +1,6 @@
 var params, chatUser, chatService, recipientID;
-var signaling, videoChat;
-
-// Storage QB user ids by their logins
-var users = {
-	Quick: '999190',
-	Blox: '978816'
-};
+var signaling, videoChat, popups = {};
+var isPopupClosed = true;
 
 var audio = {
 	ring: $('#ring')[0]
@@ -137,33 +132,25 @@ function acceptCall() {
 	sessionID = $(this).data('id');
 	sessionDescription = $(this).data('description');
 	
-	switches.isPopupClosed = false;
+	isPopupClosed = false;
 	popups['remoteCall' + recipientID].close();
 	delete popups['remoteCall' + recipientID];
 	
 	stopRing(popups);
+	videoChat = null;
 	createVideoChatInstance(sessionID, sessionDescription);
 }
 
 function rejectCall(sessionID) {
-	switches.isPopupClosed = false;
+	isPopupClosed = false;
 	popups['remoteCall' + recipientID].close();
 	delete popups['remoteCall' + recipientID];
 	
 	stopRing(popups);
-	videoChat = videoChat || new QBVideoChat(null, ICE_SERVERS, signaling, sessionID, null);
 	videoChat.reject(recipientID, chatUser.name);
 }
 
 function stopCall() {
-	var win;
-	
-	win = popups['videochat'];
-	
-	switches.isPopupClosed = false;
-	win.close();
-	delete popups['videochat'];
-	
 	videoChat.stop(recipientID, chatUser.name);
 	videoChat.hangup();
 	videoChat = null;
@@ -242,51 +229,41 @@ function onCall(qbID, sessionDescription, sessionID, name, avatar) {
 		audio.ring.play();
 		
 		win.onbeforeunload = function() {
-			if (switches.isPopupClosed)
+			if (isPopupClosed)
 				rejectCall(qbID, sessionID);
-			switches.isPopupClosed = true;
+			isPopupClosed = true;
 		};
 	};
 }
 
 function onAccept(qbID) {
-	/*var win = popups['videochat'];
-	getRemoteStream($(win.document));*/
+	getRemoteStream();
 }
 
 function onReject(qbID) {
-	/*var win = popups['videochat'];
-	if (win)
-		$(win.document).find('#stopCall').hide().parent().find('#doCall').show();*/
+	$('#stopCall').hide().parent().find('#doCall').show();
 }
 
 function onStop(qbID) {
-	/*var win;
-	
-	win = popups['videochat'];
-	if (win && qbID == $(win.document).find('#stopCall').data('qb')) {
-		switches.isPopupClosed = false;
-		win.close();
-		delete popups['videochat'];
-		
+	if (qbID == $('#stopCall').data('qb')) {
 		videoChat.hangup();
 		videoChat = null;
 	}
 	
-	win = popups['remoteCall' + qbID];
+	var win = popups['remoteCall' + qbID];
 	if (win) {
-		switches.isPopupClosed = false;
+		isPopupClosed = false;
 		win.close();
 		delete popups['remoteCall' + qbID];
 		
 		stopRing(popups);
-	}*/
+	}
 }
 
 /* Helpers
 ----------------------------------------------------------*/
 function chooseOpponent(currentLogin) {
-	return currentLogin == 'Quick' ? 'Blox' : 'Quick';
+	return currentLogin == 'Bob' ? 'Sam' : 'Bob';
 }
 
 function getRemoteStream() {
@@ -295,4 +272,40 @@ function getRemoteStream() {
 	
 	$('#localVideo').hide();
 	$('#remoteVideo, #miniVideo').show();
+}
+
+function openPopup(winName, sizes) {
+	var scrWidth, scrHeight, winWidth, winHeight, disWidth, disHeight;
+	var url, params;
+	
+	scrWidth = window.screen.availWidth;
+	scrHeight = window.screen.availHeight;
+	
+	if (sizes) {
+		winWidth = sizes.width;
+		winHeight = sizes.height;
+	}
+	
+	disWidth = (scrWidth - winWidth) / 2;
+	disHeight = (scrHeight - winHeight) / 2;
+	
+	url = window.location.origin + window.location.pathname + 'remotecall.html';
+	params = ('width='+winWidth+', height='+winHeight+', left='+disWidth+', top='+disHeight+', ');
+	
+	return window.open(url, winName, params);
+}
+
+function htmlRemoteCallBuilder(selector, qbID, sessionDescription, sessionID, avatar, name) {
+	avatar = avatar || 'images/avatar_default.jpg';
+	
+	selector.find('title').text('Remote call');
+	selector.find('.avatar').attr('src', avatar);
+	selector.find('.author').html('<b>' + name + '</b><br>is calling you');
+	selector.find('#acceptCall').attr('data-qb', qbID).attr('data-name', name).attr('data-id', sessionID).attr('data-description', sessionDescription);
+	selector.find('#remoteCall').show();
+}
+
+function stopRing(popups) {
+	if (Object.keys(popups).length == 0 || Object.keys(popups).length == 1)
+		audio.ring.pause();
 }

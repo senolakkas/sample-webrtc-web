@@ -146,3 +146,19 @@ body {
 	text-align: center;
 	background: rgba(24, 24, 24, 0.7);
 }
+
+#remoteCall {
+	padding: 20px 10px;
+	text-align: center;
+}
+	#remoteCall .avatar {
+		width: 125px;
+		margin-bottom: 20px;
+		border-radius: 50%;
+	}
+	#remoteCall .author {
+		margin-bottom: 20px;
+	}
+	#remoteCall button:last-child {
+		margin-left: 15px;
+	}
