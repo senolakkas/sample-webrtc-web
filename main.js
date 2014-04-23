@@ -25,7 +25,7 @@ $(document).ready(function() {
 			// events
 			$('#loginForm button').click(login);
 			$('#logout').click(logout);
-			$('#doCall').click(doCall);
+			$('#doCall').click(createVideoChatInstance);
 			$('#stopCall').click(stopCall);
 		}
 	});
@@ -90,7 +90,6 @@ function createSignalingInstance() {
 	};
 	
 	signaling = new QBVideoChatSignaling(chatService, params);
-	createVideoChatInstance();
 }
 
 function createVideoChatInstance(sessionID, sessionDescription) {
@@ -141,7 +140,6 @@ function acceptCall() {
 	delete popups['remoteCall' + recipientID];
 	
 	stopRing(popups);
-	videoChat = null;
 	createVideoChatInstance(sessionID, sessionDescription);
 }
 
@@ -158,8 +156,8 @@ function stopCall() {
 	$('#stopCall').hide().parent().find('#doCall').show();
 	videoChat.stop(recipientID, chatUser.name);
 	videoChat.hangup();
-	/*videoChat.signaling = null;
-	videoChat = null;*/
+	videoChat.signaling = null;
+	videoChat = null;
 }
 
 /* Callbacks
@@ -175,7 +173,6 @@ function onConnectSuccess() {
 	
 	$('#loginForm').modal('hide');
 	$('#wrap').show();
-	$('#videochat-footer').hide();
 	$('#videochat-footer .opponent').text(opponent);
 	createSignalingInstance();
 	
@@ -196,7 +193,6 @@ function onConnectClosed() {
 }
 
 function getMediaSuccess(qbID, name, sessionID) {
-	$('#videochat-footer').show();
 	$('#doCall, #stopCall').attr('data-qb', qbID);
 	if (sessionID)
 		$('#doCall').hide().parent().find('#stopCall').show();
@@ -208,6 +204,8 @@ function getMediaSuccess(qbID, name, sessionID) {
 	if (sessionID) {
 		getRemoteStream();
 		videoChat.accept(qbID, chatUser.login);
+	} else {
+		doCall();
 	}
 }
 
@@ -254,8 +252,8 @@ function onStop(qbID) {
 	if (qbID == $('#stopCall').data('qb')) {
 		$('#stopCall').hide().parent().find('#doCall').show();
 		videoChat.hangup();
-		/*videoChat.signaling = null;
-		videoChat = null;*/
+		videoChat.signaling = null;
+		videoChat = null;
 	}
 	
 	var win = popups['remoteCall' + qbID];
