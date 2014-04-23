@@ -114,7 +114,11 @@ function createVideoChatInstance(sessionID, sessionDescription) {
 		debug: false
 	};
 	
+	console.log(params);
+	
 	videoChat = new QBVideoChat(signaling, params);
+	
+	console.log(videoChat);
 	
 	// set access to user media devices
 	videoChat.getUserMedia();
