@@ -158,6 +158,10 @@ function stopCall() {
 	videoChat.hangup();
 	videoChat.signaling = null;
 	videoChat = null;
+	
+	$('video').attr('src', '');
+	$('#localVideo').show();
+	$('#remoteVideo, #miniVideo').hide();
 }
 
 /* Callbacks
