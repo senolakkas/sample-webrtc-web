@@ -152,12 +152,12 @@ function rejectCall(sessionID) {
 	delete popups['remoteCall' + recipientID];
 	
 	stopRing(popups);
-	videoChat.reject(recipientID, chatUser.name);
+	videoChat.reject(recipientID, userName);
 }
 
 function stopCall() {
 	$('#stopCall').hide().parent().find('#doCall').show();
-	videoChat.stop(recipientID, chatUser.name);
+	videoChat.stop(recipientID, userName);
 	videoChat.hangup();
 	videoChat = null;
 	
