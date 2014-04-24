@@ -284,8 +284,8 @@ function QBVideoChat(signaling, params) {
 	};
 	
 	this.signaling = signaling;
-	this.signaling.onInnerAcceptCallback = this.onAcceptSignalingCallback;
-	this.signaling.onCandidateCallback = this.addCandidate;
+	this.signaling._callbacks.onInnerAcceptCallback = this.onAcceptSignalingCallback;
+	this.signaling._callbacks.onCandidateCallback = this.addCandidate;
 	
 	// MediaStream getUserMedia
 	this.getUserMedia = function() {
