@@ -64,7 +64,7 @@ function connectChat() {
 		onConnectSuccess: onConnectSuccess,
 		onConnectClosed: onConnectClosed,
 
-		debug: false
+		debug: true
 	};
 	
 	chatService = new QBChat(params);
