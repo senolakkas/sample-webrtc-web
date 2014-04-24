@@ -153,7 +153,6 @@ function stopCall() {
 	$('#stopCall').hide().parent().find('#doCall').show();
 	videoChat.stop(recipientID, chatUser.name);
 	videoChat.hangup();
-	videoChat.signaling = null;
 	videoChat = null;
 	
 	$('video').attr('src', '');
@@ -252,7 +251,6 @@ function onReject(qbID) {
 function onStop(qbID) {
 	$('#stopCall').hide().parent().find('#doCall').show();
 	videoChat.hangup();
-	videoChat.signaling = null;
 	videoChat = null;
 	
 	$('video').attr('src', '');
