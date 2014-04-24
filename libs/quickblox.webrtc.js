@@ -247,16 +247,7 @@ function QBVideoChat(signaling, params) {
  	var self = this;
  	
  	this.version = '0.4.4';
-
-	// helpers
-	this._xmppTextToDictionary = function(data) {
-		return $.parseJSON(QBChatHelpers.xmlunescape(data));
-	};
-	
-	this._xmppDictionaryToText = function(data) {
-		return JSON.stringify(data);
-	};
-	 	
+ 	
 	this._state = QBVideoChatState.INACTIVE;
 	this._candidatesQueue = [];
 	this.localStreamElement = null;
@@ -287,7 +278,6 @@ function QBVideoChat(signaling, params) {
 		var jsonCandidate, candidate;
 		
 		jsonCandidate = self._xmppTextToDictionary(data);
-		console.log(jsonCandidate);
 		candidate = new adapter.RTCIceCandidate(jsonCandidate);
 		
 		self.pc.addIceCandidate(candidate);
@@ -452,7 +442,14 @@ function QBVideoChat(signaling, params) {
 		self.pc = null;
 	};
 	
-
+	// helpers
+	this._xmppTextToDictionary = function(data) {
+		return $.parseJSON(QBChatHelpers.xmlunescape(data));
+	};
+	
+	this._xmppDictionaryToText = function(data) {
+		return JSON.stringify(data);
+	};
 }
 
 function traceVC(text) {
