@@ -1,6 +1,7 @@
 var params, chatUser, chatService, recipientID;
 var signaling, videoChat, popups = {};
 var isPopupClosed = true;
+var userName;
 
 var audio = {
 	ring: $('#ring')[0]
@@ -41,8 +42,9 @@ function login() {
 	
 	params = {
 		login: $(this).val(),
-		password: '123123123' // default password
+		password: $(this).val() //'123123123' // default password
 	};
+	userName = $(this).data('name');
 	
 	// chat user authentication
 	QB.login(params, function(err, result) {
@@ -97,7 +99,7 @@ function createSignalingInstance() {
 }
 
 function createVideoChatInstance(event, sessionID, sessionDescription) {
-	var name = chooseOpponent(chatUser.login);
+	var name = chooseOpponent(userName);
 	
 	// set parameters of videoChat object
 	params = {
@@ -126,7 +128,7 @@ function createVideoChatInstance(event, sessionID, sessionDescription) {
 function doCall() {
 	$('#doCall').hide();
 	$('#stopCall').show();
-	videoChat.call(recipientID, chatUser.login);
+	videoChat.call(recipientID, userName);
 }
 
 function acceptCall() {
@@ -172,7 +174,7 @@ function onConnectFailed() {
 }
 
 function onConnectSuccess() {
-	var opponent = chooseOpponent(chatUser.login);
+	var opponent = chooseOpponent(userName);
 	recipientID = users[opponent];
 	
 	$('#loginForm').modal('hide');
@@ -207,14 +209,14 @@ function getMediaSuccess(qbID, name, sessionID) {
 	
 	if (sessionID) {
 		getRemoteStream();
-		videoChat.accept(qbID, chatUser.login);
+		videoChat.accept(qbID, userName);
 	} else {
 		doCall();
 	}
 }
 
 function getMediaError(qbID) {
-	videoChat.reject(qbID, chatUser.login);
+	videoChat.reject(qbID, userName);
 }
 
 function onCall(qbID, sessionDescription, sessionID, name, avatar) {
