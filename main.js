@@ -152,6 +152,7 @@ function rejectCall(sessionID) {
 	delete popups['remoteCall' + recipientID];
 	
 	stopRing(popups);
+	videoChat = videoChat || new QBVideoChat(signaling, {sessionID: sessionID});
 	videoChat.reject(recipientID, userName);
 }
 
