@@ -252,6 +252,12 @@ function onAccept(qbID) {
 
 function onReject(qbID) {
 	$('#stopCall').hide().parent().find('#doCall').show();
+	videoChat.hangup();
+	videoChat = null;
+	
+	$('video').attr('src', '');
+	$('#localVideo').show();
+	$('#remoteVideo, #miniVideo').hide();
 }
 
 function onStop(qbID) {
