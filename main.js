@@ -27,6 +27,10 @@ $(document).ready(function() {
 			$('#logout').click(logout);
 			$('#doCall').click(createVideoChatInstance);
 			$('#stopCall').click(stopCall);
+			
+			window.onbeforeunload = function() {
+				if (videoChat) stopCall();
+			};
 		}
 	});
 });
@@ -74,7 +78,7 @@ function connectChat() {
 }
 
 function logout() {
-	stopCall();
+	if (videoChat) stopCall();
 	chatService.disconnect();
 }
 
