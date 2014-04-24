@@ -146,7 +146,7 @@ function acceptCall() {
 	createVideoChatInstance(null, sessionID, sessionDescription);
 }
 
-function rejectCall(sessionID) {
+function rejectCall(qbID, sessionID) {
 	isPopupClosed = false;
 	popups['remoteCall' + recipientID].close();
 	delete popups['remoteCall' + recipientID];
