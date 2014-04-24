@@ -154,6 +154,8 @@ function rejectCall(qbID, sessionID) {
 	stopRing(popups);
 	videoChat = videoChat || new QBVideoChat(signaling, {sessionID: sessionID});
 	videoChat.reject(recipientID, userName);
+	videoChat.hangup();
+	videoChat = null;
 }
 
 function stopCall() {
