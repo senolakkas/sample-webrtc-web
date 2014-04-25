@@ -42,7 +42,7 @@ function login() {
 	
 	params = {
 		login: $(this).val(),
-		password: '123123123' //$(this).val() // default password
+		password: $(this).val() //'123123123' // default password
 	};
 	userName = $(this).data('name');
 	
