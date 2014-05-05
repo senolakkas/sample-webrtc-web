@@ -302,7 +302,7 @@ var QBVideoChatState = {
 function QBVideoChat(signaling, params) {
  	var self = this;
  	
- 	this.version = '0.5.1';
+ 	this.version = '0.5.2';
  	
 	this._state = QBVideoChatState.INACTIVE;
 	this._candidatesQueue = [];
