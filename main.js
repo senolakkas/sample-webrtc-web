@@ -1,196 +1,332 @@
-/*
- * QuickBlox WebRTC Sample
- * version 0.02
- *
- * Author: Igor Khomenko (igor@quickblox.com)
- *
- */
+var params, chatUser, chatService, recipientID;
+var signaling, videoChat, popups = {};
+var isPopupClosed = true;
+var userName;
 
-var myName, opponentName;
-var opponentID;
+var audio = {
+	ring: $('#ring')[0]
+};
 
-// Test users
-var TESTUSERS = {
-                        id1         : '298',
-                        login1      : 'bobbobbob',
-                        password1   : 'bobbobbob',
-                        name1       : 'Bob',
-//id1         : '909907',
-//login1      : 'katekate',
-//password1   : 'katekate',
-//name1       : 'Kate',
-                        id2         : '299',
-                        login2      : 'samsamsam',
-                        password2   : 'samsamsam',
-                        name2       : 'Sam',
-}
-
-// Widget settings
-var WIDGET_WIDTH = $('body').width();
-var WIDGET_HEIGHT = $('body').height();
-
-var localVideo, remoteVideo;
-
-var videoChatSignaling;
-var videoChat;
-
-
-/*------------------- DOM is ready -------------------------*/
-$(document).ready(function(){
-	$('#auth').show();
-	//
-	$('#connecting').hide();
-	//
-	$('#webrtc').hide();
-    //$('#callIncoming').hide();
-    //$('#userVideo').hide();
-    //$('#recipientVideoContainer').hide();
-    
-    
-    $("#acceptCall").click(function() {
-		document.getElementById("ring").pause();
-		$(".delay").fadeIn(200);
-		setTimeout(function(){$("#callIncoming").addClass("hidden")}, 3000);
-		setTimeout(function(){callActive = true; callTimer()}, 3000);
-		setTimeout(function(){$("#callIncoming").hide()}, 4000);
-		setTimeout(function(){$(".activeCallControls").fadeIn(500)}, 4000);
-	});
-	$("#hangUp").click(function() {
-		recipientVideo.stop();
-	});
+$(document).ready(function() {
+	// Web SDK initialization
+	QB.init(QBAPP.appID, QBAPP.authKey, QBAPP.authSecret);
 	
-	localVideo = document.getElementById("localVideo");
-	remoteVideo = document.getElementById("remoteVideo");
+	// QuickBlox session creation
+	QB.createSession(function(err, result) {
+		if (err) {
+			console.log(err.detail);
+		} else {
+			$('#loginForm').modal({
+				backdrop: 'static',
+				keyboard: false
+			});
+			
+			$('.tooltip-title').tooltip();
+			
+			// events
+			$('#loginForm button').click(login);
+			$('#logout').click(logout);
+			$('#doCall').click(createVideoChatInstance);
+			$('#stopCall').click(stopCall);
+			
+			window.onbeforeunload = function() {
+				if (videoChat) stopCall();
+			};
+		}
+	});
 });
 
-/*
- * Actions 
- */
-function login(user) {
-    $('#auth').hide().next('#connecting').show();
-	$('#wrap').addClass('connect_message');
+function login() {
+	$('#loginForm button').hide();
+	$('#loginForm .progress').show();
+	
+	params = {
+		login: $(this).val(),
+		password: $(this).val() //'123123123' // default password
+	};
+	userName = $(this).data('name');
+	
+	// chat user authentication
+	QB.login(params, function(err, result) {
+		if (err) {
+			onConnectFailed();
+			console.log(err.detail);
+		} else {
+			chatUser = {
+				id: result.id,
+				login: params.login,
+				pass: params.password
+			};
+			
+			connectChat();
+		}
+	});
+}
 
+function connectChat() {
+	// set parameters of Chat object
+	params = {
+		onConnectFailed: onConnectFailed,
+		onConnectSuccess: onConnectSuccess,
+		onConnectClosed: onConnectClosed,
+
+		debug: true
+	};
 	
-	// Create signaling instance
-	//
-	videoChatSignaling = new QBVideoChatSignaling();
+	chatService = new QBChat(params);
 	
-	// set callbacks
-	videoChatSignaling.addOnConnectionSuccessCallback(onConnectionSuccess);
-	videoChatSignaling.addOnConnectionFailedCallback(onConnectionFailed);
-	videoChatSignaling.addOnConnectionDisconnectedCallback(onConnectionDisconnected);
-	videoChatSignaling.addOnCallCallback(onCall);
-	videoChatSignaling.addOnAcceptCallback(onAccept);
-	videoChatSignaling.addOnRejectCallback(onReject);
+	// connect to QB chat service
+	chatService.connect(chatUser);
+}
+
+function logout() {
+	if (videoChat) stopCall();
+	chatService.disconnect();
+}
+
+function createSignalingInstance() {
+	// set parameters of Signaling object
+	params = {
+		onCallCallback: onCall,
+		onAcceptCallback: onAccept,
+		onRejectCallback: onReject,
+		onStopCallback: onStop,
+
+		debug: false
+	};
 	
-	// Login To Chat
-	//
-	var login, password;
-	if (user == 1) {
-		login = TESTUSERS.login1;
-		password = TESTUSERS.password1;
+	signaling = new QBVideoChatSignaling(chatService, params);
+}
+
+function createVideoChatInstance(event, sessionID, sessionDescription) {
+	var name = chooseOpponent(userName);
+	
+	// set parameters of videoChat object
+	params = {
+		sessionID: sessionID,
+		sessionDescription: sessionDescription,
 		
-		myName = TESTUSERS.name1;
-		opponentName = TESTUSERS.name2;
+		constraints: {audio: true, video: true},
 		
-		opponentID = TESTUSERS.id2;
+		onGetUserMediaSuccess: function() {
+			getMediaSuccess(recipientID, name, sessionID)
+		},
+		
+		onGetUserMediaError: function() {
+			getMediaError(recipientID)
+		},
+
+		debug: false
+	};
+	
+	videoChat = new QBVideoChat(signaling, params);
+	
+	// set access to user media devices
+	videoChat.getUserMedia();
+}
+
+function doCall() {
+	$('#doCall').hide();
+	$('#stopCall').show();
+	videoChat.call(recipientID, userName);
+}
+
+function acceptCall() {
+	var name, sessionDescription, sessionID;
+	
+	name = $(this).data('name');
+	sessionID = $(this).data('id');
+	sessionDescription = $(this).data('description');
+	
+	isPopupClosed = false;
+	popups['remoteCall' + recipientID].close();
+	delete popups['remoteCall' + recipientID];
+	
+	stopRing(popups);
+	createVideoChatInstance(null, sessionID, sessionDescription);
+}
+
+function rejectCall(qbID, sessionID) {
+	isPopupClosed = false;
+	popups['remoteCall' + recipientID].close();
+	delete popups['remoteCall' + recipientID];
+	
+	stopRing(popups);
+	videoChat = videoChat || new QBVideoChat(signaling, {sessionID: sessionID});
+	videoChat.reject(recipientID, userName);
+	videoChat = null;
+}
+
+function stopCall() {
+	$('#stopCall').hide().parent().find('#doCall').show();
+	videoChat.stop(recipientID, userName);
+	videoChat.hangup();
+	videoChat = null;
+	
+	$('video').attr('src', '');
+	$('#localVideo').show();
+	$('#remoteVideo, #miniVideo').hide();
+}
+
+/* Callbacks
+----------------------------------------------------------*/
+function onConnectFailed() {
+	$('#loginForm .progress').hide();
+	$('#loginForm button').show();
+}
+
+function onConnectSuccess() {
+	var opponent = chooseOpponent(userName);
+	recipientID = users[opponent];
+	
+	$('#loginForm').modal('hide');
+	$('#wrap').show();
+	$('#videochat-footer .opponent').text(opponent);
+	createSignalingInstance();
+	
+	// create a timer that will send presence each 60 seconds
+	chatService.startAutoSendPresence(60);
+}
+
+function onConnectClosed() {
+	$('#wrap').hide();
+	$('#loginForm').modal('show');
+	$('#loginForm .progress').hide();
+	$('#loginForm button').show();
+	
+	chatUser = null;
+	chatService = null;
+	signaling = null;
+	videoChat = null;
+}
+
+function getMediaSuccess(qbID, name, sessionID) {
+	$('#doCall, #stopCall').attr('data-qb', qbID);
+	if (sessionID)
+		$('#doCall').hide().parent().find('#stopCall').show();
+	
+	videoChat.localStreamElement = $('#localVideo')[0];
+	videoChat.remoteStreamElement = $('#remoteVideo')[0];
+	videoChat.attachMediaStream(videoChat.localStreamElement, videoChat.localStream);
+	
+	if (sessionID) {
+		getRemoteStream();
+		videoChat.accept(qbID, userName);
 	} else {
-		login = TESTUSERS.login2;
-		password = TESTUSERS.password2;
-		
-		myName = TESTUSERS.name2;
-		opponentName = TESTUSERS.name1;
-		
-		opponentID = TESTUSERS.id1;
+		doCall();
 	}
-	//
-	var params = {login: login, password: password};
-	videoChatSignaling.login(params);
 }
 
-function callToUser(){
-	videoChat.call(opponentID);
+function getMediaError(qbID) {
+	videoChat.reject(qbID, userName);
 }
 
-function acceptCall(){    
-    videoChat.accept(opponentID);
-    
-    $('#incomingCallControls').hide();
-    $('#incomingCallAudio')[0].pause();
-    $('#remoteVideoContainer').show();
+function onCall(qbID, sessionDescription, sessionID, name, avatar) {
+	var win, selector, winName = 'remoteCall' + qbID;
+	
+	if (popups[winName]) {
+		popups[winName].close();
+		delete popups[winName];
+	}
+	
+	popups[winName] = openPopup(winName, {width: 250, height: 280});
+	win = popups[winName];
+	
+	win.onload = function() {
+		selector = $(win.document);
+		selector.find('#acceptCall').click(acceptCall);
+		selector.find('#rejectCall').click(function() {rejectCall(qbID, sessionID)});
+		
+		htmlRemoteCallBuilder(selector, qbID, sessionDescription, sessionID, avatar, name);
+		audio.ring.play();
+		
+		win.onbeforeunload = function() {
+			if (isPopupClosed)
+				rejectCall(qbID, sessionID);
+			isPopupClosed = true;
+		};
+	};
 }
 
-function rejectCall(){
-    videoChat.reject(opponentID);
-    
-    $('#incomingCallControls').hide();
-    $('#incomingCallAudio')[0].pause()
+function onAccept(qbID) {
+	getRemoteStream();
 }
 
-/*
- * Signalling callbacks
- */
-function onConnectionSuccess(user_id) {
-   	traceM('onConnectionSuccess');
-    
-    $('#connecting').hide();
-    $('#webrtc').show();
-    
-    $('#localVideoContainer').show();
-    $('#callToUserButton').show();
-    $('#currentUserName').text(myName);
-    $('#callToUserButton').text('Call to ' + opponentName);
-    
-    $('#localVideoContainer').show();
-    $('#remoteVideoContainer').show();
-    
-    // Create video chat instance
-    videoChat = new QBVideoChat(localVideo, remoteVideo, 
-							{video: true, audio: true}, videoChatSignaling);
+function onReject(qbID) {
+	$('#stopCall').hide().parent().find('#doCall').show();
+	videoChat.hangup();
+	videoChat = null;
+	
+	$('video').attr('src', '');
+	$('#localVideo').show();
+	$('#remoteVideo, #miniVideo').hide();
 }
 
-function onConnectionFailed(error) {
-    traceM('onConnectionFailed: ' + error);
- 
-	$('#connecting, #chat').hide().prev('#auth').show();
-	$('#wrap').removeClass('connect_message');
-	$('#qb_login_form input').addClass('error');
+function onStop(qbID) {
+	$('#stopCall').hide().parent().find('#doCall').show();
+	videoChat.hangup();
+	videoChat = null;
+	
+	$('video').attr('src', '');
+	$('#localVideo').show();
+	$('#remoteVideo, #miniVideo').hide();
+	
+	var win = popups['remoteCall' + qbID];
+	if (win) {
+		isPopupClosed = false;
+		win.close();
+		delete popups['remoteCall' + qbID];
+		
+		stopRing(popups);
+	}
 }
 
-function onConnectionDisconnected(){
-    traceM('onConnectionDisconnected');
-    
-    $('.chat-content').html('');
-    $('#chat, #qb_login_form').hide().prevAll('#auth, #buttons').show();
+/* Helpers
+----------------------------------------------------------*/
+function chooseOpponent(currentLogin) {
+	return currentLogin == 'Bob' ? 'Sam' : 'Bob';
 }
 
-function onCall(fromUserID, sessionDescription, sessionID){
-    traceM('onCall: ' + fromUserID);
-    
-    $('#incomingCallControls').show();
-    $('#incomingCallAudio')[0].play();
+function getRemoteStream() {
+	var miniVideo = $('#miniVideo')[0];
+	videoChat.reattachMediaStream(miniVideo, videoChat.localStreamElement);
+	
+	$('#localVideo').hide();
+	$('#remoteVideo, #miniVideo').show();
 }
 
-function onAccept(fromUserID, sessionDescription, sessionID){
-    traceM('onAccept: ' + fromUserID);
+function openPopup(winName, sizes) {
+	var scrWidth, scrHeight, winWidth, winHeight, disWidth, disHeight;
+	var url, params;
+	
+	scrWidth = window.screen.availWidth;
+	scrHeight = window.screen.availHeight;
+	
+	if (sizes) {
+		winWidth = sizes.width;
+		winHeight = sizes.height;
+	}
+	
+	disWidth = (scrWidth - winWidth) / 2;
+	disHeight = (scrHeight - winHeight) / 2;
+	
+	url = window.location.origin + window.location.pathname + 'remotecall.html';
+	params = ('width='+winWidth+', height='+winHeight+', left='+disWidth+', top='+disHeight+', ');
+	
+	return window.open(url, winName, params);
 }
 
-function onReject(fromUserID){
-    traceM('onReject: ' + fromUserID);
-    
-    alert("Call rejected");
+function htmlRemoteCallBuilder(selector, qbID, sessionDescription, sessionID, avatar, name) {
+	avatar = avatar || 'images/avatar_default.jpg';
+	
+	selector.find('title').text('Remote call');
+	selector.find('.avatar').attr('src', avatar);
+	selector.find('.author').html('<b>' + name + '</b><br>is calling you');
+	selector.find('#acceptCall').attr('data-qb', qbID).attr('data-name', name).attr('data-id', sessionID).attr('data-description', sessionDescription);
+	selector.find('#remoteCall').show();
 }
 
-function onStop(fromUserID, reason, sessionID){
-    traceM('onStop: ' + fromUserID + ', reason: ' + reason);
-    
-    videoChat = null;
-}
-
-
-/*
- * Helpers 
- */
-function traceM(text) {
- 	 console.log("[main]: " + text);
+function stopRing(popups) {
+	if (Object.keys(popups).length == 0 || Object.keys(popups).length == 1)
+		audio.ring.pause();
 }
