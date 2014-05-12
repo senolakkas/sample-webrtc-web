@@ -95,7 +95,7 @@ function createSignalingInstance() {
 		debug: false
 	};
 	
-	signaling = new QBVideoChatSignaling(chatService, params);
+	signaling = new QBSignaling(chatService, params);
 }
 
 function createVideoChatInstance(event, sessionID, sessionDescription) {
