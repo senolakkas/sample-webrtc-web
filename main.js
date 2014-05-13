@@ -95,7 +95,7 @@ function createSignalingInstance() {
 		debug: false
 	};
 	
-	signaling = new QBVideoChatSignaling(chatService, params);
+	signaling = new QBSignaling(chatService, params);
 }
 
 function createVideoChatInstance(event, sessionID, sessionDescription) {
@@ -126,9 +126,15 @@ function createVideoChatInstance(event, sessionID, sessionDescription) {
 }
 
 function doCall() {
+	var extraParams = {
+		callType: 1,
+		full_name: userName
+	};
+	
 	$('#doCall').hide();
 	$('#stopCall').show();
-	videoChat.call(recipientID, userName);
+	
+	videoChat.call(recipientID, extraParams);
 }
 
 function acceptCall() {
@@ -147,19 +153,28 @@ function acceptCall() {
 }
 
 function rejectCall(qbID, sessionID) {
+	var extraParams = {
+		full_name: userName
+	};
+	
 	isPopupClosed = false;
 	popups['remoteCall' + recipientID].close();
 	delete popups['remoteCall' + recipientID];
 	
 	stopRing(popups);
 	videoChat = videoChat || new QBVideoChat(signaling, {sessionID: sessionID});
-	videoChat.reject(recipientID, userName);
+	videoChat.reject(recipientID, extraParams);
 	videoChat = null;
 }
 
 function stopCall() {
+	var extraParams = {
+		status: videoChat.stopReason.MANUALLY,
+		full_name: userName
+	};
+	
 	$('#stopCall').hide().parent().find('#doCall').show();
-	videoChat.stop(recipientID, userName);
+	videoChat.stop(recipientID, extraParams);
 	videoChat.hangup();
 	videoChat = null;
 	
@@ -201,6 +216,10 @@ function onConnectClosed() {
 }
 
 function getMediaSuccess(qbID, name, sessionID) {
+	var extraParams = {
+		full_name: userName
+	};
+	
 	$('#doCall, #stopCall').attr('data-qb', qbID);
 	if (sessionID)
 		$('#doCall').hide().parent().find('#stopCall').show();
@@ -211,17 +230,20 @@ function getMediaSuccess(qbID, name, sessionID) {
 	
 	if (sessionID) {
 		getRemoteStream();
-		videoChat.accept(qbID, userName);
+		videoChat.accept(qbID, extraParams);
 	} else {
 		doCall();
 	}
 }
 
 function getMediaError(qbID) {
-	videoChat.reject(qbID, userName);
+	var extraParams = {
+		full_name: userName
+	};
+	videoChat.reject(qbID, extraParams);
 }
 
-function onCall(qbID, sessionDescription, sessionID, name, avatar) {
+function onCall(qbID, extraParams) {
 	var win, selector, winName = 'remoteCall' + qbID;
 	
 	if (popups[winName]) {
@@ -235,24 +257,24 @@ function onCall(qbID, sessionDescription, sessionID, name, avatar) {
 	win.onload = function() {
 		selector = $(win.document);
 		selector.find('#acceptCall').click(acceptCall);
-		selector.find('#rejectCall').click(function() {rejectCall(qbID, sessionID)});
+		selector.find('#rejectCall').click(function() {rejectCall(qbID, extraParams.sessionID)});
 		
-		htmlRemoteCallBuilder(selector, qbID, sessionDescription, sessionID, avatar, name);
+		htmlRemoteCallBuilder(selector, qbID, extraParams.sdp, extraParams.sessionID, extraParams.full_name);
 		audio.ring.play();
 		
 		win.onbeforeunload = function() {
 			if (isPopupClosed)
-				rejectCall(qbID, sessionID);
+				rejectCall(qbID, extraParams.sessionID);
 			isPopupClosed = true;
 		};
 	};
 }
 
-function onAccept(qbID) {
+function onAccept(qbID, extraParams) {
 	getRemoteStream();
 }
 
-function onReject(qbID) {
+function onReject(qbID, extraParams) {
 	$('#stopCall').hide().parent().find('#doCall').show();
 	videoChat.hangup();
 	videoChat = null;
@@ -262,7 +284,7 @@ function onReject(qbID) {
 	$('#remoteVideo, #miniVideo').hide();
 }
 
-function onStop(qbID) {
+function onStop(qbID, extraParams) {
 	$('#stopCall').hide().parent().find('#doCall').show();
 	videoChat.hangup();
 	videoChat = null;
@@ -316,8 +338,8 @@ function openPopup(winName, sizes) {
 	return window.open(url, winName, params);
 }
 
-function htmlRemoteCallBuilder(selector, qbID, sessionDescription, sessionID, avatar, name) {
-	avatar = avatar || 'images/avatar_default.jpg';
+function htmlRemoteCallBuilder(selector, qbID, sessionDescription, sessionID, name) {
+	var avatar = 'images/avatar_default.jpg';
 	
 	selector.find('title').text('Remote call');
 	selector.find('.avatar').attr('src', avatar);
