@@ -99,22 +99,18 @@ function createSignalingInstance() {
 }
 
 function createVideoChatInstance(event, sessionID, sessionDescription) {
-	var name = chooseOpponent(userName);
-	
 	// set parameters of videoChat object
 	params = {
+		constraints: {audio: true, video: true},
+		
 		sessionID: sessionID,
 		sessionDescription: sessionDescription,
 		
-		constraints: {audio: true, video: true},
-		
 		onGetUserMediaSuccess: function() {
-			getMediaSuccess(recipientID, name, sessionID)
+			getMediaSuccess(sessionID)
 		},
 		
-		onGetUserMediaError: function() {
-			getMediaError(recipientID)
-		},
+		onGetUserMediaError: getMediaError,
 
 		debug: false
 	};
@@ -215,32 +211,32 @@ function onConnectClosed() {
 	videoChat = null;
 }
 
-function getMediaSuccess(qbID, name, sessionID) {
+function getMediaSuccess(sessionID) {
 	var extraParams = {
 		full_name: userName
 	};
 	
-	$('#doCall, #stopCall').attr('data-qb', qbID);
+	$('#doCall, #stopCall').attr('data-qb', recipientID);
 	if (sessionID)
 		$('#doCall').hide().parent().find('#stopCall').show();
 	
-	videoChat.localStreamElement = $('#localVideo')[0];
-	videoChat.remoteStreamElement = $('#remoteVideo')[0];
-	videoChat.attachMediaStream(videoChat.localStreamElement, videoChat.localStream);
+	videoChat.localVideoElement = $('#localVideo')[0];
+	videoChat.remoteVideoElement = $('#remoteVideo')[0];
+	videoChat.attachMediaStream(videoChat.localVideoElement, videoChat.localStream);
 	
 	if (sessionID) {
 		getRemoteStream();
-		videoChat.accept(qbID, extraParams);
+		videoChat.accept(recipientID, extraParams);
 	} else {
 		doCall();
 	}
 }
 
-function getMediaError(qbID) {
+function getMediaError() {
 	var extraParams = {
 		full_name: userName
 	};
-	videoChat.reject(qbID, extraParams);
+	videoChat.reject(recipientID, extraParams);
 }
 
 function onCall(qbID, extraParams) {
@@ -311,7 +307,7 @@ function chooseOpponent(currentLogin) {
 
 function getRemoteStream() {
 	var miniVideo = $('#miniVideo')[0];
-	videoChat.reattachMediaStream(miniVideo, videoChat.localStreamElement);
+	videoChat.reattachMediaStream(miniVideo, videoChat.localVideoElement);
 	
 	$('#localVideo').hide();
 	$('#remoteVideo, #miniVideo').show();

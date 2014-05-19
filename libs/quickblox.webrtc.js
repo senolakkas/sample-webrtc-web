@@ -95,7 +95,7 @@ function QBSignaling(chatService, params) {
 		author = $(msg).attr('from');
 		qbID = QBChatHelpers.getIDFromNode(author);
 		
-		extraParams = $(stanza).find('extraParams')[0];
+		extraParams = $(msg).find('extraParams')[0];
 		$(extraParams.childNodes).each(function() {
 			extension[$(this).context.tagName] = $(this).context.textContent;
 		});
@@ -261,13 +261,13 @@ var QBStopReason = {
 function QBVideoChat(signaling, params) {
  	var self = this;
  	
- 	this.version = '0.6.0';
+ 	this.version = '0.6.2';
  	this.stopReason = QBStopReason;
  	
 	this._state = QBVideoChatState.INACTIVE;
 	this._candidatesQueue = [];
-	this.localStreamElement = null;
-	this.remoteStreamElement = null;
+	this.localVideoElement = null;
+	this.remoteVideoElement = null;
 	
 	if (params) {
 		this._debug = params.debug || null;
@@ -362,7 +362,7 @@ function QBVideoChat(signaling, params) {
 	this.onRemoteStreamAddedCallback = function(event) {
 		traceVC('Remote stream added');
 		self.remoteStream = event.stream;
-		self.attachMediaStream(self.remoteStreamElement, event.stream);
+		self.attachMediaStream(self.remoteVideoElement, event.stream);
 	};
 	
 	// Set LocalDescription
