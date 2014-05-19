@@ -224,9 +224,9 @@ function getMediaSuccess(qbID, name, sessionID) {
 	if (sessionID)
 		$('#doCall').hide().parent().find('#stopCall').show();
 	
-	videoChat.localStreamElement = $('#localVideo')[0];
-	videoChat.remoteStreamElement = $('#remoteVideo')[0];
-	videoChat.attachMediaStream(videoChat.localStreamElement, videoChat.localStream);
+	videoChat.localVideoElement = $('#localVideo')[0];
+	videoChat.remoteVideoElement = $('#remoteVideo')[0];
+	videoChat.attachMediaStream(videoChat.localVideoElement, videoChat.localStream);
 	
 	if (sessionID) {
 		getRemoteStream();
@@ -311,7 +311,7 @@ function chooseOpponent(currentLogin) {
 
 function getRemoteStream() {
 	var miniVideo = $('#miniVideo')[0];
-	videoChat.reattachMediaStream(miniVideo, videoChat.localStreamElement);
+	videoChat.reattachMediaStream(miniVideo, videoChat.localVideoElement);
 	
 	$('#localVideo').hide();
 	$('#remoteVideo, #miniVideo').show();
