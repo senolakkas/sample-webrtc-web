@@ -99,22 +99,18 @@ function createSignalingInstance() {
 }
 
 function createVideoChatInstance(event, sessionID, sessionDescription) {
-	var name = chooseOpponent(userName);
-	
 	// set parameters of videoChat object
 	params = {
+		constraints: {audio: true, video: true},
+		
 		sessionID: sessionID,
 		sessionDescription: sessionDescription,
 		
-		constraints: {audio: true, video: true},
-		
 		onGetUserMediaSuccess: function() {
-			getMediaSuccess(recipientID, name, sessionID)
+			getMediaSuccess(sessionID)
 		},
 		
-		onGetUserMediaError: function() {
-			getMediaError(recipientID)
-		},
+		onGetUserMediaError: getMediaError,
 
 		debug: false
 	};
@@ -215,12 +211,12 @@ function onConnectClosed() {
 	videoChat = null;
 }
 
-function getMediaSuccess(qbID, name, sessionID) {
+function getMediaSuccess(sessionID) {
 	var extraParams = {
 		full_name: userName
 	};
 	
-	$('#doCall, #stopCall').attr('data-qb', qbID);
+	$('#doCall, #stopCall').attr('data-qb', recipientID);
 	if (sessionID)
 		$('#doCall').hide().parent().find('#stopCall').show();
 	
@@ -230,17 +226,17 @@ function getMediaSuccess(qbID, name, sessionID) {
 	
 	if (sessionID) {
 		getRemoteStream();
-		videoChat.accept(qbID, extraParams);
+		videoChat.accept(recipientID, extraParams);
 	} else {
 		doCall();
 	}
 }
 
-function getMediaError(qbID) {
+function getMediaError() {
 	var extraParams = {
 		full_name: userName
 	};
-	videoChat.reject(qbID, extraParams);
+	videoChat.reject(recipientID, extraParams);
 }
 
 function onCall(qbID, extraParams) {
