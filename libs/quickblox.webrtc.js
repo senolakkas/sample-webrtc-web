@@ -361,13 +361,13 @@ function QBVideoChat(signaling, params) {
 	// onIceCandidate callback
 	this.onIceCandidateCallback = function(event) {
 		var candidate = event.candidate;
-		console.log(555555555555);
+		
 		if (candidate) {
 			console.log(self._state);
 			if (self._state == QBVideoChatState.INACTIVE)
 				self._candidatesQueue.push(candidate);
 			else {
-				
+				console.log(555555555555);
 				// Send ICE candidate to opponent
 				self.signaling.sendCandidate(self.opponentID, candidate, self.sessionID);
 			}
@@ -398,7 +398,7 @@ function QBVideoChat(signaling, params) {
                                     self.sendAceptRequest();
                                     // send candidates
                                     console.log(123123);
-                                     self._state = QBVideoChatState.ESTABLISHING;
+                                     
 																			for (var i = 0; i < self._candidatesQueue.length; i++) {
 																				candidate = self._candidatesQueue.pop();
 																				self.signaling.sendCandidate(self.opponentID, candidate, self.sessionID);
@@ -421,7 +421,7 @@ function QBVideoChat(signaling, params) {
 		traceVC('RemoteDescription...');
 		var sessionDescription, candidate;
 		
-		
+		self._state = QBVideoChatState.ESTABLISHING;
 		sessionDescription = new adapter.RTCSessionDescription({sdp: descriptionSDP, type: descriptionType});
 		
 		self.pc.setRemoteDescription(sessionDescription,
