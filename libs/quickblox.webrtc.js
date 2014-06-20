@@ -34,13 +34,13 @@ var config = {
 		{url:'stun:stun.xten.com'},
 		{
 		    url: 'turn:turnserver.quickblox.com:3478?transport=udp',
-		    credential: '',
-		    username: ''
+		    credential: ' ',
+		    username: ' '
 		},
 		{
 		    url: 'turn:turnserver.quickblox.com:3478?transport=tcp',
-		    credential: '',
-		    username: ''
+		    credential: ' ',
+		    username: ' '
 		},
 		{
 		    url: 'turn:numb.viagenie.ca',
