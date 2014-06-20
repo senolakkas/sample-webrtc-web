@@ -306,6 +306,7 @@ function QBVideoChat(signaling, params) {
 	this.addCandidate = function(data) {
 		var candidate;
 		
+		console.log(3333333333333333333333333);
 		candidate = new adapter.RTCIceCandidate(data);
 		self.pc.addIceCandidate(candidate);
 	};
