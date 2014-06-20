@@ -392,8 +392,15 @@ function QBVideoChat(signaling, params) {
                                   // ICE gathering starts work here
                                   if (sessionDescription.type === 'offer')
                                     self.sendCallRequest();
-                                  else if (sessionDescription.type === 'answer')
+                                  else if (sessionDescription.type === 'answer') {
                                     self.sendAceptRequest();
+                                    // send candidates
+                                     self._state = QBVideoChatState.ESTABLISHING;
+																			for (var i = 0; i < self._candidatesQueue.length; i++) {
+																				candidate = self._candidatesQueue.pop();
+																				self.signaling.sendCandidate(self.opponentID, candidate, self.sessionID);
+																			}
+                                   }
                                 },
                                 
                                 function onError(error) {
@@ -411,7 +418,7 @@ function QBVideoChat(signaling, params) {
 		traceVC('RemoteDescription...');
 		var sessionDescription, candidate;
 		
-		self._state = QBVideoChatState.ESTABLISHING;
+		
 		sessionDescription = new adapter.RTCSessionDescription({sdp: descriptionSDP, type: descriptionType});
 		
 		self.pc.setRemoteDescription(sessionDescription,
@@ -422,11 +429,7 @@ function QBVideoChat(signaling, params) {
                                    if (sessionDescription.type === 'offer') {
                                      self.pc.createAnswer(self.onGetSessionDescriptionSuccessCallback, self.onCreateAnswerFailureCallback, SDP_CONSTRAINTS);
                                      
-                                     // send candidates
-																			for (var i = 0; i < self._candidatesQueue.length; i++) {
-																				candidate = self._candidatesQueue.pop();
-																				self.signaling.sendCandidate(self.opponentID, candidate, self.sessionID);
-																			}
+                                     
                                    }
                                  },
                                  
