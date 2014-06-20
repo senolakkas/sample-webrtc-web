@@ -128,11 +128,13 @@ function QBSignaling(chatService, params) {
 			self._callbacks.onStopCallback(qbID, extension);
 			break;
 		case QBSignalingType.CANDIDATE:
+			console.log(111111111);
 			self._callbacks.onCandidateCallback({
 				sdpMLineIndex: extension.sdpMLineIndex,
 				candidate: extension.candidate,
 				sdpMid: extension.sdpMid
 			});
+			console.log(222222222);
 			break;
 		case QBSignalingType.PARAMETERS_CHANGED:
 			break;
