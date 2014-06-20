@@ -416,8 +416,15 @@ function QBVideoChat(signaling, params) {
                                  function onSuccess() {
                                    traceVC("RemoteDescription success");
                                    
-                                   if (sessionDescription.type === 'offer')
+                                   if (sessionDescription.type === 'offer') {
                                      self.pc.createAnswer(self.onGetSessionDescriptionSuccessCallback, self.onCreateAnswerFailureCallback, SDP_CONSTRAINTS);
+                                     
+                                     // send candidates
+																			for (var i = 0; i < self._candidatesQueue.length; i++) {
+																				candidate = self._candidatesQueue.pop();
+																				self.signaling.sendCandidate(self.opponentID, candidate, self.sessionID);
+																			}
+                                   }
                                  },
                                  
                                  function onError(error) {
@@ -425,11 +432,7 @@ function QBVideoChat(signaling, params) {
                                  }
 		);
 		
-		// send candidates
-		for (var i = 0; i < self._candidatesQueue.length; i++) {
-			candidate = self._candidatesQueue.pop();
-			self.signaling.sendCandidate(self.opponentID, candidate, self.sessionID);
-		}
+		
 	};
 	
 	this.onCreateAnswerFailureCallback = function(error) {
