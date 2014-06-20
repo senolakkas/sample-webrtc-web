@@ -369,6 +369,8 @@ function QBVideoChat(signaling, params) {
 			else {
 				console.log(555555555555);
 				// Send ICE candidate to opponent
+				console.log(self.opponentID);  
+        console.log(self.sessionID);  
 				self.signaling.sendCandidate(self.opponentID, candidate, self.sessionID);
 			}
 		}
@@ -396,13 +398,7 @@ function QBVideoChat(signaling, params) {
                                     self.sendCallRequest();
                                   else if (sessionDescription.type === 'answer') {
                                     self.sendAceptRequest();
-                                    // send candidates
-                                    console.log(123123);
-                                     
-																			for (var i = 0; i < self._candidatesQueue.length; i++) {
-																				candidate = self._candidatesQueue.pop();
-																				self.signaling.sendCandidate(self.opponentID, candidate, self.sessionID);
-																			}
+                                    
                                    }
                                 },
                                 
@@ -441,7 +437,14 @@ function QBVideoChat(signaling, params) {
                                  }
 		);
 		
-		
+		// send candidates
+                                    console.log(123123);
+        console.log(self.opponentID);  
+        console.log(self.sessionID);                           
+																			for (var i = 0; i < self._candidatesQueue.length; i++) {
+																				candidate = self._candidatesQueue.pop();
+																				self.signaling.sendCandidate(self.opponentID, candidate, self.sessionID);
+																			}
 	};
 	
 	this.onCreateAnswerFailureCallback = function(error) {
