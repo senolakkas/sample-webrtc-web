@@ -246,9 +246,9 @@ window.QBSignaling = QBSignaling;
 window.QBVideoChat = QBVideoChat;
 
 var PC_CONSTRAINTS = {
-	optional: [{
+	optional: [/*{
 	   DtlsSrtpKeyAgreement: true
-	}]
+	}*/]
 };
 
 var SDP_CONSTRAINTS = {
