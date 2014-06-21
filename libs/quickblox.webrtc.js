@@ -349,7 +349,7 @@ function QBVideoChat(signaling, params) {
 		traceVC("RTCPeerConnection...");
 		try {
 			self.pc = new adapter.RTCPeerConnection(pcConfig, PC_CONSTRAINTS);
-			if (!self.remoteSessionDescription) self.pc.addStream(self.localStream);   //// for remote stream in onaddstream callback!!!
+			self.pc.addStream(self.localStream);
 			self.pc.onicecandidate = self.onIceCandidateCallback;
 			self.pc.onaddstream = self.onRemoteStreamAddedCallback;
 			traceVC('RTCPeerConnnection created');
@@ -418,18 +418,18 @@ function QBVideoChat(signaling, params) {
 		var sessionDescription, candidate;
 		
 		self._state = QBVideoChatState.ESTABLISHING;
-		sessionDescription = new adapter.RTCSessionDescription({sdp: descriptionSDP, type: descriptionType});
+		if (navigator.webkitGetUserMedia) {
+			sessionDescription = new adapter.RTCSessionDescription({sdp: descriptionSDP, type: descriptionType});
+		} else {
+			sessionDescription = {sdp: descriptionSDP, type: descriptionType};
+		}
 		
 		self.pc.setRemoteDescription(sessionDescription,
                                  
                                  function onSuccess() {
                                    traceVC("RemoteDescription success");
                                    
-                                   if (sessionDescription.type === 'offer') {
-                                     self.pc.createAnswer(self.onGetSessionDescriptionSuccessCallback, self.onCreateAnswerFailureCallback, SDP_CONSTRAINTS);
-                                     
-                                     
-                                   }
+                                   
                                  },
                                  
                                  function onError(error) {
@@ -437,7 +437,12 @@ function QBVideoChat(signaling, params) {
                                  }
 		);
 		
-		if (sessionDescription.type === 'offer') self.pc.addStream(self.localStream); 
+		if (sessionDescription.type === 'offer') {
+                                     self.pc.createAnswer(self.onGetSessionDescriptionSuccessCallback, self.onCreateAnswerFailureCallback, SDP_CONSTRAINTS);
+                                     
+                                     
+                                   }
+                                   
 		// send candidates
                                     console.log(123123);
         console.log(self.opponentID);  
