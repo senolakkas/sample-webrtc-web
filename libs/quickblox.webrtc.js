@@ -246,9 +246,9 @@ window.QBSignaling = QBSignaling;
 window.QBVideoChat = QBVideoChat;
 
 var PC_CONSTRAINTS = {
-	optional: [/*{
-	   DtlsSrtpKeyAgreement: true
-	}*/]
+	optional: [{
+	   DtlsSrtpKeyAgreement: 'true'
+	}]
 };
 
 var SDP_CONSTRAINTS = {
@@ -424,7 +424,11 @@ function QBVideoChat(signaling, params) {
                                  
                                  function onSuccess() {
                                    traceVC("RemoteDescription success");
-                                   
+                                   if (sessionDescription.type === 'offer') {
+                                     self.pc.createAnswer(self.onGetSessionDescriptionSuccessCallback, self.onCreateAnswerFailureCallback, SDP_CONSTRAINTS);
+                                     
+                                     
+                                   }
                                    
                                  },
                                  
@@ -433,11 +437,7 @@ function QBVideoChat(signaling, params) {
                                  }
 		);
 		
-		if (sessionDescription.type === 'offer') {
-                                     self.pc.createAnswer(self.onGetSessionDescriptionSuccessCallback, self.onCreateAnswerFailureCallback, SDP_CONSTRAINTS);
-                                     
-                                     
-                                   }
+		
 		// send candidates
                                     console.log(123123);
         console.log(self.opponentID);  
