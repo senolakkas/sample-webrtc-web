@@ -13,7 +13,7 @@ var users = {
 };*/
 
 // connect with iOS application
-var QBAPP = {
+/*var QBAPP = {
 	appID: 92,
 	authKey: 'wJHdOcQSxXQGWx5',
 	authSecret: 'BTFsj7Rtt27DAmT'
@@ -22,4 +22,16 @@ var QBAPP = {
 var users = {
 	Bob: '1010049',
 	Sam: '1010050'
+};*/
+
+
+var QBAPP = {
+	appID: 347,
+	authKey: 'xxgga8DSx5twgMp',
+	authSecret: '7S2FmhpzveZ5cu5'
+};
+
+var users = {
+	Bob: '1022614',
+	Sam: '1022615'
 };
