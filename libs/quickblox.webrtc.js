@@ -418,11 +418,7 @@ function QBVideoChat(signaling, params) {
 		var sessionDescription, candidate;
 		
 		self._state = QBVideoChatState.ESTABLISHING;
-		if (navigator.webkitGetUserMedia) {
-			sessionDescription = new adapter.RTCSessionDescription({sdp: descriptionSDP, type: descriptionType});
-		} else {
-			sessionDescription = descriptionSDP;
-		}
+		sessionDescription = new adapter.RTCSessionDescription({sdp: descriptionSDP, type: descriptionType});
 		
 		self.pc.setRemoteDescription(sessionDescription,
                                  
@@ -442,7 +438,6 @@ function QBVideoChat(signaling, params) {
                                      
                                      
                                    }
-                                   
 		// send candidates
                                     console.log(123123);
         console.log(self.opponentID);  
