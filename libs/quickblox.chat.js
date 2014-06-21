@@ -7,9 +7,9 @@
  */
 
 var config = {
-	server: 'chatstage.quickblox.com',
-	muc: 'muc.chatstage.quickblox.com',
-	bosh: 'ws://chatstage.quickblox.com:5290',
+	server: 'chat.quickblox.com',
+	muc: 'muc.chat.quickblox.com',
+	bosh: 'http://chat.quickblox.com:8080',
 	amazon: 'https://qbprod.s3.amazonaws.com/'
 };
 

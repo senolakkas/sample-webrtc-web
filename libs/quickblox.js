@@ -154,7 +154,7 @@ var config = {
     authSecret: ''
   },
   urls:{
-    base: 'http://api.stage.quickblox.com/',
+    base: 'https://api.quickblox.com/',
     find: 'find',
     session: 'session',
     login: 'login',

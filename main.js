@@ -41,10 +41,9 @@ function login() {
 	$('#loginForm .progress').show();
 	
 	params = {
-		login: /*$(this).val()*/ $(this).data('name'),
-		password: /*$(this).val()*/ '123123123' // default password
+		login: $(this).val(),
+		password: $(this).val() //'123123123' // default password
 	};
-	console.log(params);
 	userName = $(this).data('name');
 	
 	// chat user authentication
