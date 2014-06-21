@@ -349,7 +349,7 @@ function QBVideoChat(signaling, params) {
 		traceVC("RTCPeerConnection...");
 		try {
 			self.pc = new adapter.RTCPeerConnection(pcConfig, PC_CONSTRAINTS);
-			self.pc.addStream(self.localStream);
+			if (!self.remoteSessionDescription) self.pc.addStream(self.localStream);   //// for remote stream in onaddstream callback!!!
 			self.pc.onicecandidate = self.onIceCandidateCallback;
 			self.pc.onaddstream = self.onRemoteStreamAddedCallback;
 			traceVC('RTCPeerConnnection created');
@@ -437,6 +437,7 @@ function QBVideoChat(signaling, params) {
                                  }
 		);
 		
+		if (sessionDescription.type === 'offer') self.pc.addStream(self.localStream); 
 		// send candidates
                                     console.log(123123);
         console.log(self.opponentID);  
