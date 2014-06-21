@@ -419,9 +419,9 @@ function QBVideoChat(signaling, params) {
 		
 		self._state = QBVideoChatState.ESTABLISHING;
 		if (navigator.webkitGetUserMedia) {
-			sessionDescription = new adapter.RTCSessionDescription({sdp: descriptionSDP, type: descriptionType});
+			sessionDescription = new adapter.RTCSessionDescription(descriptionSDP);
 		} else {
-			sessionDescription = {sdp: descriptionSDP, type: descriptionType};
+			sessionDescription = descriptionSDP;
 		}
 		
 		self.pc.setRemoteDescription(sessionDescription,
