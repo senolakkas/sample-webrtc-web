@@ -41,7 +41,7 @@ function login() {
 	$('#loginForm .progress').show();
 	
 	params = {
-		login: $(this).val(),
+		login: /*$(this).val()*/ $(this).data('name'),
 		password: /*$(this).val()*/ '123123123' // default password
 	};
 	console.log(params);
