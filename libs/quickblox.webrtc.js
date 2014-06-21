@@ -429,7 +429,14 @@ function QBVideoChat(signaling, params) {
                                      
                                      
                                    }
-                                   
+                                   // send candidates
+                                    console.log(123123);
+														        console.log(self.opponentID);  
+														        console.log(self.sessionID);                           
+																																	for (var i = 0; i < self._candidatesQueue.length; i++) {
+																																		candidate = self._candidatesQueue.pop();
+																																		self.signaling.sendCandidate(self.opponentID, candidate, self.sessionID);
+																																	}
                                  },
                                  
                                  function onError(error) {
@@ -438,14 +445,7 @@ function QBVideoChat(signaling, params) {
 		);
 		
 		
-		// send candidates
-                                    console.log(123123);
-        console.log(self.opponentID);  
-        console.log(self.sessionID);                           
-																			for (var i = 0; i < self._candidatesQueue.length; i++) {
-																				candidate = self._candidatesQueue.pop();
-																				self.signaling.sendCandidate(self.opponentID, candidate, self.sessionID);
-																			}
+		
 	};
 	
 	this.onCreateAnswerFailureCallback = function(error) {
