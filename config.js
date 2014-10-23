@@ -20,6 +20,14 @@ var QBAPP = {
 };
 
 var users = {
-	Bob: '1010049',
-	Sam: '1010050'
+	Bob: {
+		id: '1010049',
+		login: 'ios_android1',
+		password: 'ios_android1'
+	},
+	Sam: {
+		id: '1010050',
+		login: 'ios_android2',
+		password: 'ios_android2'
+	}
 };

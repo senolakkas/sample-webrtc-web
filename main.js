@@ -41,8 +41,8 @@ function login() {
 	$('#loginForm .progress').show();
 	
 	params = {
-		login: $(this).val(),
-		password: $(this).val() //'123123123' // default password
+		login: users[$(this).val()].login,
+		password: users[$(this).val()].password
 	};
 	userName = $(this).data('name');
 	
@@ -188,7 +188,7 @@ function onConnectFailed() {
 
 function onConnectSuccess() {
 	var opponent = chooseOpponent(userName);
-	recipientID = users[opponent];
+	recipientID = users[opponent].id;
 	
 	$('#loginForm').modal('hide');
 	$('#wrap').show();
